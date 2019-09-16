@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.489
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "belsim2020", "belsim2020\belsim2020.csproj", "{8593F140-BB53-4F96-957D-C7BA2681EF4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "belsim2020.Database", "..\belsim2020.Database\belsim2020.Database.csproj", "{96761E87-75C8-48F7-AFA5-805F5EE95997}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "belsim2020.Database", "belsim2020.Database\belsim2020.Database.csproj", "{96761E87-75C8-48F7-AFA5-805F5EE95997}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
