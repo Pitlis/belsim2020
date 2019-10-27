@@ -8,6 +8,10 @@ namespace belsim2020.Database
 {
 	public class Belsim2020DbContext : IdentityDbContext
 	{
+		public DbSet<Project> Projects { get; set; }
+		public DbSet<UserProject> UserProjects { get; set; }
+		public DbSet<RkResource> RkResources { get; set; }
+
 		public Belsim2020DbContext(DbContextOptions<Belsim2020DbContext> options) : base(options) { }
 
 		protected override void OnModelCreating(ModelBuilder builder)

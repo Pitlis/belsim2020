@@ -15,7 +15,7 @@ namespace belsim2020.Entities
 		public DateTime CreatedAt { get; set; }
 		public DateTime ModifiedAt { get; set; }
 
-		public ProjectTypes ProjectType { get; set; }
+		public RkExperimentType ProjectType { get; set; }
 
 		public virtual ICollection<UserProject> Users { get; set; }
 	}
