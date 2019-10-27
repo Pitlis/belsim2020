@@ -1,4 +1,5 @@
 ﻿using belsim2020.Database;
+using belsim2020.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +36,7 @@ namespace belsim2020
 				)
 			);
 
-			services.AddDefaultIdentity<IdentityUser>()
+			services.AddDefaultIdentity<User>()
 				.AddEntityFrameworkStores<Belsim2020DbContext>();
 
 			services.Configure<IdentityOptions>(options =>

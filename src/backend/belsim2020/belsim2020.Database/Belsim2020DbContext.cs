@@ -1,4 +1,5 @@
-﻿using belsim2020.Database.Constants;
+﻿using belsim2020.Entities;
+using belsim2020.Entities.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace belsim2020.Database
 		{
 			base.OnModelCreating(builder);
 
-			builder.Entity<IdentityUser>(b =>
+			builder.Entity<User>(b =>
 			{
 				b.Property(u => u.Id)
 					.HasMaxLength(450);
@@ -41,6 +42,19 @@ namespace belsim2020.Database
 
 			builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = AuthConstants.Roles.Admin, NormalizedName = AuthConstants.Roles.Admin.ToUpper() });
 			builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = AuthConstants.Roles.User, NormalizedName = AuthConstants.Roles.User.ToUpper() });
+
+			builder.Entity<UserProject>()
+				.HasKey(pt => new { pt.ProjectId, pt.UserId });
+
+			builder.Entity<UserProject>()
+				.HasOne(up => up.Project)
+				.WithMany(p => p.Users)
+				.HasForeignKey(pt => pt.ProjectId);
+
+			builder.Entity<UserProject>()
+				.HasOne(pt => pt.User)
+				.WithMany(t => t.Projects)
+				.HasForeignKey(pt => pt.UserId);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace belsim2020.Database.Constants
+﻿namespace belsim2020.Entities.Constants
 {
 	public static class AuthConstants
 	{
