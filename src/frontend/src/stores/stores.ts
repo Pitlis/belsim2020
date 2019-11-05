@@ -3,8 +3,10 @@ import { ProjectStore } from './Project.store';
 import { RouterStore } from './Router.store';
 
 export function createStores(history: History) {
+    console.log('!!!!');
+    console.log(ProjectStore.name);
     return Object.freeze({
-        routerStore: new RouterStore(history),
-        projectStore: new ProjectStore()
+        RouterStore: new RouterStore(history),
+        ProjectStore: new ProjectStore()
     });
 }

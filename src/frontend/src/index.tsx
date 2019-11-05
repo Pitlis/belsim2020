@@ -3,8 +3,8 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 import { createBrowserHistory } from 'history';
 
-import { createStores } from './stores';
-import { App } from './App';
+import { createStores } from 'stores';
+import { App } from 'App';
 
 // prepare MobX stores
 const history = createBrowserHistory();
