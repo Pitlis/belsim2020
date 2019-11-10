@@ -1,5 +1,11 @@
-﻿using belsim2020.Database;
+﻿using belsim2020.Configuration;
+using belsim2020.Database;
 using belsim2020.Entities;
+using belsim2020.Middlewares;
+using belsim2020.Services;
+using belsim2020.Services.Implementations;
+using belsim2020.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace belsim2020
 {
@@ -36,42 +44,59 @@ namespace belsim2020
 				)
 			);
 
-			services.AddDefaultIdentity<User>()
-				.AddEntityFrameworkStores<Belsim2020DbContext>();
-
-			services.Configure<IdentityOptions>(options =>
+			services.AddIdentity<User, IdentityRole>(opts =>
 			{
-				options.Password.RequireDigit = true;
-				options.Password.RequireLowercase = true;
-				options.Password.RequireNonAlphanumeric = true;
-				options.Password.RequireUppercase = true;
-				options.Password.RequiredLength = 6;
-				options.Password.RequiredUniqueChars = 1;
-
-				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-				options.Lockout.MaxFailedAccessAttempts = 5;
-				options.Lockout.AllowedForNewUsers = true;
-
-				options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-				options.User.RequireUniqueEmail = false;
-			});
+				opts.Password.RequiredLength = 6;
+				opts.Password.RequireNonAlphanumeric = false;
+				opts.Password.RequireLowercase = false;
+				opts.Password.RequireUppercase = false;
+				opts.Password.RequireDigit = false;
+				opts.Lockout.AllowedForNewUsers = true;
+				opts.Lockout.MaxFailedAccessAttempts = 10;
+				opts.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+				opts.User.RequireUniqueEmail = true;
+			})
+			.AddEntityFrameworkStores<Belsim2020DbContext>()
+			.AddDefaultTokenProviders();
 
 			services.ConfigureApplicationCookie(options =>
 			{
 				// Cookie settings
 				options.Cookie.HttpOnly = true;
-				options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
-				options.LoginPath = "/Identity/Account/Login";
-				options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
 				options.SlidingExpiration = true;
+
+				options.Events = new CookieAuthenticationEvents
+				{
+					OnRedirectToLogin = ctx =>
+					{
+						if (ctx.Request.Path.StartsWithSegments("/api"))
+						{
+							ctx.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+						}
+						return Task.FromResult(0);
+					},
+					OnRedirectToAccessDenied = ctx =>
+					{
+						if (ctx.Request.Path.StartsWithSegments("/api"))
+						{
+							ctx.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+						}
+						return Task.FromResult(0);
+					}
+				};
 			});
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+			services.Configure<AdminSettings>(Configuration.GetSection("AdminSettings"));
+
+			services.AddTransient<IUserService, UserService>();
+			services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, Belsim2020DbContext dbContext)
 		{
 			if (env.IsDevelopment())
 			{
@@ -85,6 +110,7 @@ namespace belsim2020
 
 			app.UseHttpsRedirection();
 
+			app.UseMiddleware<CustomExceptionMiddleware>();
 			app.UseStaticFiles();
 			app.UseCookiePolicy();
 

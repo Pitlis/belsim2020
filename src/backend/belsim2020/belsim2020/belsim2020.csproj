@@ -12,12 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Infrastructure\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\belsim2020.Database\belsim2020.Database.csproj" />
     <ProjectReference Include="..\belsim2020.Entities\belsim2020.Entities.csproj" />
+    <ProjectReference Include="..\belsim2020.Services\belsim2020.Services.csproj" />
   </ItemGroup>
 
 </Project>
