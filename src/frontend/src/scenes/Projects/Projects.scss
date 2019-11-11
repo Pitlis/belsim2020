@@ -1,0 +1,8 @@
+.projects {
+    display: flex;
+    flex-wrap: wrap;
+
+    .project-card {
+        margin: 20px;
+    }
+}

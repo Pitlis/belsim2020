@@ -23,8 +23,10 @@ export class ProjectStore {
             ProjectId: (this.availableProjects.length + 1).toString(),
             CreatedAt: new Date(),
             ModifiedAt: new Date(),
-            ProjectName: "Project " + (this.availableProjects.length + 1).toString(),
-            ProjectType: BelsimProjectType.RK
+            ProjectName: 'Project ' + (this.availableProjects.length + 1).toString(),
+            ProjectType: BelsimProjectType.RK,
+            OrganizationName: 'БРУ',
+            Comments: ''
         });
     }
 

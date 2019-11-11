@@ -10,14 +10,18 @@ export const project = Object.freeze({
                 ProjectName: 'Project 1',
                 CreatedAt: new Date(),
                 ModifiedAt: new Date(),
-                ProjectType: BelsimProjectType.RK
+                ProjectType: BelsimProjectType.RK,
+                OrganizationName: 'Белорусско-Российский университет',
+                Comments: 'Non arcu risus quis varius quam quisque id diam. Lorem ipsum dolor sit amet consectetur adipiscing. Diam donec adipiscing tristique risus. Lacus luctus accumsan tortor posuere. Eu scelerisque felis imperdiet proin fermentum.'
             },
             {
                 ProjectId: '0fb59f84-342b-41d9-b340-7f9dee5d819b',
                 ProjectName: 'Project 2',
                 CreatedAt: new Date(),
                 ModifiedAt: new Date(),
-                ProjectType: BelsimProjectType.RK
+                ProjectType: BelsimProjectType.RK,
+                OrganizationName: 'Белорусско-Российский университет',
+                Comments: ''
             }
         ];
         return tempResponse;

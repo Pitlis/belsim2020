@@ -1,33 +1,35 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-//import { Project } from 'models';
 
 import { ProjectCard } from 'components/ProjectCard';
-import { ProjectStore } from 'stores';
+import { ProjectStore, RouterStore } from 'stores';
+import { routes, makeUrlWithParams } from 'routes';
+import './Projects.scss';
 
-@inject(ProjectStore.name)
+@inject(ProjectStore.name, RouterStore.name)
 @observer
-export class Projects extends Component<{ projectStore: ProjectStore }> {
+export class Projects extends Component<{ projectStore: ProjectStore, routerStore: RouterStore }> {
     public projectStore: ProjectStore;
+    public routerStore: RouterStore;
 
     constructor(props) {
         super(props);
         this.projectStore = props[ProjectStore.name];
+        this.routerStore = props[RouterStore.name];
     }
 
     componentDidMount() {
         this.projectStore.loadAvailableProjects();
     }
 
-    handleAddProject = () => {
-        this.projectStore.addProject();
+    handleOpenProject = (projectId: string) => {
+        this.routerStore.push(makeUrlWithParams(routes.projectDetails.path, { projectId }));
     }
 
     public render(): JSX.Element {
         return (
-            <div>
-                <button onClick={this.handleAddProject}>Add project</button>
-                {this.projectStore.availableProjects.map((p, i) => <ProjectCard key={i} name={p.ProjectName} />)}
+            <div className='projects'>
+                {this.projectStore.availableProjects.map((p, i) => <ProjectCard key={i} project={p} onOpenProject={this.handleOpenProject} />)}
             </div>
         );
     }

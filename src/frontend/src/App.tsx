@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Router, Route, Switch } from 'react-router';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { routes } from 'routes';
 import { ProjectDetails } from 'scenes/ProjectDetails';

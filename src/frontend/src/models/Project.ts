@@ -7,4 +7,6 @@ export class Project {
     public CreatedAt: Date = new Date();
     public ModifiedAt: Date = new Date();
     public ProjectType: BelsimProjectType = BelsimProjectType.RK;
+    public OrganizationName: string = '';
+    public Comments: string = '';
 }

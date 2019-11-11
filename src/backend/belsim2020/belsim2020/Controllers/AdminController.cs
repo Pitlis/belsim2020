@@ -14,7 +14,7 @@ namespace belsim2020.Controllers
     [Route("api/admin")]
     [ApiController]
     [Authorize(Roles = "admin")]
-    public class AdminController : Controller
+    public class AdminController : ControllerBase
     {
         private readonly IUserService userService;
         private readonly UserManager<User> userManager;
