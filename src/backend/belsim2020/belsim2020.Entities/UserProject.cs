@@ -11,5 +11,7 @@ namespace belsim2020.Entities
 
         public Guid ProjectId { get; set; }
         public virtual Project Project { get; set; }
+
+        public bool IsProjectOwner { get; set; }
     }
 }
