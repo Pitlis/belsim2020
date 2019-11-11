@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using belsim2020.Database;
+﻿using belsim2020.Database;
 using belsim2020.Entities;
 using belsim2020.Entities.Constants;
 using belsim2020.Services.Interfaces;
 using belsim2020.Services.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace belsim2020.Services.Implementations
 {

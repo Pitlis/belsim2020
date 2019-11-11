@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace belsim2020.Services.Interfaces
 {
@@ -6,8 +7,8 @@ namespace belsim2020.Services.Interfaces
     {
         string UserId { get; }
 
-        IList<string> Roles { get; }
+        IEnumerable<string> Roles { get; }
 
-        IList<string> Claims { get; }
+        IEnumerable<Claim> Claims { get; }
     }
 }
