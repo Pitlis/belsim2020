@@ -2,12 +2,12 @@
 
 namespace belsim2020.Services.Interfaces
 {
-	public interface ICurrentUserContext
-	{
-		string UserId { get; }
+    public interface ICurrentUserContext
+    {
+        string UserId { get; }
 
-		IList<string> Roles { get; }
+        IList<string> Roles { get; }
 
-		IList<string> Claims { get; }
-	}
+        IList<string> Claims { get; }
+    }
 }

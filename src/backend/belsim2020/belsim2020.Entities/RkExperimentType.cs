@@ -1,7 +1,7 @@
 ﻿namespace belsim2020.Entities
 {
-	public enum RkExperimentType
-	{
-		RK = 1,
-	}
+    public enum RkExperimentType
+    {
+        RK = 1,
+    }
 }
