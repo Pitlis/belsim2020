@@ -24,12 +24,12 @@ namespace belsim2020
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -64,9 +64,11 @@ namespace belsim2020
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
-                options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
                 options.SlidingExpiration = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.Path = Configuration.GetValue<string>("FrontendHost");
+
 
                 options.Events = new CookieAuthenticationEvents
                 {
@@ -92,6 +94,18 @@ namespace belsim2020
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("default",
+                builder =>
+                {
+                    builder.WithOrigins(Configuration.GetValue<string>("FrontendHost"));
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                    builder.AllowCredentials();
+                });
+            });
+
             services.Configure<AdminSettings>(Configuration.GetSection("AdminSettings"));
 
             services.AddScoped<ICurrentUserContext, CurrentUserContext>();
@@ -99,6 +113,8 @@ namespace belsim2020
             services.AddTransient<IProjectService, ProjectService>();
 
             services.AddAutoMapper(typeof(ViewModelMappingProfile).Assembly, typeof(ViewModelMappingProfile).Assembly);
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,12 +130,13 @@ namespace belsim2020
                 app.UseHsts();
             }
 
+            app.UseCors("default");
             app.UseHttpsRedirection();
 
             app.UseMiddleware<CustomExceptionMiddleware>();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
 
+            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseMvc();
         }

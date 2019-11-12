@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using belsim2020.Entities;
 using belsim2020.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -85,6 +86,7 @@ namespace belsim2020.Controllers
         }
 
         [HttpGet("refresh-session")]
+        [Authorize]
         public IActionResult RefreshSession()
         {
             return new OkResult();
