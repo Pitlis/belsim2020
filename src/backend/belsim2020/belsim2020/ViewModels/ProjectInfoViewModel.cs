@@ -18,9 +18,5 @@ namespace belsim2020.ViewModels
         public DateTime ModifiedAt { get; set; }
 
         public RkExperimentType ProjectType { get; set; }
-
-        public IList<UserNameViewModel> Owners { get; set; }
-
-        public IList<UserNameViewModel> AssignedUsers { get; set; }
     }
 }

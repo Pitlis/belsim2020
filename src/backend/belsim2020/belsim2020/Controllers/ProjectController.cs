@@ -1,9 +1,11 @@
-﻿using belsim2020.Entities;
+﻿using AutoMapper;
+using belsim2020.Entities;
 using belsim2020.Services.Interfaces;
 using belsim2020.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,38 +18,38 @@ namespace belsim2020.Controllers
     {
         private readonly IProjectService projectService;
         private readonly ICurrentUserContext userContext;
+        private readonly IMapper mapper;
 
         public ProjectController(
             IProjectService projectService,
-            ICurrentUserContext userContext)
+            ICurrentUserContext userContext,
+            IMapper mapper)
         {
             this.projectService = projectService;
             this.userContext = userContext;
+            this.mapper = mapper;
         }
 
         [HttpPost("create")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> CreateProject([FromBody] CreateProjectViewModel model)
+        public async Task<IActionResult> CreateProject([FromBody] CreateProjectViewModel viewModel)
         {
-            var projectId = await projectService.CreateProject(
-                model.Name,
-                model.Organization,
-                model.Comments,
-                RkExperimentType.RK);
+            var model = mapper.Map<Project>(viewModel);
+            model.ProjectType = RkExperimentType.RK;
+
+            var projectId = await projectService.CreateProject(model);
 
             return new OkObjectResult(projectId.ToString());
         }
 
         [HttpPut("update")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> UpdateProject([FromBody] UpdateProjectViewModel model)
+        public async Task<IActionResult> UpdateProject([FromBody] UpdateProjectViewModel viewModel)
         {
-            var project = await projectService.GetProjectInfo(model.ProjectId);
-            project.ProjectName = model.Name;
-            project.OrganizationName = model.Organization;
-            project.Comments = model.Comments;
+            var project = await projectService.GetProjectInfo(viewModel.ProjectId);
+            var model = mapper.Map(viewModel, project);
 
-            await projectService.UpdateProject(project);
+            await projectService.UpdateProject(model);
 
             return new OkResult();
         }
@@ -63,18 +65,18 @@ namespace belsim2020.Controllers
 
         [HttpPost("add-user")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> AddUser([FromBody] AddUserToProjectViewModel model)
+        public async Task<IActionResult> AddUser([FromBody] AddUserToProjectViewModel viewModel)
         {
-            await projectService.AddUserToProject(model.ProjectId, model.UserId, model.IsOwner);
+            await projectService.AddUserToProject(viewModel.ProjectId, viewModel.UserId, viewModel.IsOwner);
 
             return new OkResult();
         }
 
         [HttpPost("delete-user")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeleteUser([FromBody] DeleteUserFromProjectViewModel model)
+        public async Task<IActionResult> DeleteUser([FromBody] DeleteUserFromProjectViewModel viewModel)
         {
-            await projectService.DeleteUserFromProject(model.ProjectId, model.UserId);
+            await projectService.DeleteUserFromProject(viewModel.ProjectId, viewModel.UserId);
 
             return new OkResult();
         }
@@ -84,28 +86,7 @@ namespace belsim2020.Controllers
         {
             var project = await projectService.GetProjectInfo(projectId);
 
-            var model = new ProjectInfoViewModel()
-            {
-                ProjectId = project.ProjectId,
-                CreatedAt = project.CreatedAt,
-                ModifiedAt = project.ModifiedAt,
-                ProjectName = project.ProjectName,
-                OrganizationName = project.OrganizationName,
-                Comments = project.Comments,
-                ProjectType = project.ProjectType,
-                Owners = project.Users.Where(up => up.IsProjectOwner)
-                .Select(up => new UserNameViewModel()
-                {
-                    UserId = up.User.Id,
-                    Name = up.User.PublicName
-                }).ToList(),
-                AssignedUsers = project.Users
-                .Select(up => new UserNameViewModel()
-                {
-                    UserId = up.User.Id,
-                    Name = up.User.PublicName
-                }).ToList()
-            };
+            var model = mapper.Map<ProjectInfoWithUsersViewModel>(project);
 
             return new OkObjectResult(model);
         }
@@ -115,7 +96,9 @@ namespace belsim2020.Controllers
         {
             var availableProjects = await projectService.GetAvailableProjectsList(userContext.UserId);
 
-            return new OkObjectResult(availableProjects);
+            var model = mapper.Map<IList<ProjectInfoViewModel>>(availableProjects);
+
+            return new OkObjectResult(model);
         }
     }
 }

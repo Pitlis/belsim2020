@@ -1,4 +1,6 @@
-﻿using belsim2020.Configuration;
+﻿using AutoMapper;
+using belsim2020.AutoMapper;
+using belsim2020.Configuration;
 using belsim2020.Database;
 using belsim2020.Entities;
 using belsim2020.Middlewares;
@@ -95,6 +97,8 @@ namespace belsim2020
             services.AddScoped<ICurrentUserContext, CurrentUserContext>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
+
+            services.AddAutoMapper(typeof(ViewModelMappingProfile).Assembly, typeof(ViewModelMappingProfile).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

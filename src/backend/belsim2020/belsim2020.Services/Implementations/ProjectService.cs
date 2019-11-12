@@ -27,19 +27,12 @@ namespace belsim2020.Services.Implementations
             this.logger = logger;
         }
 
-        public async Task<Guid> CreateProject(string name, string organization, string comments, RkExperimentType type)
+        public async Task<Guid> CreateProject(Project project)
         {
             VerifyAdminAccess();
 
-            var project = new Project()
-            {
-                ProjectName = name,
-                OrganizationName = organization,
-                Comments = comments,
-                ProjectType = type,
-                CreatedAt = DateTime.UtcNow,
-                ModifiedAt = DateTime.UtcNow
-            };
+            project.CreatedAt = DateTime.UtcNow;
+            project.ModifiedAt = DateTime.UtcNow;
 
             await dbContext.Projects.AddAsync(project);
             await dbContext.SaveChangesAsync();
@@ -51,16 +44,7 @@ namespace belsim2020.Services.Implementations
         {
             VerifyAdminAccess();
 
-            var existsProject = await dbContext.Projects.FirstOrDefaultAsync(p => p.ProjectId == updatedProject.ProjectId);
-            if (existsProject == null)
-            {
-                throw new ApplicationException($"Project [{updatedProject.ProjectId}] does not exists");
-            }
-
             updatedProject.ModifiedAt = DateTime.UtcNow;
-            updatedProject.CreatedAt = existsProject.CreatedAt;
-            updatedProject.ProjectType = existsProject.ProjectType;
-            updatedProject.Users = existsProject.Users;
 
             dbContext.Projects.Update(updatedProject);
             await dbContext.SaveChangesAsync();

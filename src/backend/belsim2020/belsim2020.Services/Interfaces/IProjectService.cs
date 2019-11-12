@@ -7,7 +7,7 @@ namespace belsim2020.Services.Interfaces
 {
     public interface IProjectService
     {
-        Task<Guid> CreateProject(string name, string organization, string comments, RkExperimentType type);
+        Task<Guid> CreateProject(Project project);
         Task UpdateProject(Project project);
         Task DeleteProject(Guid projectId);
         Task AddUserToProject(Guid projectId, string userId, bool isOwner = false);
