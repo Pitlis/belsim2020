@@ -1,10 +1,10 @@
-﻿using belsim2020.Entities;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using belsim2020.Entities;
 using belsim2020.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace belsim2020.Controllers
 {
@@ -70,7 +70,6 @@ namespace belsim2020.Controllers
                 return new BadRequestObjectResult(model);
             }
 
-
             var signInResult = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
 
             if (signInResult.Succeeded)
@@ -83,6 +82,12 @@ namespace belsim2020.Controllers
                 logger.LogError($"Something in login went wrong... [{signInResult.ToString()}]");
                 return new BadRequestResult();
             }
+        }
+
+        [HttpGet("refresh-session")]
+        public IActionResult RefreshSession()
+        {
+            return new OkResult();
         }
 
         [HttpPost("logout")]
