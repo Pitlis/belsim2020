@@ -35,6 +35,12 @@ namespace belsim2020.AutoMapper
                         }).ToList()
                     )
                  );
+
+            CreateMap<CreateResourceViewModel, RkResource>();
+            CreateMap<RkResource, ResourceViewModel>();
+
+            CreateMap<CreateProductViewModel, RkProduct>();
+            CreateMap<RkProduct, ProductViewModel>();
         }
     }
 }

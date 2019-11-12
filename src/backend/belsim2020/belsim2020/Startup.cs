@@ -6,7 +6,9 @@ using belsim2020.Entities;
 using belsim2020.Middlewares;
 using belsim2020.Services;
 using belsim2020.Services.Implementations;
+using belsim2020.Services.Implementations.Rk;
 using belsim2020.Services.Interfaces;
+using belsim2020.Services.Interfaces.Rk;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -111,6 +113,8 @@ namespace belsim2020
             services.AddScoped<ICurrentUserContext, CurrentUserContext>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IResourceService, ResourceService>();
+            services.AddTransient<IProductService, ProductService>();
 
             services.AddAutoMapper(typeof(ViewModelMappingProfile).Assembly, typeof(ViewModelMappingProfile).Assembly);
 

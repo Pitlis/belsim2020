@@ -11,6 +11,14 @@ namespace belsim2020.Database
         public DbSet<Project> Projects { get; set; }
         public DbSet<UserProject> UserProjects { get; set; }
         public DbSet<RkResource> RkResources { get; set; }
+        public DbSet<RkProduct> RkProducts { get; set; }
+        public DbSet<RkResourceInExperiment> RkResourcesInExperiment { get; set; }
+        public DbSet<RkProductInExperiment> RkProductsInExperiment { get; set; }
+        public DbSet<RkExperimentTemplate> RkExperimentTemplates { get; set; }
+        public DbSet<RkAccount> RkAccounts { get; set; }
+        public DbSet<RkAccountInExperiment> RkAccountsInExperiment { get; set; }
+        public DbSet<RkProductResourceInExperiment> RkProductResourceInExperiment { get; set; }
+        public DbSet<RkProductShipmentInExperiment> RkProductShipmentInExperiment { get; set; }
 
         public Belsim2020DbContext(DbContextOptions<Belsim2020DbContext> options) : base(options) { }
 
