@@ -7,7 +7,7 @@ namespace belsim2020.Entities
     public class RkProductShipmentInExperiment
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid RkShipmentInExperimentId { get; set; }
+        public Guid RkProductShipmentInExperimentId { get; set; }
 
         public Guid ProductInExperimentId { get; set; }
         public virtual RkProductInExperiment ProductInExperiment { get; set; }

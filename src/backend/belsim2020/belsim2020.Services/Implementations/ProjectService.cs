@@ -139,7 +139,7 @@ namespace belsim2020.Services.Implementations
             }
         }
 
-        #region Implementation
+        #region Helpers
 
         private void VerifyAdminAccess()
         {
