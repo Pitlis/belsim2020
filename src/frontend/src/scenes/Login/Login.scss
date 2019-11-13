@@ -1,0 +1,39 @@
+.login-scene {  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    
+    .login-form {
+        height: 300px;
+        width: 300px;
+    }
+
+    .card-title {
+        padding-bottom: 25px;
+    }
+
+    .form-check {
+        line-height: 20px;
+
+        .form-check-label {
+            user-select: none;
+            font-size: 14px;
+        }
+    }
+
+    .login-button {
+        text-align: center;
+        button {
+            width: 100px;
+        }
+    }
+
+    .error-login-message {
+        width: 100%;
+        margin-top: 10px;
+        font-size: 80%;
+        color: #dc3545;
+        margin-bottom: 20px;;
+    }
+}

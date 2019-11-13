@@ -2,6 +2,11 @@
     width: 350px;
     font-size: 14px;
 
+    .list-group-item {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
     .card-link {
         text-align: center;
         font-size: 18px;
