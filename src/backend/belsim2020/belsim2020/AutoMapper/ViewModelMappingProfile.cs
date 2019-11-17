@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using AutoMapper;
 using belsim2020.Entities;
+using belsim2020.Services.Models;
 using belsim2020.ViewModels;
 
 namespace belsim2020.AutoMapper
@@ -41,6 +42,12 @@ namespace belsim2020.AutoMapper
 
             CreateMap<CreateProductViewModel, RkProduct>();
             CreateMap<RkProduct, ProductViewModel>();
+
+            CreateMap<RkExperimentTemplateModel, ExperimentTemplateViewModel>();
+
+            CreateMap<UpdateExperimentTemplateViewModel, RkExperimentTemplateModel>();
+
+            CreateMap<RkExperimentShortInfoModel, ExperimentTemplateItemViewModel>();
         }
     }
 }

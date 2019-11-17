@@ -1,12 +1,10 @@
 ﻿using AutoMapper;
-using belsim2020.Entities;
 using belsim2020.Services.Interfaces;
 using belsim2020.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace belsim2020.Controllers
@@ -34,10 +32,7 @@ namespace belsim2020.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectViewModel viewModel)
         {
-            var model = mapper.Map<Project>(viewModel);
-            model.ProjectType = RkExperimentType.RK;
-
-            var projectId = await projectService.CreateProject(model);
+            var projectId = await projectService.CreateProject(viewModel.ProjectName, viewModel.OrganizationName, viewModel.Comments);
 
             return new OkObjectResult(projectId.ToString());
         }

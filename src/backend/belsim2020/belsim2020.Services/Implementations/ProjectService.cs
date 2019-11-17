@@ -27,12 +27,19 @@ namespace belsim2020.Services.Implementations
             this.logger = logger;
         }
 
-        public async Task<Guid> CreateProject(Project project)
+        public async Task<Guid> CreateProject(string name, string organization, string comments)
         {
             VerifyAdminAccess();
 
-            project.CreatedAt = DateTime.UtcNow;
-            project.ModifiedAt = DateTime.UtcNow;
+            var project = new Project()
+            {
+                ProjectName = name,
+                OrganizationName = organization,
+                Comments = comments,
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow,
+                ProjectType = RkExperimentType.RK
+            };
 
             await dbContext.Projects.AddAsync(project);
             await dbContext.SaveChangesAsync();

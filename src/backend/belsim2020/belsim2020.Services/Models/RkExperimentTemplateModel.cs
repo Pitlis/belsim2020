@@ -1,17 +1,14 @@
-﻿using System;
+﻿using belsim2020.Entities;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
-namespace belsim2020.Entities
+namespace belsim2020.Services.Models
 {
-    [Table("RK_ExperimentTemplates")]
-    public class RkExperimentTemplate
+    public class RkExperimentTemplateModel
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid RkExperimentTemplateId { get; set; }
 
         public string OwnerId { get; set; }
-        public virtual User Owner { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
@@ -19,12 +16,9 @@ namespace belsim2020.Entities
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public Guid ProjectId { get; set; }
-        public virtual Project Project { get; set; }
-
-        public ICollection<RkAccountInExperiment> Accounts { get; set; }
-        public ICollection<RkProductInExperiment> Products { get; set; }
-        public ICollection<RkResourceInExperiment> Resources { get; set; }
+        public IList<ExperimentAccountModel> Accounts { get; set; }
+        public IList<ExperimentProductModel> Products { get; set; }
+        public IList<ExperimentResourceModel> Resources { get; set; }
 
         #region Experiment settings
 

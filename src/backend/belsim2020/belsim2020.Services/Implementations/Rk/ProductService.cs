@@ -16,12 +16,12 @@ namespace belsim2020.Services.Implementations.Rk
     {
         private readonly Belsim2020DbContext dbContext;
         private readonly ICurrentUserContext userContext;
-        private readonly ILogger<ProjectService> logger;
+        private readonly ILogger<ProductService> logger;
 
         public ProductService(
             Belsim2020DbContext dbContext,
             ICurrentUserContext userContext,
-            ILogger<ProjectService> logger)
+            ILogger<ProductService> logger)
         {
             this.dbContext = dbContext;
             this.userContext = userContext;

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using belsim2020.Database;
@@ -9,9 +10,10 @@ using belsim2020.Database;
 namespace belsim2020.Database.Migrations
 {
     [DbContext(typeof(Belsim2020DbContext))]
-    partial class Belsim2020DbContextModelSnapshot : ModelSnapshot
+    [Migration("20191117095854_TempAddingAccounts")]
+    partial class TempAddingAccounts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,15 +47,15 @@ namespace belsim2020.Database.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ca7e6b7f-ddfc-4511-a9bf-cca8ad67740b",
-                            ConcurrencyStamp = "34422411-bc34-403c-9ab7-7b38419aa099",
+                            Id = "7f3486f5-a375-4d26-a35c-c9f9a40e10df",
+                            ConcurrencyStamp = "e0737312-c6b4-4871-8a94-ef1de32d7a30",
                             Name = "admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "6b3f8340-34a4-44a0-9002-dba91a26509f",
-                            ConcurrencyStamp = "a26a99f6-cbe2-4dea-8bd8-c65def948f1b",
+                            Id = "42f311b8-91e7-4621-b36b-0fa330092ee1",
+                            ConcurrencyStamp = "25919c89-81dc-4902-8d5d-e43a95a735d5",
                             Name = "user",
                             NormalizedName = "USER"
                         });
@@ -301,6 +303,8 @@ namespace belsim2020.Database.Migrations
                     b.Property<decimal>("EarningsTax");
 
                     b.Property<decimal>("EcologicalTax");
+
+                    b.Property<int>("ExperimentType");
 
                     b.Property<decimal>("FixedCosts");
 

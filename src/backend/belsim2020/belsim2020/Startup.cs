@@ -5,6 +5,7 @@ using belsim2020.Database;
 using belsim2020.Entities;
 using belsim2020.Middlewares;
 using belsim2020.Services;
+using belsim2020.Services.AutoMapper;
 using belsim2020.Services.Implementations;
 using belsim2020.Services.Implementations.Rk;
 using belsim2020.Services.Interfaces;
@@ -69,7 +70,7 @@ namespace belsim2020
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
                 options.SlidingExpiration = true;
                 options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.Path = Configuration.GetValue<string>("FrontendHost");
+                //options.Cookie.Path = Configuration.GetValue<string>("FrontendHost");
 
 
                 options.Events = new CookieAuthenticationEvents
@@ -115,8 +116,9 @@ namespace belsim2020
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IResourceService, ResourceService>();
             services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IExperimentTemplateService, ExperimentTemplateService>();
 
-            services.AddAutoMapper(typeof(ViewModelMappingProfile).Assembly, typeof(ViewModelMappingProfile).Assembly);
+            services.AddAutoMapper(typeof(ViewModelMappingProfile).Assembly, typeof(ModelMappingProfile).Assembly);
 
 
         }

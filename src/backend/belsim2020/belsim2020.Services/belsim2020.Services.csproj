@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\belsim2020.Database\belsim2020.Database.csproj" />
     <ProjectReference Include="..\belsim2020.Entities\belsim2020.Entities.csproj" />
   </ItemGroup>

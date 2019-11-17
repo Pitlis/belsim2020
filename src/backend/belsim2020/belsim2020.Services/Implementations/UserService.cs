@@ -26,7 +26,7 @@ namespace belsim2020.Services.Implementations
             this.logger = logger;
         }
 
-        public async Task<CreateUserResult> CreateUser(string email, string publicName, string organizationName, string comments, string password)
+        public async Task<CreateUserResultModel> CreateUser(string email, string publicName, string organizationName, string comments, string password)
         {
             var user = new User
             {
@@ -51,7 +51,7 @@ namespace belsim2020.Services.Implementations
                 await userManager.AddToRolesAsync(user, new List<string>() { AuthConstants.Roles.User });
             }
 
-            return new CreateUserResult()
+            return new CreateUserResultModel()
             {
                 IdentityResult = result,
                 UserId = result.Succeeded ? user.Id : null

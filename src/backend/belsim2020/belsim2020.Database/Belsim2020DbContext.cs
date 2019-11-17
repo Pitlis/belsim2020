@@ -3,6 +3,7 @@ using belsim2020.Entities.Constants;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace belsim2020.Database
 {
@@ -67,6 +68,9 @@ namespace belsim2020.Database
                 .HasOne(pt => pt.User)
                 .WithMany(t => t.Projects)
                 .HasForeignKey(pt => pt.UserId);
+
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счет 1", RkAccountId = Guid.Parse("eaacc9f3-a658-4218-ac77-3aefcf278c34") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счет 2", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f6f") });
         }
     }
 }
