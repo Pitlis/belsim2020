@@ -62,74 +62,69 @@ namespace belsim2020.Services.Implementations.Rk
 
             await VerifyAccessToProject(experimentTemplate.ProjectId);
             VerifyEditAccess(experimentTemplate);
-
-            if (experimentTemplate.OwnerId != model.OwnerId)
-            {
-                throw new ApplicationException("Owner of experiment template cannot be changed");
-            }
-
-            if (experimentTemplate.CreatedAt != model.CreatedAt)
-            {
-                throw new ApplicationException("Creation date of experiment template cannot be changed");
-            }
-
-            foreach (var accountInModel in model.Accounts)
-            {
-                if (experimentTemplate.Accounts
-                    .FirstOrDefault(a =>
-                        a.AccountId == accountInModel.AccountId
-                        && a.ExperimentTemplateId == accountInModel.ExperimentTemplateId
-                        && a.RkAccountInExperimentId == accountInModel.RkAccountInExperimentId) == null)
-                {
-                    throw new ApplicationException($"Account object in experiment template cannot be edited");
-                }
-            }
-
-            foreach (var resourceInModel in model.Resources)
-            {
-                if (experimentTemplate.Resources
-                    .FirstOrDefault(r =>
-                        r.ResourceId == resourceInModel.ResourceId
-                        && r.RkResourceInExperimentId == resourceInModel.RkResourceInExperimentId
-                        && r.ExperimentTemplateId == r.ExperimentTemplateId) == null)
-                {
-                    throw new ApplicationException($"Resource in updated model [{resourceInModel.ResourceId}] does not exists in resources list of experiment [{experimentTemplate.RkExperimentTemplateId}]");
-                }
-            }
-
-            foreach (var productInModel in model.Products)
-            {
-                if (experimentTemplate.Products
-                    .FirstOrDefault(r =>
-                        r.ProductId == productInModel.ProductId
-                        && r.RkProductInExperimentId == productInModel.RkProductInExperimentId
-                        && r.ExperimentTemplateId == r.ExperimentTemplateId) == null)
-                {
-                    throw new ApplicationException($"Product in updated model [{productInModel.ProductId}] does not exists in products list of experiment [{experimentTemplate.RkExperimentTemplateId}]");
-                }
-
-                foreach (var shipment in productInModel.Shipments)
-                {
-                    if (experimentTemplate.Products.FirstOrDefault(p => p.RkProductInExperimentId == shipment.ProductInExperimentId) == null)
-                    {
-                        throw new ApplicationException($"Shipment for product in experiment [{shipment.ProductInExperimentId}] cannot be added - this product does not exist in current experiment [{experimentTemplate.RkExperimentTemplateId}]");
-                    }
-                }
-
-                foreach (var resource in productInModel.Resources)
-                {
-                    if (experimentTemplate.Products.FirstOrDefault(p => p.RkProductInExperimentId == resource.RkProductInExperimentId) == null)
-                    {
-                        throw new ApplicationException($"ResourceProduct for product in experiment [{resource.RkProductInExperimentId}] cannot be added - product of this ResourceProduct does not exist in current experiment [{experimentTemplate.RkExperimentTemplateId}]");
-                    }
-                    if (experimentTemplate.Resources.FirstOrDefault(p => p.RkResourceInExperimentId == resource.RkResourceInExperimentId) == null)
-                    {
-                        throw new ApplicationException($"ResourceProduct for product in experiment [{resource.RkResourceInExperimentId}] cannot be added - resource of this ResourceProduct does not exist in current experiment [{experimentTemplate.RkExperimentTemplateId}]");
-                    }
-                }
-            }
+            VerifyUpdatedExperimentModel(model, experimentTemplate);
 
             mapper.Map(model, experimentTemplate);
+
+            foreach (var account in model.Accounts)
+            {
+                var existsAccount = experimentTemplate.Accounts.First(a => a.RkAccountInExperimentId == account.RkAccountInExperimentId);
+                mapper.Map(account, existsAccount);
+            }
+
+            foreach (var resource in model.Resources)
+            {
+                var existsResource = experimentTemplate.Resources.First(r => r.RkResourceInExperimentId == resource.RkResourceInExperimentId);
+                mapper.Map(resource, existsResource);
+            }
+
+            foreach (var product in model.Products)
+            {
+                var existsProduct = experimentTemplate.Products.First(p => p.RkProductInExperimentId == product.RkProductInExperimentId);
+                foreach (var shipment in product.Shipments)
+                {
+                    var existsShipment = existsProduct.Shipments.FirstOrDefault(s => s.RkProductShipmentInExperimentId == shipment.RkProductShipmentInExperimentId);
+                    if (existsShipment != null)
+                    {
+                        mapper.Map(shipment, existsShipment);
+                    }
+                    else
+                    {
+                        var newShipment = mapper.Map<RkProductShipmentInExperiment>(shipment);
+                        newShipment.ProductInExperimentId = existsProduct.RkProductInExperimentId;
+                        dbContext.RkProductShipmentInExperiment.Add(newShipment);
+                        existsProduct.Shipments.Add(newShipment);
+                        shipment.RkProductShipmentInExperimentId = newShipment.RkProductShipmentInExperimentId;
+                    }
+                }
+                var deletedShipmentIds = existsProduct.Shipments
+                    .Select(s => s.RkProductShipmentInExperimentId)
+                    .Except(product.Shipments.Select(s => s.RkProductShipmentInExperimentId));
+                var deletedShipments = existsProduct.Shipments.Where(s => deletedShipmentIds.Contains(s.RkProductShipmentInExperimentId));
+                dbContext.RkProductShipmentInExperiment.RemoveRange(deletedShipments);
+
+                foreach (var resource in product.Resources)
+                {
+                    var existsResource = existsProduct.Resources.FirstOrDefault(r => r.RkProductResourceInExperimentId == resource.RkProductResourceInExperimentId);
+                    if (existsResource != null)
+                    {
+                        mapper.Map(resource, existsResource);
+                    }
+                    else
+                    {
+                        var newResource = mapper.Map<RkProductResourceInExperiment>(resource);
+                        newResource.RkProductInExperimentId = existsProduct.RkProductInExperimentId;
+                        dbContext.RkProductResourceInExperiment.Add(newResource);
+                        existsProduct.Resources.Add(newResource);
+                        resource.RkProductResourceInExperimentId = newResource.RkProductResourceInExperimentId;
+                    }
+                    var deletedResourceIds = existsProduct.Resources
+                        .Select(r => r.RkProductResourceInExperimentId)
+                        .Except(product.Resources.Select(r => r.RkProductResourceInExperimentId));
+                    var deletedResources = existsProduct.Resources.Where(r => deletedResourceIds.Contains(r.RkProductResourceInExperimentId));
+                    dbContext.RkProductResourceInExperiment.RemoveRange(deletedResources);
+                }
+            }
 
             experimentTemplate.ModifiedAt = DateTime.UtcNow;
 
@@ -253,7 +248,7 @@ namespace belsim2020.Services.Implementations.Rk
                 .ToListAsync();
 
             var resourcesForRemoving = new List<RkResourceInExperiment>();
-            foreach (var resource in resourcesForRemoving)
+            foreach (var resource in resourcesInExperiment)
             {
                 if (!resourceIds.Contains(resource.ResourceId))
                 {
@@ -336,6 +331,84 @@ namespace belsim2020.Services.Implementations.Rk
             }
 
             return experimentTemplate;
+        }
+
+        private void VerifyUpdatedExperimentModel(RkExperimentTemplateModel model, RkExperimentTemplate experimentTemplate)
+        {
+            if (experimentTemplate.OwnerId != model.OwnerId)
+            {
+                throw new ApplicationException("Owner of experiment template cannot be changed");
+            }
+
+            if (experimentTemplate.CreatedAt != model.CreatedAt)
+            {
+                throw new ApplicationException("Creation date of experiment template cannot be changed");
+            }
+
+            foreach (var accountInModel in model.Accounts)
+            {
+                if (experimentTemplate.Accounts
+                    .FirstOrDefault(a =>
+                        a.AccountId == accountInModel.AccountId
+                        && a.ExperimentTemplateId == accountInModel.ExperimentTemplateId
+                        && a.RkAccountInExperimentId == accountInModel.RkAccountInExperimentId) == null)
+                {
+                    throw new ApplicationException($"Account list in experiment template cannot be edited");
+                }
+            }
+            if (experimentTemplate.Accounts.Count != model.Accounts.Count)
+            {
+                throw new ApplicationException($"Account list in experiment template cannot be edited");
+            }
+
+            foreach (var resourceInModel in model.Resources)
+            {
+                if (experimentTemplate.Resources
+                    .FirstOrDefault(r =>
+                        r.ResourceId == resourceInModel.ResourceId
+                        && r.RkResourceInExperimentId == resourceInModel.RkResourceInExperimentId
+                        && r.ExperimentTemplateId == r.ExperimentTemplateId) == null)
+                {
+                    throw new ApplicationException($"Resource in updated model [{resourceInModel.ResourceId}] does not exists in resources list of experiment [{experimentTemplate.RkExperimentTemplateId}]");
+                }
+            }
+            if (experimentTemplate.Resources.Count != model.Resources.Count)
+            {
+                throw new ApplicationException($"Resource list in experiment template cannot be edited");
+            }
+
+            foreach (var productInModel in model.Products)
+            {
+                if (experimentTemplate.Products
+                    .FirstOrDefault(r =>
+                        r.ProductId == productInModel.ProductId
+                        && r.RkProductInExperimentId == productInModel.RkProductInExperimentId
+                        && r.ExperimentTemplateId == r.ExperimentTemplateId) == null)
+                {
+                    throw new ApplicationException($"Product in updated model [{productInModel.ProductId}] does not exists in products list of experiment [{experimentTemplate.RkExperimentTemplateId}]");
+                }
+
+                foreach (var resource in productInModel.Resources)
+                {
+                    if (experimentTemplate.Resources.FirstOrDefault(p => p.RkResourceInExperimentId == resource.RkResourceInExperimentId) == null)
+                    {
+                        throw new ApplicationException($"ResourceProduct for product in experiment [{resource.RkResourceInExperimentId}] cannot be added - resource of this ResourceProduct does not exist in current experiment [{experimentTemplate.RkExperimentTemplateId}]");
+                    }
+                }
+
+                var groupedResources = productInModel.Resources.GroupBy(r => r.RkResourceInExperimentId);
+                foreach (var group in groupedResources)
+                {
+                    if (group.Count() > 1)
+                    {
+                        throw new ApplicationException($"ResourceProduct (resource [{group.Key}]) can be added to product only once");
+                    }
+                }
+            }
+            if (experimentTemplate.Products.Count != model.Products.Count)
+            {
+                throw new ApplicationException($"Product list in experiment template cannot be edited");
+            }
         }
 
         #endregion

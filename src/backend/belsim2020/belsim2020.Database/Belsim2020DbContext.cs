@@ -53,8 +53,8 @@ namespace belsim2020.Database
                 .Property(t => t.Name)
                 .HasMaxLength(450);
 
-            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = AuthConstants.Roles.Admin, NormalizedName = AuthConstants.Roles.Admin.ToUpper() });
-            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = AuthConstants.Roles.User, NormalizedName = AuthConstants.Roles.User.ToUpper() });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = AuthConstants.Roles.Admin, NormalizedName = AuthConstants.Roles.Admin.ToUpper(), Id = "ca7e6b7f-ddfc-4511-a9bf-cca8ad67740b", ConcurrencyStamp = "34422411-bc34-403c-9ab7-7b38419aa099" });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole { Name = AuthConstants.Roles.User, NormalizedName = AuthConstants.Roles.User.ToUpper(), Id = "6b3f8340-34a4-44a0-9002-dba91a26509f", ConcurrencyStamp = "a26a99f6-cbe2-4dea-8bd8-c65def948f1b" });
 
             builder.Entity<UserProject>()
                 .HasKey(pt => new { pt.ProjectId, pt.UserId });

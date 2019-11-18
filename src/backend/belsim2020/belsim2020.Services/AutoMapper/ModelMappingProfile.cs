@@ -12,7 +12,7 @@ namespace belsim2020.Services.AutoMapper
 
             CreateMap<RkAccountInExperiment, ExperimentAccountModel>()
                 .ForMember(m => m.Name, opt => opt.MapFrom(src => src.Account.Name));
-            CreateMap<ExperimentAccountModel, RkAccountInExperiment>(); ;
+            CreateMap<ExperimentAccountModel, RkAccountInExperiment>();
 
             CreateMap<RkProductShipmentInExperiment, ExperimentShipmentModel>();
             CreateMap<ExperimentShipmentModel, RkProductShipmentInExperiment>();
@@ -24,10 +24,15 @@ namespace belsim2020.Services.AutoMapper
             CreateMap<ExperimentResourceModel, RkResourceInExperiment>();
 
             CreateMap<RkProductInExperiment, ExperimentProductModel>();
-            CreateMap<ExperimentProductModel, RkProductInExperiment>();
+            CreateMap<ExperimentProductModel, RkProductInExperiment>()
+                .ForMember(m => m.Shipments, opt => opt.Ignore())
+                .ForMember(m => m.Resources, opt => opt.Ignore());
 
             CreateMap<RkExperimentTemplate, RkExperimentTemplateModel>();
-            CreateMap<RkExperimentTemplateModel, RkExperimentTemplate>();
+            CreateMap<RkExperimentTemplateModel, RkExperimentTemplate>()
+                .ForMember(m => m.Accounts, opt => opt.Ignore())
+                .ForMember(m => m.Products, opt => opt.Ignore())
+                .ForMember(m => m.Resources, opt => opt.Ignore());
 
             CreateMap<RkExperimentTemplate, RkExperimentShortInfoModel>()
                 .ForMember(m => m.OwnerName, opt => opt.MapFrom(src => src.Owner.PublicName));
