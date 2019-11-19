@@ -1,27 +1,28 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
-import { ProjectCard } from 'components/ProjectCard';
-import { ProjectStore, RouterStore, StoresType } from 'stores';
+import { RouterStore, ProductStore, StoresType } from 'stores';
 import { routes, makeUrlWithParams } from 'routes';
-import './Projects.scss';
+import './ProjectProductsResourcesEditor.scss';
+import { getIdFromUrl } from 'routes/getIdFromUrl';
 
 @inject((stores: StoresType) => ({
     stores
 }))
 @observer
-export class Projects extends Component<{ stores?: StoresType }> {
-    public projectStore: ProjectStore;
+export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresType }> {
+    public productStore: ProductStore;
     public routerStore: RouterStore;
 
     constructor(props) {
         super(props);
-        this.projectStore = this.props.stores!.ProjectStore;
+        this.productStore = this.props.stores!.ProductStore;
         this.routerStore = this.props.stores!.RouterStore;
     }
 
     componentDidMount() {
-        this.projectStore.loadAvailableProjects();
+        let projectId = getIdFromUrl(this.routerStore.location);
+        this.productStore.loadProducts(projectId);
     }
 
     handleOpenProject = (projectId: string) => {
@@ -31,7 +32,7 @@ export class Projects extends Component<{ stores?: StoresType }> {
     public render(): JSX.Element {
         return (
             <div className='projects'>
-                {this.projectStore.availableProjects.map((p, i) => <ProjectCard key={i} project={p} onOpenProject={this.handleOpenProject} />)}
+                project products and resources
             </div>
         );
     }

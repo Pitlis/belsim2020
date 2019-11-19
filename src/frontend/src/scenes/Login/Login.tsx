@@ -5,21 +5,24 @@ import { Form, Button, Card } from 'react-bootstrap';
 import { RouterStore } from 'mobx-react-router';
 import './Login.scss';
 
-import { AuthStore } from 'stores';
+import { AuthStore, StoresType } from 'stores';
 import { BelsimInput } from 'components/BelsimInput';
 import { BelsimCheckbox } from 'components/BmailCheckbox';
 import errorMessages from 'helpers/errorMessages';
 
-@inject(RouterStore.name, AuthStore.name)
+@inject((stores: StoresType) => ({
+    stores
+}))
 @observer
-export class Login extends Component {
+export class Login extends Component<{ stores: StoresType }> {
     public routerStore: RouterStore;
     public authStore: AuthStore;
 
     constructor(props) {
         super(props);
-        this.routerStore = props[RouterStore.name];
-        this.authStore = props[AuthStore.name];
+        this.routerStore = this.props.stores!.RouterStore;
+        this.authStore = this.props.stores!.AuthStore;
+        
         this.authStore.initUserCredentialsForm();
     }
 

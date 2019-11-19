@@ -47,10 +47,11 @@ export class AuthStore {
         reaction(() => this.IsSignInChecked, (isSignInChecked) => {
             console.log('call reaction');
             if (isSignInChecked) {
+                console.log(stores.RouterStore.location.pathname);
                 if (this.isLoggedIn) {
-                    stores.RouterStore.push(routes.projects.path);
+                    this.redirectToStartPageAfterLogin();
                 } else {
-                    stores.RouterStore.push(routes.main.path);
+                    stores.RouterStore.push(routes.login.path);
                 }
             } else {
                 this.setLoggedInState();
@@ -160,6 +161,14 @@ export class AuthStore {
     private stopRefreshingSession(): void {
         if (this.refreshingTimer) {
             clearInterval(this.refreshingTimer);
+        }
+    }
+
+    private redirectToStartPageAfterLogin(): void {
+        if (stores.RouterStore.location.pathname === routes.login.path) {
+            stores.RouterStore.push(routes.projects.path);
+        } else {
+            stores.RouterStore.push(stores.RouterStore.location.pathname);
         }
     }
 }
