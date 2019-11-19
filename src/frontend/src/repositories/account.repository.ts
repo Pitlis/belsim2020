@@ -7,7 +7,7 @@ export const account = Object.freeze({
     },
     async login(authUser: AuthUser): Promise<void> {
         return http.post('/account/login', authUser)
-            .then(response => console.log(response.data));
+            .then(response => response.data);
     },
     async logout(): Promise<void> {
         return http.post('/account/logout');

@@ -9,19 +9,6 @@
         width: 300px;
     }
 
-    .card-title {
-        padding-bottom: 25px;
-    }
-
-    .form-check {
-        line-height: 20px;
-
-        .form-check-label {
-            user-select: none;
-            font-size: 14px;
-        }
-    }
-
     .login-button {
         text-align: center;
         button {
@@ -29,11 +16,9 @@
         }
     }
 
-    .error-login-message {
-        width: 100%;
-        margin-top: 10px;
+    .error {
         font-size: 80%;
         color: #dc3545;
-        margin-bottom: 20px;;
+        margin-top: 10px;
     }
 }

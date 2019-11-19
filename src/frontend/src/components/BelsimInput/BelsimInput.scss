@@ -1,0 +1,19 @@
+.belsim-input {
+    .error {
+        font-size: 80%;
+        color: #dc3545;
+    }
+    .invalid-input {
+        border-color: #dc3545;
+    }
+    .invalid-input:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+    }
+    label {
+        margin-bottom: 0;
+    }
+    .form-text {
+        margin-top: 0;
+    }
+}

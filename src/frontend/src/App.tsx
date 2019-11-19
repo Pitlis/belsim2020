@@ -3,6 +3,7 @@ import { Router, Route, Switch } from 'react-router';
 import { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'App.scss';
 
 import { StoresType, AuthStore } from 'stores';
 import { routes } from 'routes';
@@ -24,6 +25,7 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
 
   public render(): JSX.Element {
     console.log(this.authStore.IsSignInChecked);
+    console.log(this.props.history);
     if (this.authStore.IsSignInChecked) {
       return (
         <Router history={this.props.history} >

@@ -37,21 +37,21 @@ namespace belsim2020.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new BadRequestObjectResult(model);
+                return new BadRequestObjectResult(ModelState);
             }
 
             User user = await userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
             {
-                ModelState.AddModelError("INVALID_EMAIL_OR_PASSWORD", "INVALID_EMAIL_OR_PASSWORD");
-                return new BadRequestObjectResult(model);
+                ModelState.AddModelError("Errors", "INVALID_EMAIL_OR_PASSWORD");
+                return new BadRequestObjectResult(ModelState);
             }
 
             if (await userManager.IsLockedOutAsync(user))
             {
-                ModelState.AddModelError("LOCKED", "LOCKED");
-                return new BadRequestObjectResult(model);
+                ModelState.AddModelError("Errors", "LOCKED");
+                return new BadRequestObjectResult(ModelState);
             }
 
             if (await userManager.CheckPasswordAsync(user, model.Password) == false)
@@ -67,8 +67,8 @@ namespace belsim2020.Controllers
                     }
                 }
 
-                ModelState.AddModelError("INVALID_EMAIL_OR_PASSWORD", "INVALID_EMAIL_OR_PASSWORD");
-                return new BadRequestObjectResult(model);
+                ModelState.AddModelError("Errors", "INVALID_EMAIL_OR_PASSWORD");
+                return new BadRequestObjectResult(ModelState);
             }
 
             var signInResult = await signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
