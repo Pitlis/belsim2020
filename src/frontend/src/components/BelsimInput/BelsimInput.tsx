@@ -11,6 +11,7 @@ interface Props {
     showErrors: boolean;
     fieldName: string;
     description?: string;
+    readonly?: boolean;
 }
 
 @observer
@@ -24,6 +25,7 @@ export class BelsimInput extends React.Component<Props> {
                     {...InputFormControl.bindActions(this.props.formControl)}
                     value={this.props.formControl.value}
                     className={`form-control ${this.props.showErrors && this.props.formControl.errors.length ? 'invalid-input': ''}`}
+                    readOnly={this.props.readonly}
                 />
                 {this.props.description ? (<small className='text-muted form-text'>{this.props.description}</small>) : (null)}
                 {this.props.showErrors ? (this.props.formControl.errors.map(error => (

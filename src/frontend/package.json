@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@quantumart/mobx-form-validation-kit": "^1.1.4",
+    "@ag-grid-community/all-modules": "^22.0.0",
+    "@ag-grid-community/react": "^22.0.0",
+    "@quantumart/mobx-form-validation-kit": "1.1.4",
     "@types/jest": "24.0.20",
     "@types/node": "12.11.7",
     "@types/react": "16.9.11",

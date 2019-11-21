@@ -6,6 +6,7 @@ import { api } from 'repositories';
 
 export class ProjectStore {
     @observable public availableProjects: Project[];
+    @observable public currentProject: Project;
 
     public constructor() {
         this.init();
@@ -14,6 +15,11 @@ export class ProjectStore {
     @action
     public init(): void {
         this.availableProjects = new Array<Project>();
+    }
+
+    @action
+    public openProject(projectId: string): void {
+
     }
 
     @action
