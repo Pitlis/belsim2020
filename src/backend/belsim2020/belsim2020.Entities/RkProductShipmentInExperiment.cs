@@ -15,7 +15,7 @@ namespace belsim2020.Entities
         // Реализация: Объем продукции в отгрузке:(ед.)
         public double Volume { get; set; }
 
-        // Реализация: Объем продукции в отгрузке:(мес.)
+        // Реализация: Время отгрузки: (мес.)
         public int ShipmentDatetime { get; set; }
     }
 }

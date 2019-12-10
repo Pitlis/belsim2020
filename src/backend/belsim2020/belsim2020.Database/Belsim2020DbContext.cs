@@ -20,6 +20,7 @@ namespace belsim2020.Database
         public DbSet<RkAccountInExperiment> RkAccountsInExperiment { get; set; }
         public DbSet<RkProductResourceInExperiment> RkProductResourceInExperiment { get; set; }
         public DbSet<RkProductShipmentInExperiment> RkProductShipmentInExperiment { get; set; }
+        public DbSet<RkExperiment> RkExperiments { get; set; }
 
         public Belsim2020DbContext(DbContextOptions<Belsim2020DbContext> options) : base(options) { }
 

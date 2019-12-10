@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using belsim2020.Database;
@@ -9,9 +10,10 @@ using belsim2020.Database;
 namespace belsim2020.Database.Migrations
 {
     [DbContext(typeof(Belsim2020DbContext))]
-    partial class Belsim2020DbContextModelSnapshot : ModelSnapshot
+    [Migration("20191210162510_AddExperiments")]
+    partial class AddExperiments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

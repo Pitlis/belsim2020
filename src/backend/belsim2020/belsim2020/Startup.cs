@@ -110,6 +110,7 @@ namespace belsim2020
             });
 
             services.Configure<AdminSettings>(Configuration.GetSection("AdminSettings"));
+            services.Configure<ExperimentorSettings>(Configuration.GetSection("ExperimentorSettings"));
 
             services.AddScoped<ICurrentUserContext, CurrentUserContext>();
             services.AddTransient<IUserService, UserService>();
@@ -117,6 +118,7 @@ namespace belsim2020
             services.AddTransient<IResourceService, ResourceService>();
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<IExperimentTemplateService, ExperimentTemplateService>();
+            services.AddTransient<IExperimentService, ExperimentService>();
 
             services.AddAutoMapper(typeof(ViewModelMappingProfile).Assembly, typeof(ModelMappingProfile).Assembly);
 

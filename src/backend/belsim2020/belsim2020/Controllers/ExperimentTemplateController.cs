@@ -90,5 +90,13 @@ namespace belsim2020.Controllers
 
             return new OkObjectResult(model);
         }
+
+        [HttpPost("create-experiment-from-template")]
+        public async Task<IActionResult> CreateExperiment([FromBody] Guid experimentTemplateId)
+        {
+            var experimentId = await experimentTemplateService.CreateExperiment(experimentTemplateId);
+
+            return new OkObjectResult(experimentId.ToString());
+        }
     }
 }

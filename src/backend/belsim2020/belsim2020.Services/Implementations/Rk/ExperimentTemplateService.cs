@@ -7,6 +7,7 @@ using belsim2020.Services.Interfaces.Rk;
 using belsim2020.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -409,6 +410,24 @@ namespace belsim2020.Services.Implementations.Rk
             {
                 throw new ApplicationException($"Product list in experiment template cannot be edited");
             }
+        }
+
+        public async Task<Guid> CreateExperiment(Guid experimentTemplateId)
+        {
+            var templateModel = await GetExperimentTemplate(experimentTemplateId);
+            var experiment = new RkExperiment()
+            {
+                ExperimentTemplateId = experimentTemplateId,
+                CreatedAt = DateTime.UtcNow,
+                CreatedById = userContext.UserId,
+                ExperimentData = JsonConvert.SerializeObject(templateModel),
+                Status = ExperimentStatus.Created,
+                StatusChangedAt = DateTime.UtcNow
+            };
+            await dbContext.RkExperiments.AddAsync(experiment);
+            await dbContext.SaveChangesAsync();
+
+            return experiment.RkExperimentId;
         }
 
         #endregion
