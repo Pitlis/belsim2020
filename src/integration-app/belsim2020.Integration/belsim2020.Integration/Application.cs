@@ -1,4 +1,5 @@
 ﻿using belsim2020.Integration.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +23,11 @@ namespace belsim2020.Integration
 
         public async Task Run()
         {
-            var model = await apiService.TakeExperimentForProcessing();
-            experimenterDataService.WriteModelDataToFile("D:\\tttttt.xml", model);
+            //var model = await apiService.TakeExperimentForProcessing();
+            //experimenterDataService.WriteModelDataToFile("D:\\data.xml", model);
+            //experimenterDataService.WriteExperimentScenarioToFile("D:\\expscenario.xml", model);
+            var t = experimenterDataService.GetResultsFromFile("D:\\expscenario.xml");
+            var data = JsonConvert.SerializeObject(t);
         }
     }
 }

@@ -1,7 +1,12 @@
 ﻿using belsim2020.Integration.Models;
 using belsim2020.Integration.Models.ApiModels;
+using belsim2020.Integration.Models.ResultModels;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace belsim2020.Integration.Services
@@ -51,6 +56,134 @@ namespace belsim2020.Integration.Services
             doc.Save(fileName);
         }
 
+        public List<Variable> GetResultsFromFile(string fileName)
+        {
+            List<Run> runs = new List<Run>();
+
+            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            XmlTextReader reader = new XmlTextReader(fs);
+
+            try
+            {
+                bool resultsFindFlag = false;
+                while (reader.Read())
+                {
+                    if (reader.NodeType == XmlNodeType.Element && reader.Name == "experiment-results")
+                    {
+                        resultsFindFlag = true;
+                        break;
+                    }
+                }
+
+                if (resultsFindFlag)
+                    while (reader.Read())
+                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "responses")
+                        {
+                            runs.Add(new Run() { Index = Convert.ToInt32(reader.GetAttribute("run")) });
+                            while (reader.Read())
+                            {
+                                if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "responses")
+                                    break;
+
+                                if (reader.NodeType == XmlNodeType.Element && reader.Name == "variable")
+                                {
+                                    Variable variable = new Variable() { Name = reader.GetAttribute("name") };
+                                    while (reader.Read())
+                                    {
+                                        if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "variable")
+                                            break;
+
+                                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "value")
+                                        {
+                                            reader.Read();
+                                            variable.Value = decimal.Parse(reader.Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
+                                        }
+
+                                        if (reader.NodeType == XmlNodeType.Element && reader.Name == "timed-value")
+                                        {
+                                            decimal time = Convert.ToDecimal(reader.GetAttribute("time"));
+                                            reader.Read();
+                                            variable.TimedValues.Add(new TimedValue()
+                                            {
+                                                Time = time,
+                                                Value = decimal.Parse(reader.Value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture)
+                                            });
+                                        }
+                                    }
+                                    runs.Last().Variables.Add(variable);
+                                }
+                            }
+                        }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            if (runs == null || runs.Count == 0)
+                return null;
+
+            string[] variableNames = runs[0].Variables.Select(o => o.Name).ToArray();
+            List<Variable> variables = new List<Variable>();
+            foreach (var variableName in variableNames)
+            {
+                int n = runs[0].Variables.FirstOrDefault(o => o.Name == variableName).TimedValues.Count + 1;
+                int m = runs.Count;
+                decimal[,] vTable = new decimal[n, m];
+                for (int i = 0; i < runs.Count; i++)
+                {
+                    Variable variable = runs[i].Variables.FirstOrDefault(o => o.Name == variableName);
+                    vTable[0, i] = variable.Value;
+                    for (int j = 0; j < variable.TimedValues.Count; j++)
+                        vTable[j + 1, i] = variable.TimedValues[j].Value;
+                }
+
+                Variable v = new Variable()
+                {
+                    Name = variableName
+                };
+
+                for (int i = 0; i < n; i++)
+                {
+                    List<decimal> timedValues = new List<decimal>();
+                    for (int j = 0; j < m; j++)
+                        timedValues.Add(vTable[i, j]);
+
+                    decimal median = timedValues.Average();
+
+                    var lqValues = timedValues.Where(o => o < median);
+                    decimal lq = median;
+                    if (lqValues != null && lqValues.Count() > 0)
+                        lq = lqValues.Average();
+
+                    var uqValues = timedValues.Where(o => o > median);
+                    decimal uq = median;
+                    if (uqValues != null && uqValues.Count() > 0)
+                        uq = uqValues.Average();
+
+                    decimal le = timedValues.Min();
+                    decimal ue = timedValues.Max();
+
+                    if (i == 0)
+                        v.BoxPlotParameters = new BoxPlot(median, lq, uq, le, ue);
+                    else
+                        v.TimedValues.Add(new TimedValue()
+                        {
+                            Time = runs[0].Variables.FirstOrDefault(o => o.Name == variableName).TimedValues[i - 1].Time,
+                            BoxPlotParameters = new BoxPlot(median, lq, uq, le, ue)
+                        });
+                }
+
+                variables.Add(v);
+            }
+
+            return variables;
+        }
+
         #region Xml parameters
 
         private XElement GetModelParametersAsXml(ApiExperimentModel experiment)
@@ -61,7 +194,7 @@ namespace belsim2020.Integration.Services
             variable.Add(new XElement(VALUE, experiment.Period));
             parameters.Add(variable);
 
-            variable = new XElement(VARIABLE, new XAttribute(NAME, "__Период времени (мес.)"));
+            variable = new XElement(VARIABLE, new XAttribute(NAME, "__Интервал сбора статистики (мес.)"));
             variable.Add(new XElement(VALUE, experiment.Interval));
             parameters.Add(variable);
 
@@ -104,7 +237,7 @@ namespace belsim2020.Integration.Services
             for (int i = 0; i < experiment.Products.Count; i++)
             {
                 XElement item = new XElement(VARIABLE, new XAttribute(INDEX, i));
-                item.Add(new XElement(VALUE, experiment.Products[i].FinishedProductCount));
+                item.Add(new XElement(VALUE, (int)experiment.Products[i].FinishedProductCount));
                 variable.Add(item);
             }
             parameters.Add(variable);
@@ -140,24 +273,25 @@ namespace belsim2020.Integration.Services
             variable.Add(new XElement(VALUE, experiment.ShipmentsCount));
             parameters.Add(variable);
 
-            //variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Реализация: Время отгрузки: (мес.)"));
-            //for (int i = 0; i < experiment.ShipmentsDates.Count; i++)
-            //{
-            //    XElement item = new XElement(VARIABLE, new XAttribute(INDEX, i));
-            //    item.Add(new XElement(VALUE, experiment.ShipmentsDates[i].ShipmentDatetime));
-            //    variable.Add(item);
-            //}
-            //parameters.Add(variable);
+            variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Реализация: Время отгрузки: (мес.)"));
+            var countShipmentsForProducts = experiment.Products.First().Shipments.Count;
+            for (int i = 0; i < countShipmentsForProducts; i++)
+            {
+                XElement item = new XElement(VARIABLE, new XAttribute(INDEX, i));
+                item.Add(new XElement(VALUE, experiment.Products.First().Shipments[i].ShipmentDatetime));
+                variable.Add(item);
+            }
+            parameters.Add(variable);
 
-            //variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, GetDescription(typeof(ProductModel).GetProperty("Shipments").GetCustomAttributes(true))));
-            //for (int i = 0; i < viewModel.ProductsCount; i++)
-            //    for (int j = 0; j < viewModel.ShipmentsCount; j++)
-            //    {
-            //        XElement item = new XElement(VARIABLE, new XAttribute(INDEX, string.Format("{0},{1}", j, i)));
-            //        item.Add(new XElement(VALUE, viewModel.Products[i].Shipments[j].Volume.ToString(CultureInfo.InvariantCulture)));
-            //        variable.Add(item);
-            //    }
-            //parameters.Add(variable);
+            variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Реализация: Объем продукции в отгрузке:(ед.)"));
+            for (int productIndex = 0; productIndex < experiment.Products.Count; productIndex++)
+                for (int shipmentIndex = 0; shipmentIndex < countShipmentsForProducts; shipmentIndex++)
+                {
+                    XElement item = new XElement(VARIABLE, new XAttribute(INDEX, string.Format("{0},{1}", shipmentIndex, productIndex)));
+                    item.Add(new XElement(VALUE, experiment.Products[productIndex].Shipments[shipmentIndex].Volume.ToString(CultureInfo.InvariantCulture)));
+                    variable.Add(item);
+                }
+            parameters.Add(variable);
 
             variable = new XElement(VARIABLE, new XAttribute(NAME, "Реализация: Интервал между отгрузками: Среднее (дн.)"));
             variable.Add(new XElement(VALUE, experiment.ShippingCycle));

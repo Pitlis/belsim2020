@@ -59,6 +59,10 @@
     <Compile Include="Models\ApiModels\ApiExperimentShipmentModel.cs" />
     <Compile Include="Models\ApiModels\DistrFuncTypes.cs" />
     <Compile Include="Models\ResponseModel.cs" />
+    <Compile Include="Models\ResultModels\BoxPlot.cs" />
+    <Compile Include="Models\ResultModels\Run.cs" />
+    <Compile Include="Models\ResultModels\TimedValue.cs" />
+    <Compile Include="Models\ResultModels\Variable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApiService.cs" />
