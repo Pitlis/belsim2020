@@ -125,6 +125,8 @@ namespace belsim2020.Services.Implementations.Rk
                     var deletedResources = existsProduct.Resources.Where(r => deletedResourceIds.Contains(r.RkProductResourceInExperimentId));
                     dbContext.RkProductResourceInExperiment.RemoveRange(deletedResources);
                 }
+
+                mapper.Map(product, existsProduct);
             }
 
             experimentTemplate.ModifiedAt = DateTime.UtcNow;

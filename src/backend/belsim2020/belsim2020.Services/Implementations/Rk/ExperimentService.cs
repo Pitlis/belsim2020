@@ -4,10 +4,8 @@ using belsim2020.Entities;
 using belsim2020.Services.Extensions;
 using belsim2020.Services.Interfaces;
 using belsim2020.Services.Interfaces.Rk;
-using belsim2020.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,16 +17,30 @@ namespace belsim2020.Services.Implementations.Rk
     {
         private readonly Belsim2020DbContext dbContext;
         private readonly ILogger<ExperimentService> logger;
+        private readonly ICurrentUserContext userContext;
         private readonly IMapper mapper;
 
         public ExperimentService(
             Belsim2020DbContext dbContext,
             ILogger<ExperimentService> logger,
-            IMapper mapper)
+            IMapper mapper,
+            ICurrentUserContext userContext)
         {
             this.dbContext = dbContext;
             this.logger = logger;
             this.mapper = mapper;
+            this.userContext = userContext;
+        }
+
+        public async Task<IList<RkExperiment>> GetAllProjectExperiments(Guid projectId)
+        {
+            await VerifyAccessToProject(projectId);
+
+            return await dbContext.RkExperiments
+                .Where(e => e.ExperimentTemplate.ProjectId == projectId)
+                .Include(e => e.ExperimentTemplate)
+                .Include(e => e.CreatedBy)
+                .ToListAsync();
         }
 
         public async Task<RkExperiment> GetLastUnprocessedExperiment()
@@ -57,5 +69,46 @@ namespace belsim2020.Services.Implementations.Rk
 
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task SetExperimentResult(Guid experimentId, string resultJson)
+        {
+            var experiment = await dbContext.RkExperiments.FirstOrDefaultAsync(e => e.RkExperimentId == experimentId);
+            if (experiment == null)
+            {
+                throw new ApplicationException($"Experiment [{experimentId}] does not exists");
+            }
+
+            if (experiment.Status != ExperimentStatus.InProgress)
+            {
+                throw new ApplicationException($"Cannot set experiment results: experiment [{experimentId}] is not in progress - it's in status [{experiment.Status}]");
+            }
+
+            experiment.ResultData = resultJson;
+            experiment.Status = ExperimentStatus.Completed;
+            experiment.StatusChangedAt = DateTime.UtcNow;
+
+            await dbContext.SaveChangesAsync();
+        }
+
+        #region Helpers
+
+        private async Task VerifyAccessToProject(Guid projectId)
+        {
+            var project = await dbContext.Projects
+                .Include(p => p.Users)
+                .FirstOrDefaultAsync(p => p.ProjectId == projectId);
+
+            if (project == null)
+            {
+                throw new ApplicationException($"Project [{projectId}] does not exist");
+            }
+
+            if (!project.Users.Select(u => u.UserId).Contains(userContext.UserId) && !userContext.IsAdmin())
+            {
+                throw new ApplicationException($"User[{userContext.UserId}] does not have access to project [{projectId}]");
+            }
+        }
+
+        #endregion
     }
 }

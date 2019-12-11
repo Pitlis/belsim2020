@@ -3,14 +3,18 @@ using belsim2020.Configuration;
 using belsim2020.Services.Interfaces;
 using belsim2020.Services.Interfaces.Rk;
 using belsim2020.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace belsim2020.Controllers
 {
     [Route("api/experiment")]
     [ApiController]
+    [Authorize]
     public class ExperimentController : ControllerBase
     {
         private readonly IExperimentService experimentService;
@@ -31,6 +35,7 @@ namespace belsim2020.Controllers
         }
 
         [HttpPut("take-unprocessed-experiment-for-processing")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetUnprocessedExperiment([FromBody] BaseIntegrationApiViewModel model)
         {
             if (!IsValidAccessKey(model.AccessKey))
@@ -45,6 +50,29 @@ namespace belsim2020.Controllers
             }
 
             return new OkObjectResult(experiment);
+        }
+
+        [HttpPut("set-experiment-results")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SetExperimentResults([FromBody] SetExperimentResultViewModel model)
+        {
+            if (!IsValidAccessKey(model.AccessKey))
+            {
+                return new BadRequestResult();
+            }
+
+            await experimentService.SetExperimentResult(model.ExperimentId, model.ResultJson.ToString());
+
+            return new OkResult();
+        }
+
+        [HttpGet("get-results-of-project/{projectId}")]
+        public async Task<IActionResult> GetResultsOfProject(Guid projectId)
+        {
+            var experiments = await experimentService.GetAllProjectExperiments(projectId);
+            var model = mapper.Map<IList<ExperimentViewModel>>(experiments);
+
+            return new OkObjectResult(model);
         }
 
         #region Helpers

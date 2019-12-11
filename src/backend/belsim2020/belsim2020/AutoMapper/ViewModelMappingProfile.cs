@@ -3,6 +3,8 @@ using AutoMapper;
 using belsim2020.Entities;
 using belsim2020.Services.Models;
 using belsim2020.ViewModels;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace belsim2020.AutoMapper
 {
@@ -48,6 +50,32 @@ namespace belsim2020.AutoMapper
             CreateMap<UpdateExperimentTemplateViewModel, RkExperimentTemplateModel>();
 
             CreateMap<RkExperimentShortInfoModel, ExperimentTemplateItemViewModel>();
+
+            CreateMap<RkExperiment, ExperimentViewModel>()
+                .ForMember(m => m.CreatedBy,
+                    opt => opt.MapFrom(
+                        src => new UserNameViewModel()
+                        {
+                            UserId = src.CreatedBy.Id,
+                            Name = src.CreatedBy.PublicName
+                        }
+                    )
+                 )
+                 .ForMember(m => m.ExperimentTemplateName,
+                    opt => opt.MapFrom(
+                        src => src.ExperimentTemplate.Name
+                    )
+                 )
+                 .ForMember(m => m.ExperimentData,
+                    opt => opt.MapFrom(
+                        src => JObject.Parse(src.ExperimentData)
+                    )
+                 )
+                 .ForMember(m => m.ResultData,
+                    opt => opt.MapFrom(
+                        src => JArray.Parse(src.ResultData)
+                    )
+                 );
         }
     }
 }

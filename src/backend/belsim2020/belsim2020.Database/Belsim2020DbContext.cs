@@ -70,8 +70,24 @@ namespace belsim2020.Database
                 .WithMany(t => t.Projects)
                 .HasForeignKey(pt => pt.UserId);
 
-            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счет 1", RkAccountId = Guid.Parse("eaacc9f3-a658-4218-ac77-3aefcf278c34") });
-            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счет 2", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f6f") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 10: Начальное значение(руб.)", RkAccountId = Guid.Parse("eaacc9f3-a658-4218-ac77-3aefcf278c3d") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 18: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f62") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 20: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f63") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 40: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f64") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 43: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f65") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 50: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f66") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 51: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f67") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 60: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f68") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 62: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f69") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 68: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f10") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 69: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f11") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 70: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f12") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 76: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f13") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 81: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f14") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 83: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f15") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 84: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f16") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 90: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f17") });
+            builder.Entity<RkAccount>().HasData(new RkAccount() { Name = "_Счёт 99: Начальное значение(руб.)", RkAccountId = Guid.Parse("d6d2e616-39b5-4b16-8fdb-15e28d050f18") });
         }
     }
 }
