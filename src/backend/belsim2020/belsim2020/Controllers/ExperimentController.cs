@@ -66,11 +66,20 @@ namespace belsim2020.Controllers
             return new OkResult();
         }
 
-        [HttpGet("get-results-of-project/{projectId}")]
-        public async Task<IActionResult> GetResultsOfProject(Guid projectId)
+        [HttpGet("get-experiments-of-project/{projectId}")]
+        public async Task<IActionResult> GetExperimentsOfProject(Guid projectId)
         {
-            var experiments = await experimentService.GetAllProjectExperiments(projectId);
-            var model = mapper.Map<IList<ExperimentViewModel>>(experiments);
+            var experiments = await experimentService.GetProjectExperimentsList(projectId);
+            var model = mapper.Map<IList<ExperimentShortInfoViewModel>>(experiments);
+
+            return new OkObjectResult(model);
+        }
+
+        [HttpGet("get-experiment/{experimentId}")]
+        public async Task<IActionResult> GetExperiment(Guid experimentId)
+        {
+            var experiment = await experimentService.GetExperiment(experimentId);
+            var model = mapper.Map<ExperimentViewModel>(experiment);
 
             return new OkObjectResult(model);
         }

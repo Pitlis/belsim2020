@@ -51,6 +51,8 @@ namespace belsim2020.AutoMapper
 
             CreateMap<RkExperimentShortInfoModel, ExperimentTemplateItemViewModel>();
 
+            CreateMap<ExperimentShortInfoModel, ExperimentShortInfoViewModel>();
+
             CreateMap<RkExperiment, ExperimentViewModel>()
                 .ForMember(m => m.CreatedBy,
                     opt => opt.MapFrom(

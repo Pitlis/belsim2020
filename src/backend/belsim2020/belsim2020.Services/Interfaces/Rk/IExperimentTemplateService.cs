@@ -14,6 +14,6 @@ namespace belsim2020.Services.Interfaces.Rk
         Task<List<RkExperimentShortInfoModel>> GetExperimentTemplates(Guid projectId);
         Task UpdateProductList(Guid experimentTemplateId, IList<Guid> productIds);
         Task UpdateResourcesList(Guid experimentTemplateId, IList<Guid> resourceIds);
-        Task<Guid> CreateExperiment(Guid experimentTemplateId);
+        Task<Guid> CreateExperiment(Guid experimentTemplateId, string name);
     }
 }

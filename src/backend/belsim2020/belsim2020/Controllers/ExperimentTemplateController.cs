@@ -34,8 +34,8 @@ namespace belsim2020.Controllers
         public async Task<IActionResult> CreateExperimentTemplate([FromBody] CreateExperimentTemplateViewModel viewModel)
         {
             var experimentTemplateId = await experimentTemplateService.CreateExperimentTemplate(
-                viewModel.Name, 
-                viewModel.Description, 
+                viewModel.Name,
+                viewModel.Description,
                 viewModel.ProjectId);
 
             return new OkObjectResult(experimentTemplateId.ToString());
@@ -92,9 +92,9 @@ namespace belsim2020.Controllers
         }
 
         [HttpPost("create-experiment-from-template")]
-        public async Task<IActionResult> CreateExperiment([FromBody] Guid experimentTemplateId)
+        public async Task<IActionResult> CreateExperiment([FromBody] CreateExperimentFromTemplateViewModel viewModel)
         {
-            var experimentId = await experimentTemplateService.CreateExperiment(experimentTemplateId);
+            var experimentId = await experimentTemplateService.CreateExperiment(viewModel.ExperimentTemplateId, viewModel.ExperimentName);
 
             return new OkObjectResult(experimentId.ToString());
         }

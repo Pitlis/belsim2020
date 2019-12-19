@@ -48,8 +48,8 @@ namespace belsim2020.Controllers
             return new OkResult();
         }
 
-        [HttpDelete("all")]
-        public async Task<IActionResult> GetAllResources([FromBody] Guid projectId)
+        [HttpGet("all/{projectId}")]
+        public async Task<IActionResult> GetAllResources(Guid projectId)
         {
             var resources = await resourceService.GetAllResources(projectId);
             var model = mapper.Map<IList<ResourceViewModel>>(resources);

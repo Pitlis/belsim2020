@@ -4,6 +4,7 @@ using belsim2020.Entities;
 using belsim2020.Services.Extensions;
 using belsim2020.Services.Interfaces;
 using belsim2020.Services.Interfaces.Rk;
+using belsim2020.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -32,15 +33,42 @@ namespace belsim2020.Services.Implementations.Rk
             this.userContext = userContext;
         }
 
-        public async Task<IList<RkExperiment>> GetAllProjectExperiments(Guid projectId)
+        public async Task<IList<ExperimentShortInfoModel>> GetProjectExperimentsList(Guid projectId)
         {
             await VerifyAccessToProject(projectId);
 
             return await dbContext.RkExperiments
                 .Where(e => e.ExperimentTemplate.ProjectId == projectId)
+                .Select(e => new ExperimentShortInfoModel()
+                {
+                    ExperimentId = e.RkExperimentId,
+                    Name = e.Name,
+                    OwnerName = e.CreatedBy.PublicName,
+                    ExperimentTemplateName = e.ExperimentTemplate.Name,
+                    ExperimentTemplateId = e.ExperimentTemplateId,
+                    CreatedAt = e.CreatedAt,
+                    Status = e.Status,
+                    StatusChangedAt = e.StatusChangedAt
+                })
+                .ToListAsync();
+        }
+
+        public async Task<RkExperiment> GetExperiment(Guid experimentId)
+        {
+            var experiment = await dbContext.RkExperiments
+                .Where(e => e.RkExperimentId == experimentId)
                 .Include(e => e.ExperimentTemplate)
                 .Include(e => e.CreatedBy)
-                .ToListAsync();
+                .FirstOrDefaultAsync();
+
+            if (experiment == null)
+            {
+                throw new ApplicationException($"Experiment [{experimentId}] does not exists");
+            }
+
+            await VerifyAccessToProject(experiment.ExperimentTemplate.ProjectId);
+
+            return experiment;
         }
 
         public async Task<RkExperiment> GetLastUnprocessedExperiment()

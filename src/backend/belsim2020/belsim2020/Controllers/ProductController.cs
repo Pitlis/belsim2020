@@ -48,8 +48,8 @@ namespace belsim2020.Controllers
             return new OkResult();
         }
 
-        [HttpDelete("all")]
-        public async Task<IActionResult> GetAllProducts([FromBody] Guid projectId)
+        [HttpGet("all/{projectId}")]
+        public async Task<IActionResult> GetAllProducts(Guid projectId)
         {
             var products = await productService.GetAllProducts(projectId);
             var model = mapper.Map<IList<ProductViewModel>>(products);

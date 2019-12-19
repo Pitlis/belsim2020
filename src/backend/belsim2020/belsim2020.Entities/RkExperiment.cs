@@ -22,5 +22,7 @@ namespace belsim2020.Entities
 
         public ExperimentStatus Status { get; set; }
         public DateTime StatusChangedAt { get; set; }
+
+        public string Name { get; set; }
     }
 }

@@ -414,7 +414,7 @@ namespace belsim2020.Services.Implementations.Rk
             }
         }
 
-        public async Task<Guid> CreateExperiment(Guid experimentTemplateId)
+        public async Task<Guid> CreateExperiment(Guid experimentTemplateId, string name)
         {
             var templateModel = await GetExperimentTemplate(experimentTemplateId);
             var experiment = new RkExperiment()
@@ -424,7 +424,8 @@ namespace belsim2020.Services.Implementations.Rk
                 CreatedById = userContext.UserId,
                 ExperimentData = JsonConvert.SerializeObject(templateModel),
                 Status = ExperimentStatus.Created,
-                StatusChangedAt = DateTime.UtcNow
+                StatusChangedAt = DateTime.UtcNow,
+                Name = name
             };
             await dbContext.RkExperiments.AddAsync(experiment);
             await dbContext.SaveChangesAsync();
