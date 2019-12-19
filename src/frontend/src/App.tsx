@@ -12,6 +12,7 @@ import { Projects } from 'scenes/Projects';
 import { Login } from 'scenes/Login';
 import { ProjectDetailsContainer } from 'components/ProjectDetailsContainer';
 import { ProjectProductsResourcesEditor } from 'scenes/ProjectProductsResourcesEditor';
+import { ExperimentResults } from 'scenes/ExperimentResults';
 
 @inject((stores: StoresType) => ({
   stores
@@ -49,6 +50,10 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
                 path={routes.projectDetails.path}
                 exact={routes.projectDetails.exact}
                 component={ProjectDetails} />
+              <Route
+                path={routes.experimentResults.path}
+                exact={routes.experimentResults.exact}
+                component={ExperimentResults} />
             </ProjectDetailsContainer>
           </Switch>
         </Router>

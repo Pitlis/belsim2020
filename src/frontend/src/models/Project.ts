@@ -2,11 +2,11 @@ export enum BelsimProjectType {
     RK = '1'
 }
 export class Project {
-    public ProjectId: string = '';
-    public ProjectName: string = '';
-    public CreatedAt: Date = new Date();
-    public ModifiedAt: Date = new Date();
-    public ProjectType: BelsimProjectType = BelsimProjectType.RK;
-    public OrganizationName: string = '';
-    public Comments: string = '';
+    public projectId: string = '';
+    public projectName: string = '';
+    public createdAt: Date = new Date();
+    public modifiedAt: Date = new Date();
+    public projectType: BelsimProjectType = BelsimProjectType.RK;
+    public organizationName: string = '';
+    public comments: string = '';
 }

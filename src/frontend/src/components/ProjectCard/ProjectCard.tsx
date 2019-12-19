@@ -13,7 +13,7 @@ export class ProjectCard extends PureComponent<{ project: Project, onOpenProject
     }
 
     handleOpenProject = () => {
-        this.props.onOpenProject(this.props.project.ProjectId);
+        this.props.onOpenProject(this.props.project.projectId);
     }
 
     render() {
@@ -21,13 +21,13 @@ export class ProjectCard extends PureComponent<{ project: Project, onOpenProject
             <div className='project-card'>
                 <Card border='info'>
                     <Card.Body>
-                        <Card.Title>{this.props.project.ProjectName}</Card.Title>
-                        <Card.Subtitle className='mb-2 text-muted'>{this.props.project.OrganizationName}</Card.Subtitle>
-                        <Card.Text>{this.props.project.Comments}</Card.Text>
+                        <Card.Title>{this.props.project.projectName}</Card.Title>
+                        <Card.Subtitle className='mb-2 text-muted'>{this.props.project.organizationName}</Card.Subtitle>
+                        <Card.Text>{this.props.project.comments}</Card.Text>
                     </Card.Body>
                     <ListGroup className='list-group-flush'>
-                        <ListGroupItem><i>Создан: {this.props.project.CreatedAt.toLocaleString('ru-RU')}</i></ListGroupItem>
-                        <ListGroupItem><i>Изменен: {this.props.project.ModifiedAt.toLocaleString('ru-RU')}</i></ListGroupItem>
+                        <ListGroupItem><i>Создан: {this.props.project.createdAt.toLocaleString('ru-RU')}</i></ListGroupItem>
+                        <ListGroupItem><i>Изменен: {this.props.project.modifiedAt.toLocaleString('ru-RU')}</i></ListGroupItem>
                     </ListGroup>
                     <Card.Body className='card-link'>
                         <Button variant='info' onClick={this.handleOpenProject}>Открыть</Button>

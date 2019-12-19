@@ -34,7 +34,7 @@ export class ResourceStore {
             console.log(resources);
 
             runInAction(() => {
-                this.allResources = resources.sort((r1, r2) => r1.Name.localeCompare(r2.Name));
+                this.allResources = resources.sort((r1, r2) => r1.name.localeCompare(r2.name));
             });
         } catch (err) {
             runInAction(() => {
@@ -48,12 +48,12 @@ export class ResourceStore {
         this.resourceNameEditorSelectedResource = new Resource();
         this.resourceNameEditorForm = new FormGroup<IResourceNameEditor>({
             name: new FormControl(
-                this.resourceNameEditorSelectedResource.Name,
+                this.resourceNameEditorSelectedResource.name,
                 [
                     notEmptyOrSpaces('NAME_CANNOT_BE_EMPTY'),
                     (control: FormControl) => this.validateNameDublicates(control)
                 ],
-                v => (this.resourceNameEditorSelectedResource.Name = v)
+                v => (this.resourceNameEditorSelectedResource.name = v)
             ),
         });
     }
@@ -61,9 +61,9 @@ export class ResourceStore {
     @action
     public setResourceNameEditorSelectedResource(resourceId: string | null): void {
         if (resourceId !== null) {
-            let selectedResource = this.allResources.find(p => p.RkResourceId === resourceId);
+            let selectedResource = this.allResources.find(p => p.rkResourceId === resourceId);
             this.resourceNameEditorSelectedResource = !!selectedResource ? selectedResource : new Resource();
-            this.resourceNameEditorForm.controls.name.value = this.resourceNameEditorSelectedResource.Name;
+            this.resourceNameEditorForm.controls.name.value = this.resourceNameEditorSelectedResource.name;
         } else {
             this.resourceNameEditorSelectedResource = new Resource();
         }
@@ -73,7 +73,7 @@ export class ResourceStore {
     public async createResourceForProject(): Promise<void> {
         try {
             console.log('loadResources');
-            await api.resource.createResource(this.resourceNameEditorSelectedResource.Name, this.projectId);
+            await api.resource.createResource(this.resourceNameEditorSelectedResource.name, this.projectId);
 
             runInAction(() => {
                 this.loadResources(this.projectId);
@@ -92,7 +92,7 @@ export class ResourceStore {
     public async deleteResourceFromProject(): Promise<void> {
         try {
             console.log('loadResources');
-            await api.resource.deleteResource(this.resourceNameEditorSelectedResource.RkResourceId);
+            await api.resource.deleteResource(this.resourceNameEditorSelectedResource.rkResourceId);
 
             runInAction(() => {
                 this.loadResources(this.projectId);
@@ -109,11 +109,11 @@ export class ResourceStore {
     // Helpers
     private async validateNameDublicates(control: FormControl): Promise<ValidationEvent[]> {
         console.log('validateNameDublicates');
-        console.log(this.resourceNameEditorSelectedResource.RkResourceId);
-        if (control.value == null || this.resourceNameEditorSelectedResource.RkResourceId) {
+        console.log(this.resourceNameEditorSelectedResource.rkResourceId);
+        if (control.value == null || this.resourceNameEditorSelectedResource.rkResourceId) {
             return [];
         }
-        if (this.allResources.find(r => r.Name.toLowerCase() === control.value.toLowerCase())) {
+        if (this.allResources.find(r => r.name.toLowerCase() === control.value.toLowerCase())) {
             return [
                 {
                     message: 'NAME_CANNOT_BE_DUBLICATED',

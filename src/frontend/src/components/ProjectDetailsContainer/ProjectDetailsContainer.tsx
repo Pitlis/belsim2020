@@ -3,7 +3,7 @@ import { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 
 import { StoresType, ProductStore, ProjectStore, RouterStore } from 'stores';
-import { getIdFromUrl } from 'routes/getIdFromUrl';
+import { getProjectIdFromUrl } from 'routes/getIdFromUrl';
 
 @inject((stores: StoresType) => ({
     stores
@@ -16,19 +16,21 @@ export class ProjectDetailsContainer extends Component<{ stores?: StoresType }>{
 
     constructor(props) {
         super(props);
+        console.log('ProjectDetailsContainer');
         this.productStore = this.props.stores!.ProductStore;
         this.projectStore = this.props.stores!.ProjectStore;
         this.routerStore = this.props.stores!.RouterStore;
         console.log(this.productStore);
         console.log(this.projectStore);
-        console.log('project id: ' + getIdFromUrl(this.routerStore.location));
+        console.log('project id: ' + getProjectIdFromUrl(this.routerStore.location));
+        let projectId = getProjectIdFromUrl(this.routerStore.location);
+        this.projectStore.openProject(projectId);
     }
 
     public render(): JSX.Element {
         return (
             <div>
-                111
-                {this.props.children}
+                {this.projectStore.isLoading ? (<div>Loading...</div>) : (this.props.children)}
             </div>
         );
     }

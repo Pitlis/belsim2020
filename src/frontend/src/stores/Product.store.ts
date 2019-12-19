@@ -36,7 +36,7 @@ export class ProductStore {
             runInAction(() => {
                 console.log('!!!');
                 console.log(products);
-                this.allProducts = products.sort((p1, p2) => p1.Name.localeCompare(p2.Name));
+                this.allProducts = products.sort((p1, p2) => p1.name.localeCompare(p2.name));
             });
         } catch (err) {
             runInAction(() => {
@@ -50,12 +50,12 @@ export class ProductStore {
         this.productNameEditorSelectedProduct = new Product();
         this.productNameEditorForm = new FormGroup<IProductNameEditor>({
             name: new FormControl(
-                this.productNameEditorSelectedProduct.Name,
+                this.productNameEditorSelectedProduct.name,
                 [
                     notEmptyOrSpaces('NAME_CANNOT_BE_EMPTY'),
                     (control: FormControl) => this.validateNameDublicates(control)
                 ],
-                v => (this.productNameEditorSelectedProduct.Name = v)
+                v => (this.productNameEditorSelectedProduct.name = v)
             ),
         });
     }
@@ -63,9 +63,9 @@ export class ProductStore {
     @action
     public setProductNameEditorSelectedProduct(productId: string | null): void {
         if (productId !== null) {
-            let selectedProduct = this.allProducts.find(p => p.ProductId === productId);
+            let selectedProduct = this.allProducts.find(p => p.productId === productId);
             this.productNameEditorSelectedProduct = !!selectedProduct ? selectedProduct : new Product();
-            this.productNameEditorForm.controls.name.value = this.productNameEditorSelectedProduct.Name;
+            this.productNameEditorForm.controls.name.value = this.productNameEditorSelectedProduct.name;
         } else {
             this.productNameEditorSelectedProduct = new Product();
         }
@@ -75,7 +75,7 @@ export class ProductStore {
     public async createProductForProject(): Promise<void> {
         try {
             console.log('loadProducts');
-            await api.product.createProduct(this.productNameEditorSelectedProduct.Name, this.projectId);
+            await api.product.createProduct(this.productNameEditorSelectedProduct.name, this.projectId);
 
             runInAction(() => {
                 this.loadProducts(this.projectId);
@@ -94,7 +94,7 @@ export class ProductStore {
     public async deleteProductFromProject(): Promise<void> {
         try {
             console.log('loadProducts');
-            await api.product.deleteProduct(this.productNameEditorSelectedProduct.ProductId);
+            await api.product.deleteProduct(this.productNameEditorSelectedProduct.productId);
 
             runInAction(() => {
                 this.loadProducts(this.projectId);
@@ -111,11 +111,11 @@ export class ProductStore {
     // Helpers
     private async validateNameDublicates(control: FormControl): Promise<ValidationEvent[]> {
         console.log('validateNameDublicates');
-        console.log(this.productNameEditorSelectedProduct.ProductId);
-        if (control.value == null || this.productNameEditorSelectedProduct.ProductId) {
+        console.log(this.productNameEditorSelectedProduct.productId);
+        if (control.value == null || this.productNameEditorSelectedProduct.productId) {
             return [];
         }
-        if (this.allProducts.find(p => p.Name.toLowerCase() === control.value.toLowerCase())) {
+        if (this.allProducts.find(p => p.name.toLowerCase() === control.value.toLowerCase())) {
             return [
                 {
                     message: 'NAME_CANNOT_BE_DUBLICATED',

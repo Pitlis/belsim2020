@@ -9,7 +9,7 @@ import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 
 import { RouterStore, ProductStore, StoresType, ResourceStore } from 'stores';
 import './ProjectProductsResourcesEditor.scss';
-import { getIdFromUrl } from 'routes/getIdFromUrl';
+import { getProjectIdFromUrl } from 'routes/getIdFromUrl';
 import { Product, Resource } from 'models';
 import { BelsimInput } from 'components/BelsimInput';
 import { Button } from 'react-bootstrap';
@@ -34,7 +34,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
     }
 
     componentDidMount() {
-        let projectId = getIdFromUrl(this.routerStore.location);
+        let projectId = getProjectIdFromUrl(this.routerStore.location);
         this.productStore.loadProducts(projectId);
         this.resourceStore.loadResources(projectId);
     }
@@ -47,8 +47,8 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
     handleProductRowSelected = (event: SelectionChangedEvent) => {
         let selectedProduct = event.api.getSelectedRows()[0] as Product;
         if (selectedProduct) {
-            console.log((event.api.getSelectedRows()[0] as Product).ProductId);
-            this.productStore.setProductNameEditorSelectedProduct(selectedProduct.ProductId);
+            console.log((event.api.getSelectedRows()[0] as Product).productId);
+            this.productStore.setProductNameEditorSelectedProduct(selectedProduct.productId);
         } else {
             this.productStore.setProductNameEditorSelectedProduct(null);
         }
@@ -64,7 +64,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
     handleResourceRowSelected = (event: SelectionChangedEvent) => {
         let selectedResource = event.api.getSelectedRows()[0] as Resource;
         if (selectedResource) {
-            this.resourceStore.setResourceNameEditorSelectedResource(selectedResource.RkResourceId);
+            this.resourceStore.setResourceNameEditorSelectedResource(selectedResource.rkResourceId);
         } else {
             this.resourceStore.setResourceNameEditorSelectedResource(null);
         }
@@ -100,7 +100,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                         formControl={this.productStore.productNameEditorForm.controls.name}
                         showErrors={this.productStore.productNameEditorForm.touched}
                         fieldName='Название продукта'
-                        readonly={!!this.productStore.productNameEditorSelectedProduct.ProductId}
+                        readonly={!!this.productStore.productNameEditorSelectedProduct.productId}
                     ></BelsimInput>
                 </div>
                 <div className='actions'>
@@ -109,7 +109,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                             variant='success'
                             size='sm'
                             onClick={this.handleCreateProduct}
-                            disabled={!!this.productStore.productNameEditorSelectedProduct.ProductId || !this.productStore.productNameEditorForm.valid}
+                            disabled={!!this.productStore.productNameEditorSelectedProduct.productId || !this.productStore.productNameEditorForm.valid}
                         >Создать продукт</Button>
                     </div>
                     <div className='delete-button'>
@@ -117,7 +117,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                             variant='danger'
                             size='sm'
                             onClick={this.handleDeleteProduct}
-                            disabled={!this.productStore.productNameEditorSelectedProduct.ProductId}
+                            disabled={!this.productStore.productNameEditorSelectedProduct.productId}
                         >Удалить продукт</Button>
                     </div>
                 </div>
@@ -125,7 +125,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                     <AgGridReact
                         columnDefs={[{
                             headerName: "Ресурсы",
-                            field: "Name",
+                            field: "name",
                             sortable: true,
                             filter: true,
                             suppressMovable: true,
@@ -156,7 +156,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                         formControl={this.resourceStore.resourceNameEditorForm.controls.name}
                         showErrors={this.resourceStore.resourceNameEditorForm.touched}
                         fieldName='Название ресурса'
-                        readonly={!!this.resourceStore.resourceNameEditorSelectedResource.RkResourceId}
+                        readonly={!!this.resourceStore.resourceNameEditorSelectedResource.rkResourceId}
                     ></BelsimInput>
                 </div>
                 <div className='actions'>
@@ -165,7 +165,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                             variant='success'
                             size='sm'
                             onClick={this.handleCreateResource}
-                            disabled={!!this.resourceStore.resourceNameEditorSelectedResource.RkResourceId || !this.resourceStore.resourceNameEditorForm.valid}
+                            disabled={!!this.resourceStore.resourceNameEditorSelectedResource.rkResourceId || !this.resourceStore.resourceNameEditorForm.valid}
                         >Создать ресурс</Button>
                     </div>
                     <div className='delete-button'>
@@ -173,7 +173,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                             variant='danger'
                             size='sm'
                             onClick={this.handleDeleteResource}
-                            disabled={!this.resourceStore.resourceNameEditorSelectedResource.RkResourceId}
+                            disabled={!this.resourceStore.resourceNameEditorSelectedResource.rkResourceId}
                         >Удалить ресурс</Button>
                     </div>
                 </div>
@@ -181,7 +181,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                     <AgGridReact
                         columnDefs={[{
                             headerName: "Продукты",
-                            field: "Name",
+                            field: "name",
                             sortable: true,
                             filter: true,
                             suppressMovable: true,
