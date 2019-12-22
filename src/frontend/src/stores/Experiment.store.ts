@@ -1,6 +1,6 @@
 import { action, observable, runInAction } from 'mobx';
 
-import { Experiment, ExperimentShortInfo } from 'models';
+import { Experiment, ExperimentShortInfo, ResponseName } from 'models';
 import { api } from 'repositories';
 
 
@@ -8,6 +8,7 @@ export class ExperimentStore {
     @observable public projectExperimentsList: ExperimentShortInfo[];
     @observable public currenExperiment: Experiment | null;
     @observable public isLoading: boolean;
+    @observable public responseNamesList: ResponseName[];
 
     public constructor() {
         this.init();
@@ -15,7 +16,9 @@ export class ExperimentStore {
 
     @action
     public init(): void {
+        this.isLoading = true;
         this.projectExperimentsList = new Array<ExperimentShortInfo>();
+        this.responseNamesList = new Array<ResponseName>();
     }
 
     @action
@@ -32,7 +35,13 @@ export class ExperimentStore {
         this.isLoading = true;
         this.currenExperiment = await api.experiment.getExperiement(experimentId);
         runInAction(() => {
+            this.responseNamesList = this.createResponseNamesList(this.currenExperiment as Experiment);
             this.isLoading = false;
         });
+    }
+
+    private createResponseNamesList(experiment: Experiment) {
+        let originalNames = experiment.resultData[0].variables.map(v => v.name);
+        return originalNames.map(originalName => new ResponseName(originalName));
     }
 }

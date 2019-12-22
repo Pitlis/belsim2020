@@ -88,8 +88,7 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
                                 field: "ownerName",
                                 sortable: true,
                                 filter: true,
-                                suppressMovable: true,
-                                checkboxSelection: true
+                                suppressMovable: true
                             },
                             {
                                 headerName: "Название",

@@ -6,7 +6,7 @@ import { api } from 'repositories';
 
 export class ProjectStore {
     @observable public availableProjects: Project[];
-    @observable public currenProject: Project | null;
+    @observable public currenProject: Project;
     @observable public isLoading: boolean;
 
     public constructor() {
@@ -15,13 +15,13 @@ export class ProjectStore {
 
     @action
     public init(): void {
+        this.isLoading = true;
         this.availableProjects = new Array<Project>();
     }
 
     @action
     public async openProject(projectId: string): Promise<void> {
         this.isLoading = true;
-        this.currenProject = null;
 
         let project = this.availableProjects.find(p => p.projectId === projectId);
         if (project) {
@@ -59,7 +59,6 @@ export class ProjectStore {
     @action
     public async loadAvailableProjects(): Promise<void> {
         this.isLoading = true;
-        this.currenProject = null;
         this.availableProjects = await api.project.getAvailableProjects();
         runInAction(() => {
             this.isLoading = false;

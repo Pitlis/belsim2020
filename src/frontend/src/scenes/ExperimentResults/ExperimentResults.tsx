@@ -1,31 +1,22 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import ReactEcharts from 'echarts-for-react';
+import { when } from 'mobx';
+import Select from 'react-select'
 
 import { RouterStore, StoresType } from 'stores';
-import './ExperimentResults.scss';
 import { ExperimentStore } from 'stores/Experiment.store';
 import { getExperimentIdFromUrl } from 'routes/getIdFromUrl';
+import { ExperimentResult, ResponseName } from 'models';
+import './ExperimentResults.scss';
 
 let dataTool = require('echarts/extension/dataTool');
-
-
-
-let data = dataTool.prepareBoxplotData([
-    [850, 740, 900, 1070, 930, 850, 950, 980, 980, 880, 1000, 980, 930, 650, 760, 810, 1000, 1000, 960, 960],
-    [960, 940, 960, 940, 880, 800, 850, 880, 900, 840, 830, 790, 810, 880, 880, 830, 800, 790, 760, 800],
-    [880, 880, 880, 860, 720, 720, 620, 860, 970, 950, 880, 910, 850, 870, 840, 840, 850, 840, 840, 840],
-    [890, 810, 810, 820, 800, 770, 760, 740, 750, 760, 910, 920, 890, 860, 880, 720, 840, 850, 850, 780],
-    [890, 840, 780, 810, 760, 810, 790, 810, 820, 850, 870, 870, 810, 740, 810, 940, 950, 800, 810, 870]
-]);
-
-console.log(data);
 
 @inject((stores: StoresType) => ({
     stores
 }))
 @observer
-export class ExperimentResults extends Component<{ stores?: StoresType }> {
+export class ExperimentResults extends Component<{ stores?: StoresType }, { selectedExperimentResult: ResponseName | null }> {
     public experimentStore: ExperimentStore;
     public routerStore: RouterStore;
 
@@ -35,38 +26,21 @@ export class ExperimentResults extends Component<{ stores?: StoresType }> {
         this.routerStore = this.props.stores!.RouterStore;
 
         this.state = {
-            responseName: '_Баланс 110: Основные средства',
+            selectedExperimentResult: null,
         }
+
+        when(
+            () => !!(this.state.selectedExperimentResult === null && this.experimentStore.responseNamesList.length),
+            () => this.setState({ selectedExperimentResult: this.experimentStore.responseNamesList[0] })
+        );
     }
 
     componentDidMount() {
         let experimentId = getExperimentIdFromUrl(this.routerStore.location);
-        console.log('-------' + experimentId);
         this.experimentStore.openExperiment(experimentId);
     }
 
-    public render(): JSX.Element {
-        return (
-            <div className='experiment-results'>
-                {this.experimentStore.isLoading ? (<div>Loading...</div>) : (this.renderExperimentResults())}
-            </div>
-        );
-    }
-
-    private renderExperimentResults(): JSX.Element {
-        return (
-            <div>
-                {/* results: {this.experimentStore.currenExperiment?.name} */}
-                <ReactEcharts
-                    option={this.getOptions()}
-                    notMerge={true}
-                    lazyUpdate={true}
-                    theme={"theme_name"} />
-            </div>
-        );
-    }
-
-    private getOptions(): any {
+    private getOptions(boxplotData: any): any {
         let option = {
             tooltip: {
                 trigger: 'item',
@@ -75,20 +49,24 @@ export class ExperimentResults extends Component<{ stores?: StoresType }> {
                 }
             },
             grid: {
-                left: '10%',
-                right: '10%',
                 bottom: '15%'
+            },
+            dataZoom: {
+                show: true,
+                realtime: true,
+                start: 0,
+                end: 100
             },
             xAxis: {
                 type: 'category',
-                data: data.axisData,
+                data: boxplotData.axisData,
                 boundaryGap: true,
                 nameGap: 30,
                 splitArea: {
                     show: false
                 },
                 axisLabel: {
-                    formatter: 'expr {value}'
+                    formatter: (val) => { return "Месяц " + (parseInt(val) + 1).toString(); }
                 },
                 splitLine: {
                     show: false
@@ -96,7 +74,7 @@ export class ExperimentResults extends Component<{ stores?: StoresType }> {
             },
             yAxis: {
                 type: 'value',
-                name: 'km/s minus 299,000',
+                name: '',
                 splitArea: {
                     show: true
                 }
@@ -105,27 +83,85 @@ export class ExperimentResults extends Component<{ stores?: StoresType }> {
                 {
                     name: 'boxplot',
                     type: 'boxplot',
-                    data: data.boxData,
+                    data: boxplotData.boxData,
                     tooltip: {
                         formatter: function (param) {
                             return [
-                                'Experiment ' + param.name + ': ',
-                                'upper: ' + param.data[5],
-                                'Q3: ' + param.data[4],
-                                'median: ' + param.data[3],
-                                'Q1: ' + param.data[2],
-                                'lower: ' + param.data[1]
+                                'Месяц ' + (parseInt(param.name) + 1).toString() + ': ',
+                                'Максимум: ' + param.data[5],
+                                'Верхний квартиль: ' + param.data[4],
+                                'Медиана: ' + param.data[3],
+                                'Нижний квартиль: ' + param.data[2],
+                                'Минимум: ' + param.data[1]
                             ].join('<br/>');
                         }
                     }
                 },
                 {
-                    name: 'outlier',
+                    name: 'Промах',
                     type: 'scatter',
-                    data: data.outliers
+                    data: boxplotData.outliers
                 }
             ]
         };
         return option;
+    }
+
+    private getBoxplotData(responseName: string): any {
+        let responses: ExperimentResult[] = [];
+        this.experimentStore.currenExperiment!.resultData.forEach(run => {
+            let response = run.variables.find(r => r.name === responseName) as ExperimentResult;
+            responses.push(response);
+        });
+        let countMonths = responses[0].timedValues.length;
+        let rawData: (number[])[] = [];
+
+        for (let monthIndex = 1; monthIndex < countMonths + 1; monthIndex++) {
+            let monthData = responses.map(r => r.timedValues.find(t => t.time === monthIndex)!.value);
+            rawData.push(monthData as number[]);
+        }
+        return dataTool.prepareBoxplotData(rawData);
+    }
+
+    private handleResponseChanged = (selectedResponse: any) => {
+        this.setState({ selectedExperimentResult: this.experimentStore.responseNamesList.find(n => n.originalName === selectedResponse.value) as ResponseName });
+    }
+
+
+    public render(): JSX.Element {
+        return (
+            <div className='experiment-results'>
+                {!!this.experimentStore.isLoading ? (<div>Loading...</div>) : (this.renderExperimentResults())}
+            </div>
+        );
+    }
+
+    private renderResponsesList(): JSX.Element {
+        const options = this.experimentStore.responseNamesList.map(n => { return { value: n.originalName, label: n.name }; })
+        return (
+            <Select
+                options={options}
+                onChange={this.handleResponseChanged}
+                value={{
+                    value: this.state.selectedExperimentResult!.originalName,
+                    label: this.state.selectedExperimentResult!.name
+                }} />
+        );
+    }
+
+    private renderExperimentResults(): JSX.Element {
+        return (
+            <div>
+                {this.renderResponsesList()}
+                results: {this.experimentStore.currenExperiment!.name}
+                <ReactEcharts
+                    option={this.getOptions(this.getBoxplotData(this.state.selectedExperimentResult!.originalName))}
+                    notMerge={true}
+                    lazyUpdate={true}
+                    theme={"theme_name"}
+                    style={{ height: "80vh", left: 50, top: 50, width: "90vw" }}
+                />
+            </div>
+        );
     }
 }

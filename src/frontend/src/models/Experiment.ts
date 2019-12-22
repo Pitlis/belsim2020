@@ -17,8 +17,19 @@ export class Experiment {
     public createdAt: Date = new Date();
 
     public experimentData: any;
-    public resultData: any;
+    public resultData: ExperimentResultRun[];
 
     public status: ExperimentStatus;
     public statusChangedAt: Date = new Date();
+}
+
+export class ExperimentResultRun {
+    public index: number;
+    public variables: ExperimentResult[];
+}
+
+export class ExperimentResult {
+    public id: number;
+    public name: string;
+    public timedValues: { time: number, value: number }[];
 }
