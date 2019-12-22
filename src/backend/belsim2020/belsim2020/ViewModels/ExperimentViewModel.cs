@@ -7,6 +7,7 @@ namespace belsim2020.ViewModels
     public class ExperimentViewModel
     {
         public Guid RkExperimentId { get; set; }
+        public string Name { get; set; }
 
         public UserNameViewModel CreatedBy { get; set; }
 
