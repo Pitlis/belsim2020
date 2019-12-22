@@ -13,7 +13,5 @@ namespace belsim2020.Integration.Models.ResultModels
         {
             TimedValues = new List<TimedValue>();
         }
-
-        public BoxPlot BoxPlotParameters { get; set; }
     }
 }

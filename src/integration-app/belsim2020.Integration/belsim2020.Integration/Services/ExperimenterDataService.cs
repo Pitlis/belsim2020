@@ -56,7 +56,7 @@ namespace belsim2020.Integration.Services
             doc.Save(fileName);
         }
 
-        public List<Variable> GetResultsFromFile(string fileName)
+        public List<Run> GetResultsFromFile(string fileName)
         {
             List<Run> runs = new List<Run>();
 
@@ -124,64 +124,64 @@ namespace belsim2020.Integration.Services
                 fs.Close();
             }
 
-            if (runs == null || runs.Count == 0)
-                return null;
+            //if (runs == null || runs.Count == 0)
+            //    return null;
 
-            string[] variableNames = runs[0].Variables.Select(o => o.Name).ToArray();
-            List<Variable> variables = new List<Variable>();
-            foreach (var variableName in variableNames)
-            {
-                int n = runs[0].Variables.FirstOrDefault(o => o.Name == variableName).TimedValues.Count + 1;
-                int m = runs.Count;
-                decimal[,] vTable = new decimal[n, m];
-                for (int i = 0; i < runs.Count; i++)
-                {
-                    Variable variable = runs[i].Variables.FirstOrDefault(o => o.Name == variableName);
-                    vTable[0, i] = variable.Value;
-                    for (int j = 0; j < variable.TimedValues.Count; j++)
-                        vTable[j + 1, i] = variable.TimedValues[j].Value;
-                }
+            //string[] variableNames = runs[0].Variables.Select(o => o.Name).ToArray();
+            //List<Variable> variables = new List<Variable>();
+            //foreach (var variableName in variableNames)
+            //{
+            //    int n = runs[0].Variables.FirstOrDefault(o => o.Name == variableName).TimedValues.Count + 1;
+            //    int m = runs.Count;
+            //    decimal[,] vTable = new decimal[n, m];
+            //    for (int i = 0; i < runs.Count; i++)
+            //    {
+            //        Variable variable = runs[i].Variables.FirstOrDefault(o => o.Name == variableName);
+            //        vTable[0, i] = variable.Value;
+            //        for (int j = 0; j < variable.TimedValues.Count; j++)
+            //            vTable[j + 1, i] = variable.TimedValues[j].Value;
+            //    }
 
-                Variable v = new Variable()
-                {
-                    Name = variableName
-                };
+            //    Variable v = new Variable()
+            //    {
+            //        Name = variableName
+            //    };
 
-                for (int i = 0; i < n; i++)
-                {
-                    List<decimal> timedValues = new List<decimal>();
-                    for (int j = 0; j < m; j++)
-                        timedValues.Add(vTable[i, j]);
+            //    for (int i = 0; i < n; i++)
+            //    {
+            //        List<decimal> timedValues = new List<decimal>();
+            //        for (int j = 0; j < m; j++)
+            //            timedValues.Add(vTable[i, j]);
 
-                    decimal median = timedValues.Average();
+            //        decimal median = timedValues.Average();
 
-                    var lqValues = timedValues.Where(o => o < median);
-                    decimal lq = median;
-                    if (lqValues != null && lqValues.Count() > 0)
-                        lq = lqValues.Average();
+            //        var lqValues = timedValues.Where(o => o < median);
+            //        decimal lq = median;
+            //        if (lqValues != null && lqValues.Count() > 0)
+            //            lq = lqValues.Average();
 
-                    var uqValues = timedValues.Where(o => o > median);
-                    decimal uq = median;
-                    if (uqValues != null && uqValues.Count() > 0)
-                        uq = uqValues.Average();
+            //        var uqValues = timedValues.Where(o => o > median);
+            //        decimal uq = median;
+            //        if (uqValues != null && uqValues.Count() > 0)
+            //            uq = uqValues.Average();
 
-                    decimal le = timedValues.Min();
-                    decimal ue = timedValues.Max();
+            //        decimal le = timedValues.Min();
+            //        decimal ue = timedValues.Max();
 
-                    if (i == 0)
-                        v.BoxPlotParameters = new BoxPlot(median, lq, uq, le, ue);
-                    else
-                        v.TimedValues.Add(new TimedValue()
-                        {
-                            Time = runs[0].Variables.FirstOrDefault(o => o.Name == variableName).TimedValues[i - 1].Time,
-                            BoxPlotParameters = new BoxPlot(median, lq, uq, le, ue)
-                        });
-                }
+            //        if (i == 0)
+            //            v.BoxPlotParameters = new BoxPlot(median, lq, uq, le, ue);
+            //        else
+            //            v.TimedValues.Add(new TimedValue()
+            //            {
+            //                Time = runs[0].Variables.FirstOrDefault(o => o.Name == variableName).TimedValues[i - 1].Time,
+            //                BoxPlotParameters = new BoxPlot(median, lq, uq, le, ue)
+            //            });
+            //    }
 
-                variables.Add(v);
-            }
+            //    variables.Add(v);
+            //}
 
-            return variables;
+            return runs;
         }
 
         #region Xml parameters
@@ -273,6 +273,11 @@ namespace belsim2020.Integration.Services
             variable.Add(new XElement(VALUE, experiment.ShipmentsCount));
             parameters.Add(variable);
 
+            foreach (var product in experiment.Products)
+            {
+                product.Shipments = product.Shipments.OrderBy(s => s.ShipmentDatetime).ToList();
+            }
+
             variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Реализация: Время отгрузки: (мес.)"));
             var countShipmentsForProducts = experiment.Products.First().Shipments.Count;
             for (int i = 0; i < countShipmentsForProducts; i++)
@@ -344,7 +349,7 @@ namespace belsim2020.Integration.Services
             variable.Add(new XElement(VALUE, (int)experiment.PaymentDateDistrFuncType));
             parameters.Add(variable);
 
-            variable = new XElement(VARIABLE_ARRAY, "Реализация: Цены продукции (руб./ед.)");
+            variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Реализация: Цены продукции (руб./ед.)"));
             for (int i = 0; i < experiment.Products.Count; i++)
             {
                 XElement item = new XElement(VARIABLE, new XAttribute(INDEX, i));
@@ -553,6 +558,18 @@ namespace belsim2020.Integration.Services
                 variable = new XElement(VARIABLE, new XAttribute(NAME, experiment.Accounts[i].Name));
                 variable.Add(new XElement(VALUE, experiment.Accounts[i].Value.ToString(CultureInfo.InvariantCulture)));
                 parameters.Add(variable);
+
+                //-----------------------
+                //What the fuck???
+                //If remove account duplicate - system runs only one experiment, so, I cannot calculate BoxPlot values
+                if (experiment.Accounts[i].Name == "_Счёт 84: Начальное значение(отн.ед.)")
+                {
+                    variable = new XElement(VARIABLE, new XAttribute(NAME, experiment.Accounts[i].Name));
+                    variable.Add(new XElement(VALUE, experiment.Accounts[i].Value.ToString(CultureInfo.InvariantCulture)));
+                    parameters.Add(variable);
+                }
+                //-----------------------
+
             }
 
             return parameters;
