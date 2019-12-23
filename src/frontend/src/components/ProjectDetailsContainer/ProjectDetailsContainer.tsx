@@ -4,6 +4,7 @@ import { observer, inject } from 'mobx-react';
 
 import { StoresType, ProductStore, ProjectStore, RouterStore } from 'stores';
 import { getProjectIdFromUrl } from 'routes/getIdFromUrl';
+import { BelsimLoader } from 'components/BelsimLoader';
 
 @inject((stores: StoresType) => ({
     stores
@@ -30,7 +31,7 @@ export class ProjectDetailsContainer extends Component<{ stores?: StoresType }>{
     public render(): JSX.Element {
         return (
             <div>
-                {this.projectStore.isLoading ? (<div>Loading...</div>) : (this.props.children)}
+                {this.projectStore.isLoading ? (<BelsimLoader />) : (this.props.children)}
             </div>
         );
     }

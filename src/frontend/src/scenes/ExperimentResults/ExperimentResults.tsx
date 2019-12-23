@@ -10,6 +10,7 @@ import { RouterStore, StoresType } from 'stores';
 import { ExperimentStore } from 'stores/Experiment.store';
 import { getExperimentIdFromUrl } from 'routes/getIdFromUrl';
 import { ExperimentResult, ResponseName } from 'models';
+import { BelsimLoader } from 'components/BelsimLoader';
 
 let dataTool = require('echarts/extension/dataTool');
 
@@ -49,7 +50,7 @@ export class ExperimentResults extends Component<{ stores?: StoresType }, { sele
     public render(): JSX.Element {
         return (
             <div className='experiment-results'>
-                {this.state.isLoading ? (<div>Loading...</div>) : (this.renderExperimentResults())}
+                {this.state.isLoading ? (<BelsimLoader />) : (this.renderExperimentResults())}
             </div>
         );
     }
@@ -79,7 +80,8 @@ export class ExperimentResults extends Component<{ stores?: StoresType }, { sele
                 value={{
                     value: this.state.selectedExperimentResult!.originalName,
                     label: this.state.selectedExperimentResult!.name
-                }} />
+                }}
+            />
         );
     }
 

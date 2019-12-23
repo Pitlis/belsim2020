@@ -10,6 +10,7 @@ import { routes, makeUrlWithParams } from 'routes';
 import { ExperimentStore } from 'stores/Experiment.store';
 import { ExperimentShortInfo } from 'models';
 import { ExperimentsList } from 'components/ExperimentsList';
+import { BelsimLoader } from 'components/BelsimLoader';
 
 @inject((stores: StoresType) => ({
     stores
@@ -46,15 +47,17 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
     public render(): JSX.Element {
         return (
             <div className='project-details'>
-                <button onClick={this.handleOpenProjectProductsResources}>Редактировать продукты и ресурсы</button>
                 {this.experimentStore.isLoading ?
-                    (<div>Loading...</div>) :
+                    (<BelsimLoader />) :
                     (
-                        <ExperimentsList
-                            title='Все запущенные эксперименты проекта'
-                            experiments={this.experimentStore.projectExperimentsList}
-                            onOpenResults={this.handleOpenExperimentResults}
-                        />
+                        <>
+                            <button onClick={this.handleOpenProjectProductsResources}>Редактировать продукты и ресурсы</button>
+                            <ExperimentsList
+                                title='Все запущенные эксперименты проекта'
+                                experiments={this.experimentStore.projectExperimentsList}
+                                onOpenResults={this.handleOpenExperimentResults}
+                            />
+                        </>
                     )}
             </div >
         );
