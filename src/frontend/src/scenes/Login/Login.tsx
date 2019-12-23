@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 import { Form, Button, Card } from 'react-bootstrap';
-
 import { RouterStore } from 'mobx-react-router';
+
 import './Login.scss';
 
 import { AuthStore, StoresType } from 'stores';

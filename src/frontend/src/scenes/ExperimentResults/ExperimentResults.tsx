@@ -4,11 +4,12 @@ import ReactEcharts from 'echarts-for-react';
 import { when } from 'mobx';
 import Select from 'react-select'
 
+import './ExperimentResults.scss';
+
 import { RouterStore, StoresType } from 'stores';
 import { ExperimentStore } from 'stores/Experiment.store';
 import { getExperimentIdFromUrl } from 'routes/getIdFromUrl';
 import { ExperimentResult, ResponseName } from 'models';
-import './ExperimentResults.scss';
 
 let dataTool = require('echarts/extension/dataTool');
 
@@ -16,7 +17,7 @@ let dataTool = require('echarts/extension/dataTool');
     stores
 }))
 @observer
-export class ExperimentResults extends Component<{ stores?: StoresType }, { selectedExperimentResult: ResponseName | null }> {
+export class ExperimentResults extends Component<{ stores?: StoresType }, { selectedExperimentResult: ResponseName | null, isLoading: boolean }> {
     public experimentStore: ExperimentStore;
     public routerStore: RouterStore;
 
@@ -27,17 +28,75 @@ export class ExperimentResults extends Component<{ stores?: StoresType }, { sele
 
         this.state = {
             selectedExperimentResult: null,
+            isLoading: true
         }
-
-        when(
-            () => !!(this.state.selectedExperimentResult === null && this.experimentStore.responseNamesList.length),
-            () => this.setState({ selectedExperimentResult: this.experimentStore.responseNamesList[0] })
-        );
     }
 
     componentDidMount() {
         let experimentId = getExperimentIdFromUrl(this.routerStore.location);
         this.experimentStore.openExperiment(experimentId);
+
+        when(
+            () => !!this.experimentStore.responseNamesList.length,
+            () => this.setState({ selectedExperimentResult: this.experimentStore.responseNamesList[0], isLoading: false })
+        );
+    }
+
+    private handleResponseChanged = (selectedResponse: any) => {
+        this.setState({ selectedExperimentResult: this.experimentStore.responseNamesList.find(n => n.originalName === selectedResponse.value) as ResponseName });
+    }
+
+    public render(): JSX.Element {
+        return (
+            <div className='experiment-results'>
+                {this.state.isLoading ? (<div>Loading...</div>) : (this.renderExperimentResults())}
+            </div>
+        );
+    }
+
+    private renderExperimentResults(): JSX.Element {
+        return (
+            <div>
+                {this.renderResponsesList()}
+                results: {this.experimentStore.currenExperiment!.name}
+                <ReactEcharts
+                    option={this.getOptions(this.getBoxplotData(this.state.selectedExperimentResult!.originalName))}
+                    notMerge={true}
+                    lazyUpdate={true}
+                    theme={"theme_name"}
+                    style={{ height: "80vh", left: 50, top: 50, width: "90vw" }}
+                />
+            </div>
+        );
+    }
+
+    private renderResponsesList(): JSX.Element {
+        const options = this.experimentStore.responseNamesList.map(n => { return { value: n.originalName, label: n.name }; })
+        return (
+            <Select
+                options={options}
+                onChange={this.handleResponseChanged}
+                value={{
+                    value: this.state.selectedExperimentResult!.originalName,
+                    label: this.state.selectedExperimentResult!.name
+                }} />
+        );
+    }
+
+    private getBoxplotData(responseName: string): any {
+        let responses: ExperimentResult[] = [];
+        this.experimentStore.currenExperiment!.resultData.forEach(run => {
+            let response = run.variables.find(r => r.name === responseName) as ExperimentResult;
+            responses.push(response);
+        });
+        let countMonths = responses[0].timedValues.length;
+        let rawData: (number[])[] = [];
+
+        for (let monthIndex = 1; monthIndex < countMonths + 1; monthIndex++) {
+            let monthData = responses.map(r => r.timedValues.find(t => t.time === monthIndex)!.value);
+            rawData.push(monthData as number[]);
+        }
+        return dataTool.prepareBoxplotData(rawData);
     }
 
     private getOptions(boxplotData: any): any {
@@ -105,63 +164,5 @@ export class ExperimentResults extends Component<{ stores?: StoresType }, { sele
             ]
         };
         return option;
-    }
-
-    private getBoxplotData(responseName: string): any {
-        let responses: ExperimentResult[] = [];
-        this.experimentStore.currenExperiment!.resultData.forEach(run => {
-            let response = run.variables.find(r => r.name === responseName) as ExperimentResult;
-            responses.push(response);
-        });
-        let countMonths = responses[0].timedValues.length;
-        let rawData: (number[])[] = [];
-
-        for (let monthIndex = 1; monthIndex < countMonths + 1; monthIndex++) {
-            let monthData = responses.map(r => r.timedValues.find(t => t.time === monthIndex)!.value);
-            rawData.push(monthData as number[]);
-        }
-        return dataTool.prepareBoxplotData(rawData);
-    }
-
-    private handleResponseChanged = (selectedResponse: any) => {
-        this.setState({ selectedExperimentResult: this.experimentStore.responseNamesList.find(n => n.originalName === selectedResponse.value) as ResponseName });
-    }
-
-
-    public render(): JSX.Element {
-        return (
-            <div className='experiment-results'>
-                {!!this.experimentStore.isLoading ? (<div>Loading...</div>) : (this.renderExperimentResults())}
-            </div>
-        );
-    }
-
-    private renderResponsesList(): JSX.Element {
-        const options = this.experimentStore.responseNamesList.map(n => { return { value: n.originalName, label: n.name }; })
-        return (
-            <Select
-                options={options}
-                onChange={this.handleResponseChanged}
-                value={{
-                    value: this.state.selectedExperimentResult!.originalName,
-                    label: this.state.selectedExperimentResult!.name
-                }} />
-        );
-    }
-
-    private renderExperimentResults(): JSX.Element {
-        return (
-            <div>
-                {this.renderResponsesList()}
-                results: {this.experimentStore.currenExperiment!.name}
-                <ReactEcharts
-                    option={this.getOptions(this.getBoxplotData(this.state.selectedExperimentResult!.originalName))}
-                    notMerge={true}
-                    lazyUpdate={true}
-                    theme={"theme_name"}
-                    style={{ height: "80vh", left: 50, top: 50, width: "90vw" }}
-                />
-            </div>
-        );
     }
 }

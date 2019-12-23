@@ -3,16 +3,17 @@ import { inject, observer } from 'mobx-react';
 import { AgGridReact } from '@ag-grid-community/react';
 import { SelectionChangedEvent } from "@ag-grid-community/core";
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
+import { Button } from 'react-bootstrap';
 
 import '@ag-grid-community/all-modules/dist/styles/ag-grid.css';
 import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 
-import { RouterStore, ProductStore, StoresType, ResourceStore } from 'stores';
 import './ProjectProductsResourcesEditor.scss';
+
+import { RouterStore, ProductStore, StoresType, ResourceStore } from 'stores';
 import { getProjectIdFromUrl } from 'routes/getIdFromUrl';
 import { Product, Resource } from 'models';
 import { BelsimInput } from 'components/BelsimInput';
-import { Button } from 'react-bootstrap';
 
 @inject((stores: StoresType) => ({
     stores

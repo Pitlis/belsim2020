@@ -1,5 +1,6 @@
 ﻿using belsim2020.Integration.Services;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,10 @@ namespace belsim2020.Integration
             //var model = await apiService.TakeExperimentForProcessing();
             //experimenterDataService.WriteModelDataToFile("D:\\data.xml", model);
             //experimenterDataService.WriteExperimentScenarioToFile("D:\\expscenario.xml", model);
-            var t = experimenterDataService.GetResultsFromFile("D:\\expscenario.xml");
-            var data = JsonConvert.SerializeObject(t);
+            var t = experimenterDataService.GetResultsFromFile("D:\\expscenario-res-my.xml");
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            var data = JsonConvert.SerializeObject(t, serializerSettings);
         }
     }
 }

@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
 import { Card, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
+import { observer } from 'mobx-react';
+
+import './ProjectCard.scss';
 
 import { Project } from 'models';
-import './ProjectCard.scss';
-import { observer } from 'mobx-react';
 
 @observer
 export class ProjectCard extends PureComponent<{ project: Project, onOpenProject: (projectId: string) => void }> {

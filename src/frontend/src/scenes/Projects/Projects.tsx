@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 
+import './Projects.scss';
+
 import { ProjectCard } from 'components/ProjectCard';
 import { ProjectStore, RouterStore, StoresType } from 'stores';
 import { routes, makeUrlWithParams } from 'routes';
-import './Projects.scss';
 
 @inject((stores: StoresType) => ({
     stores
