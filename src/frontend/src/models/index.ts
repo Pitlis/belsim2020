@@ -6,3 +6,4 @@ export * from './UserName';
 export * from './Experiment';
 export * from './ExperimentShortInfo';
 export * from './ResponseName';
+export * from './HeaderMenuItem';

@@ -1,0 +1,32 @@
+.belsim-header {
+    background-color: #208fa0;
+
+    .navbar-nav {
+        .nav-link {
+            color: white;
+            font-weight: bold;
+
+            &.active {
+                color: #002429;
+                &:hover {
+                    color: #002429;
+                    cursor: default;
+                }
+            }
+        }
+    
+        .nav-link:hover {
+            color: #1c4d54;
+        }
+    } 
+
+    .navbar-brand,
+    .navbar-brand:hover,
+    .navbar-brand:focus {
+        color: white;
+        font-weight: bold;
+        user-select: none;
+        cursor: default;
+    }
+    
+}

@@ -13,6 +13,7 @@ import { Login } from 'scenes/Login';
 import { ProjectDetailsContainer } from 'components/ProjectDetailsContainer';
 import { ProjectProductsResourcesEditor } from 'scenes/ProjectProductsResourcesEditor';
 import { ExperimentResults } from 'scenes/ExperimentResults';
+import { BelsimHeader } from 'components/BelsimHeader';
 
 @inject((stores: StoresType) => ({
   stores
@@ -37,24 +38,32 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
               path={routes.login.path}
               exact={routes.login.exact}
               component={Login} />
-            <Route
-              path={routes.projects.path}
-              exact={routes.projects.exact}
-              component={Projects} />
-            <ProjectDetailsContainer>
+            <BelsimHeader>
               <Route
-                path={routes.projectProductsAndResources.path}
-                exact={routes.projectProductsAndResources.exact}
-                component={ProjectProductsResourcesEditor} />
+                path={routes.projects.path}
+                exact={routes.projects.exact}
+                component={Projects} />
               <Route
-                path={routes.projectDetails.path}
-                exact={routes.projectDetails.exact}
-                component={ProjectDetails} />
-              <Route
-                path={routes.experimentResults.path}
-                exact={routes.experimentResults.exact}
-                component={ExperimentResults} />
-            </ProjectDetailsContainer>
+                path={routes.baseProjectUrl.path}
+              >
+                <ProjectDetailsContainer>
+                  <Route
+                    path={routes.projectProductsAndResources.path}
+                    exact={routes.projectProductsAndResources.exact}
+                    component={ProjectProductsResourcesEditor} />
+                  <Route
+                    path={routes.projectDetails.path}
+                    exact={routes.projectDetails.exact}
+                    component={ProjectDetails} />
+                  <Route
+                    path={routes.experimentResults.path}
+                    exact={routes.experimentResults.exact}
+                    component={ExperimentResults} />
+                </ProjectDetailsContainer>
+
+              </Route>
+
+            </BelsimHeader>
           </Switch>
         </Router>
       );

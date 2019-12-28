@@ -31,10 +31,6 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
         this.experimentStore.loadProjectExperimentsList(projectId);
     }
 
-    handleOpenProjectProductsResources = () => {
-        this.routerStore.push(makeUrlWithParams(routes.projectProductsAndResources.path, { projectId: getProjectIdFromUrl(this.routerStore.location) }));
-    }
-
     handleOpenExperimentResults = (experiment: ExperimentShortInfo) => {
         this.routerStore.push(makeUrlWithParams(routes.experimentResults.path,
             {
@@ -51,7 +47,6 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
                     (<BelsimLoader />) :
                     (
                         <>
-                            <button onClick={this.handleOpenProjectProductsResources}>Редактировать продукты и ресурсы</button>
                             <ExperimentsList
                                 title='Все запущенные эксперименты проекта'
                                 experiments={this.experimentStore.projectExperimentsList}

@@ -17,7 +17,7 @@ export class ProjectDetailsContainer extends Component<{ stores?: StoresType }>{
 
     constructor(props) {
         super(props);
-        console.log('ProjectDetailsContainer');
+        console.log('------------ProjectDetailsContainer-------------');
         this.productStore = this.props.stores!.ProductStore;
         this.projectStore = this.props.stores!.ProjectStore;
         this.routerStore = this.props.stores!.RouterStore;

@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import './ProjectCard.scss';
 
 import { Project } from 'models';
+import { formatDate } from 'helpers/dateFormatter';
 
 @observer
 export class ProjectCard extends PureComponent<{ project: Project, onOpenProject: (projectId: string) => void }> {
@@ -14,6 +15,7 @@ export class ProjectCard extends PureComponent<{ project: Project, onOpenProject
     }
 
     handleOpenProject = () => {
+        console.log('handleOpenProject');
         this.props.onOpenProject(this.props.project.projectId);
     }
 
@@ -27,8 +29,8 @@ export class ProjectCard extends PureComponent<{ project: Project, onOpenProject
                         <Card.Text>{this.props.project.comments}</Card.Text>
                     </Card.Body>
                     <ListGroup className='list-group-flush'>
-                        <ListGroupItem><i>Создан: {this.props.project.createdAt.toLocaleString('ru-RU')}</i></ListGroupItem>
-                        <ListGroupItem><i>Изменен: {this.props.project.modifiedAt.toLocaleString('ru-RU')}</i></ListGroupItem>
+                        <ListGroupItem><i>Создан: {formatDate(this.props.project.createdAt)}</i></ListGroupItem>
+                        <ListGroupItem><i>Изменен: {formatDate(this.props.project.modifiedAt)}</i></ListGroupItem>
                     </ListGroup>
                     <Card.Body className='card-link'>
                         <Button variant='info' onClick={this.handleOpenProject}>Открыть</Button>

@@ -2,11 +2,11 @@ import React, { PureComponent } from 'react';
 import { AgGridReact } from '@ag-grid-community/react/lib/agGridReact';
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 import { observer } from 'mobx-react';
-import moment from 'moment';
 
 import './ExperimentsList.scss';
 
 import { ExperimentShortInfo, ExperimentStatus } from 'models';
+import { formatDate } from 'helpers/dateFormatter';
 
 interface IOwnProps {
     experiments: ExperimentShortInfo[];
@@ -124,6 +124,6 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
     }
 
     private dateFormatter(params: { value: Date }): string {
-        return moment(params.value).format('DD/MM/YYYY HH:mm')
+        return formatDate(params.value);
     }
 }

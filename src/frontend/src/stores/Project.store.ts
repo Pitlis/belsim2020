@@ -59,6 +59,7 @@ export class ProjectStore {
     @action
     public async loadAvailableProjects(): Promise<void> {
         this.isLoading = true;
+        this.availableProjects = new Array<Project>();
         this.availableProjects = await api.project.getAvailableProjects();
         runInAction(() => {
             this.isLoading = false;
