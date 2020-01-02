@@ -1,3 +1,14 @@
 body {
     background-color: #f1f9f9;
+
+    .belsim-action-button {
+        height: 25px;
+        line-height: 10px;
+
+        a {
+            height: 1.1em;
+            width: 1.1em;
+            color: white;
+        }
+    }
 }

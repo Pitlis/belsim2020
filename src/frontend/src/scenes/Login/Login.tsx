@@ -41,7 +41,6 @@ export class Login extends Component<{ stores: StoresType }> {
     }
 
     public render(): JSX.Element {
-        console.log(this.authStore.userCredentialsForm);
         return (
             <div className='login-scene'>
                 <div className='login-form'>

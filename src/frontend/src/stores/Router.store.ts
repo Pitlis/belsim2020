@@ -44,6 +44,10 @@ export class RouterStore extends BaseRouterStore {
             this.HeaderMenuItems = this.attachAdditionalMenuItems(this.getMenuForExperimentResults());
             return;
         }
+        if (isUrlRelatedToRoute(currentPath, routes.template)) {
+            this.HeaderMenuItems = this.attachAdditionalMenuItems(this.getMenuForTemplateEditor());
+            return;
+        }
 
         this.HeaderMenuItems = new Array<HeaderMenuItem>();
     }
@@ -89,6 +93,22 @@ export class RouterStore extends BaseRouterStore {
     }    
 
     private getMenuForExperimentResults(): HeaderMenuItem[] {
+        return [
+            { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true },
+            {
+                title: 'Проект',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.projectDetails.path, { projectId: getProjectIdFromUrl(this.location) })
+            },
+            {
+                title: 'Продукты и ресурсы',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.projectProductsAndResources.path, { projectId: getProjectIdFromUrl(this.location) })
+            }
+        ]
+    }    
+    
+    private getMenuForTemplateEditor(): HeaderMenuItem[] {
         return [
             { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true },
             {

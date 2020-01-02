@@ -4,13 +4,14 @@ import { RouterStore } from 'mobx-react-router';
 
 import './ProjectDetails.scss';
 
-import { getProjectIdFromUrl } from 'routes/getIdFromUrl';
-import { StoresType } from 'stores';
+import { StoresType, ProjectStore, EMPTY_TEMPLATE_ID } from 'stores';
 import { routes, makeUrlWithParams } from 'routes';
 import { ExperimentStore } from 'stores/Experiment.store';
 import { ExperimentShortInfo } from 'models';
 import { ExperimentsList } from 'components/ExperimentsList';
 import { BelsimLoader } from 'components/BelsimLoader';
+import { Button } from 'react-bootstrap';
+import { FiPlus } from 'react-icons/fi';
 
 @inject((stores: StoresType) => ({
     stores
@@ -19,25 +20,33 @@ import { BelsimLoader } from 'components/BelsimLoader';
 export class ProjectDetails extends Component<{ stores: StoresType }, { selectedExperiment: ExperimentShortInfo | null }> {
     public routerStore: RouterStore;
     public experimentStore: ExperimentStore;
+    public projectStore: ProjectStore;
 
     constructor(props) {
         super(props);
         this.routerStore = this.props.stores!.RouterStore;
         this.experimentStore = this.props.stores!.ExperimentStore;
+        this.projectStore = this.props.stores!.ProjectStore;
     }
 
     componentDidMount() {
-        let projectId = getProjectIdFromUrl(this.routerStore.location);
-        this.experimentStore.loadProjectExperimentsList(projectId);
+        this.experimentStore.loadProjectExperimentsList(this.projectStore.currenProject.projectId);
     }
 
     handleOpenExperimentResults = (experiment: ExperimentShortInfo) => {
         this.routerStore.push(makeUrlWithParams(routes.experimentResults.path,
             {
                 experimentId: experiment.experimentId,
-                projectId: getProjectIdFromUrl(this.routerStore.location)
+                projectId: this.projectStore.currenProject.projectId
             }
         ));
+    }
+
+    handleCreateNewTemplate = () => {
+        this.routerStore.push(makeUrlWithParams(routes.template.path, {
+            projectId: this.projectStore.currenProject.projectId,
+            templateId: EMPTY_TEMPLATE_ID
+        }));
     }
 
     public render(): JSX.Element {
@@ -47,6 +56,13 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
                     (<BelsimLoader />) :
                     (
                         <>
+                            <Button
+                                onClick={this.handleCreateNewTemplate}
+                                variant="success"
+                                className='belsim-action-button'
+                            >
+                                Создать модель данных <FiPlus />
+                            </Button>
                             <ExperimentsList
                                 title='Все запущенные эксперименты проекта'
                                 experiments={this.experimentStore.projectExperimentsList}

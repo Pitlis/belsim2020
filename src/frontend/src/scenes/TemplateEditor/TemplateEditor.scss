@@ -1,0 +1,29 @@
+.template-editor {
+    .edit-form {
+        margin: auto;
+        width: 90%;
+        height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .editor {
+            flex: 0 0 100%;
+            align-self: stretch;
+
+            .error {
+                font-size: 80%;
+                color: #dc3545;
+            }
+            .belsim-input {
+                height: 90px;
+                margin-bottom: 0;
+            }
+        }
+    }
+    .template-saving {
+        width: 90%;
+        text-align: right;
+        margin: 10px auto;
+    }
+}

@@ -4,3 +4,4 @@ export * from './Router.store';
 export * from './Auth.store';
 export * from './Product.store';
 export * from './Resource.store';
+export * from './Template.store';

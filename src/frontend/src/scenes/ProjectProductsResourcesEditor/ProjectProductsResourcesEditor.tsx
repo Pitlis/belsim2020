@@ -10,8 +10,7 @@ import '@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css';
 
 import './ProjectProductsResourcesEditor.scss';
 
-import { RouterStore, ProductStore, StoresType, ResourceStore } from 'stores';
-import { getProjectIdFromUrl } from 'routes/getIdFromUrl';
+import { RouterStore, ProductStore, StoresType, ResourceStore, ProjectStore } from 'stores';
 import { Product, Resource } from 'models';
 import { BelsimInput } from 'components/BelsimInput';
 
@@ -23,19 +22,21 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
     public productStore: ProductStore;
     public resourceStore: ResourceStore;
     public routerStore: RouterStore;
+    public projectStore: ProjectStore;
 
     constructor(props) {
         super(props);
         this.productStore = this.props.stores!.ProductStore;
         this.resourceStore = this.props.stores!.ResourceStore;
         this.routerStore = this.props.stores!.RouterStore;
+        this.projectStore = this.props.stores!.ProjectStore;
 
         this.productStore.initProductNameEditorForm();
         this.resourceStore.initResourceNameEditorForm();
     }
 
     componentDidMount() {
-        let projectId = getProjectIdFromUrl(this.routerStore.location);
+        let projectId = this.projectStore.currenProject.projectId;
         this.productStore.loadProducts(projectId);
         this.resourceStore.loadResources(projectId);
     }

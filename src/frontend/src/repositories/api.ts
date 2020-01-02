@@ -3,11 +3,13 @@ import { account } from './account.repository';
 import { product } from './product.repository';
 import { resource } from './resource.repository';
 import { experiment } from './experiment.repository';
+import { template } from './template.repository';
 
 export const api = Object.freeze({
     project,
     account,
     product,
     resource,
-    experiment
+    experiment,
+    template
 });

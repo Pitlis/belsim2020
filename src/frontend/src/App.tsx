@@ -14,6 +14,7 @@ import { ProjectDetailsContainer } from 'components/ProjectDetailsContainer';
 import { ProjectProductsResourcesEditor } from 'scenes/ProjectProductsResourcesEditor';
 import { ExperimentResults } from 'scenes/ExperimentResults';
 import { BelsimHeader } from 'components/BelsimHeader';
+import { TemplateEditor } from 'scenes/TemplateEditor';
 
 @inject((stores: StoresType) => ({
   stores
@@ -28,8 +29,6 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
   }
 
   public render(): JSX.Element {
-    console.log("IsSignInChecked: " + this.authStore.IsSignInChecked);
-    console.log(this.props.history);
     if (this.authStore.IsSignInChecked) {
       return (
         <Router history={this.props.history} >
@@ -59,10 +58,12 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
                     path={routes.experimentResults.path}
                     exact={routes.experimentResults.exact}
                     component={ExperimentResults} />
+                  <Route
+                    path={routes.template.path}
+                    exact={routes.template.exact}
+                    component={TemplateEditor} />
                 </ProjectDetailsContainer>
-
               </Route>
-
             </BelsimHeader>
           </Switch>
         </Router>

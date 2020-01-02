@@ -47,7 +47,6 @@ export class AuthStore {
         reaction(() => this.IsSignInChecked, (isSignInChecked) => {
             console.log('call reaction');
             if (isSignInChecked) {
-                console.log(stores.RouterStore.location.pathname);
                 if (this.isLoggedIn) {
                     this.redirectToStartPageAfterLogin();
                 } else {

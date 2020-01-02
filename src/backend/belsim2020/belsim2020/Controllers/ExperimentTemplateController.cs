@@ -82,6 +82,15 @@ namespace belsim2020.Controllers
             return new OkObjectResult(model);
         }
 
+        [HttpGet("get-empty")]
+        public async Task<IActionResult> GetEmptyExperimentTemplate()
+        {
+            var emptyTemplate = new ExperimentTemplateViewModel();
+            emptyTemplate.Name = string.Empty;
+            emptyTemplate.Description = string.Empty;
+            return new OkObjectResult(emptyTemplate);
+        }
+
         [HttpGet("templates-in-project/{projectId}")]
         public async Task<IActionResult> GetExperimentTemplatesInProject(Guid projectId)
         {
