@@ -67,6 +67,8 @@ namespace belsim2020.Services.Implementations.Rk
 
             mapper.Map(model, experimentTemplate);
 
+            experimentTemplate.CountRuns = 1;
+
             foreach (var account in model.Accounts)
             {
                 var existsAccount = experimentTemplate.Accounts.First(a => a.RkAccountInExperimentId == account.RkAccountInExperimentId);
