@@ -24,11 +24,11 @@ export const template = Object.freeze({
             .then(response => response.data);
     },
     async updateProductsList(templateId: string, productIds: string[]): Promise<void> {
-        return http.put('/experiment-template/update', { experimentTemplateId: templateId, productIds })
+        return http.put('/experiment-template/update-products-list', { experimentTemplateId: templateId, productIds })
             .then(response => response.data);
     },
     async updateResourcesList(templateId: string, resourceIds: string[]): Promise<void> {
-        return http.put('/experiment-template/update', { experimentTemplateId: templateId, resourceIds })
+        return http.put('/experiment-template/update-resources-list', { experimentTemplateId: templateId, resourceIds })
             .then(response => response.data);
     },
 });

@@ -15,8 +15,11 @@ export const EMPTY_TEMPLATE_ID = 'new';
 
 export class TemplateStore {
     @observable public currentTemplate: RkExperimentTemplate;
+    @observable public productIdsInCurrentTemplate: string[];
+    @observable public resourceIdsInCurrentTemplate: string[];
     @observable public isTemplateEmpty: boolean;
     @observable public isLoading: boolean;
+    @observable public productResourceListChanged: boolean;
 
     @observable public сommonInfoControlForm: FormGroup<ICommonInfoControl>;
 
@@ -27,6 +30,9 @@ export class TemplateStore {
     @action
     public init(): void {
         this.isLoading = true;
+        this.productResourceListChanged = false;
+        this.productIdsInCurrentTemplate = new Array<string>();
+        this.resourceIdsInCurrentTemplate = new Array<string>();
     }
 
     @action
@@ -41,8 +47,11 @@ export class TemplateStore {
             });
         } else {
             this.currentTemplate = await api.template.getTemplate(templateId);
-            this.isTemplateEmpty = false;
             runInAction(() => {
+                this.isTemplateEmpty = false;
+                this.productIdsInCurrentTemplate = this.currentTemplate.products.map(p => p.productId);
+                this.resourceIdsInCurrentTemplate = this.currentTemplate.resources.map(p => p.resourceId);
+                this.productResourceListChanged = false;
                 this.isLoading = false;
             });
         }
@@ -72,7 +81,7 @@ export class TemplateStore {
                 (this.сommonInfoControlForm ? this.сommonInfoControlForm.valid : true)
                 && true
             );
-        } else {            
+        } else {
             return (
                 (this.сommonInfoControlForm ? this.сommonInfoControlForm.valid : true)
                 && true
@@ -93,6 +102,46 @@ export class TemplateStore {
                 [],
                 v => (this.currentTemplate.description = v)
             ),
+        });
+    }
+
+    @action
+    public addProductToTemplateList(productId: string) {
+        console.log(productId);
+        this.productIdsInCurrentTemplate.push(productId);
+        this.productResourceListChanged = true;
+    }
+
+    @action
+    public removeProductFromTemplateList(productId: string) {
+        this.productIdsInCurrentTemplate = this.productIdsInCurrentTemplate.filter(id => id !== productId);
+        this.productResourceListChanged = true;
+    }
+
+    @action
+    public addResourceToTemplateList(resourceId: string) {
+        this.resourceIdsInCurrentTemplate.push(resourceId);
+        this.productResourceListChanged = true;
+    }
+
+    @action
+    public removeResourceFromTemplateList(resourceId: string) {
+        this.resourceIdsInCurrentTemplate = this.resourceIdsInCurrentTemplate.filter(id => id !== resourceId);
+        this.productResourceListChanged = true;
+    }
+
+    @action
+    public async saveTemplate() {
+        this.isLoading = true;
+
+        await api.template.updateTemplate(this.currentTemplate);
+        console.log(this.productResourceListChanged);
+        if (this.productResourceListChanged) {
+            await api.template.updateProductsList(this.currentTemplate.rkExperimentTemplateId, this.productIdsInCurrentTemplate);
+            await api.template.updateResourcesList(this.currentTemplate.rkExperimentTemplateId, this.resourceIdsInCurrentTemplate);
+        }
+        runInAction(() => {
+            this.openTemplate(this.currentTemplate.rkExperimentTemplateId);
         });
     }
 }

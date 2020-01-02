@@ -63,7 +63,7 @@ export class ProductStore {
     @action
     public setProductNameEditorSelectedProduct(productId: string | null): void {
         if (productId !== null) {
-            let selectedProduct = this.allProducts.find(p => p.productId === productId);
+            let selectedProduct = this.allProducts.find(p => p.rkProductId === productId);
             this.productNameEditorSelectedProduct = !!selectedProduct ? selectedProduct : new Product();
             this.productNameEditorForm.controls.name.value = this.productNameEditorSelectedProduct.name;
         } else {
@@ -94,7 +94,7 @@ export class ProductStore {
     public async deleteProductFromProject(): Promise<void> {
         try {
             console.log('loadProducts');
-            await api.product.deleteProduct(this.productNameEditorSelectedProduct.productId);
+            await api.product.deleteProduct(this.productNameEditorSelectedProduct.rkProductId);
 
             runInAction(() => {
                 this.loadProducts(this.projectId);
@@ -111,8 +111,8 @@ export class ProductStore {
     // Helpers
     private async validateNameDublicates(control: FormControl): Promise<ValidationEvent[]> {
         console.log('validateNameDublicates');
-        console.log(this.productNameEditorSelectedProduct.productId);
-        if (control.value == null || this.productNameEditorSelectedProduct.productId) {
+        console.log(this.productNameEditorSelectedProduct.rkProductId);
+        if (control.value == null || this.productNameEditorSelectedProduct.rkProductId) {
             return [];
         }
         if (this.allProducts.find(p => p.name.toLowerCase() === control.value.toLowerCase())) {

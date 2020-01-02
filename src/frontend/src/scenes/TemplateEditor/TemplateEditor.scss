@@ -25,5 +25,30 @@
         width: 90%;
         text-align: right;
         margin: 10px auto;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #208fa0;
+
+        .change-time {
+            font-size: 0.7em;
+            font-style: italic;
+            margin-right: 20px;
+        }
+    }
+    .editors-list {
+        display: flex;
+        flex-wrap: wrap;
+        width: 90%;
+        margin: 0 auto;
+
+        .belsim-action-button {
+            margin: 5px;
+            background-color: #208fa0;
+            border-color: #208fa0;
+            
+            &:hover {
+                background-color: #1c4d54;
+                border-color: #1c4d54;
+            }
+        }
     }
 }

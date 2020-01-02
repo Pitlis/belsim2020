@@ -1,0 +1,19 @@
+.product-resources-list {
+    display: flex;
+    justify-content: space-between;
+    .column {
+        flex: 0 1 48%;
+
+        .actions {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .ag-theme-balham {
+            height: 60vh;
+            width: 100%;
+        }
+    }
+}

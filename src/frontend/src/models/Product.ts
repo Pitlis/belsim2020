@@ -1,4 +1,4 @@
 export class Product {
-    public productId: string = '';
+    public rkProductId: string = '';
     public name: string = '';
 }

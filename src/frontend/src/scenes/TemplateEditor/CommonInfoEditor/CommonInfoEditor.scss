@@ -2,4 +2,15 @@
     .name {
         width: 40%;
     }
+    .additional-info {
+        .additional-info-row {
+            font-size: 1.05em;
+            margin-top: 20px;
+
+            .title {
+                font-style: normal;
+                font-weight: 500;
+            }
+        }
+    }
 }

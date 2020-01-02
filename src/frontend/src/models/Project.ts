@@ -1,3 +1,5 @@
+import { UserName } from "./UserName";
+
 export enum BelsimProjectType {
     RK = '1'
 }
@@ -9,4 +11,5 @@ export class Project {
     public projectType: BelsimProjectType = BelsimProjectType.RK;
     public organizationName: string = '';
     public comments: string = '';
+    public assignedUsers: UserName[];
 }
