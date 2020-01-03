@@ -17,10 +17,6 @@ interface IOwnProps {
 @observer
 export class ExperimentsList extends PureComponent<IOwnProps> {
 
-    constructor(props) {
-        super(props);
-    }
-
     handleOpenResult = (experiment: ExperimentShortInfo) => {
         this.props.onOpenResults(experiment);
     }
@@ -84,7 +80,7 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
                                 suppressMovable: true,
                                 cellRendererFramework: (event) => {
                                     return <button className='show-results-button'
-                                        disabled={event.data.status != ExperimentStatus.Completed}
+                                        disabled={event.data.status !== ExperimentStatus.Completed}
                                         onClick={() => this.handleOpenResult(event.data)}>
                                         Показать результаты
                                     </button>

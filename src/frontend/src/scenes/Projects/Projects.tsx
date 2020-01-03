@@ -32,7 +32,9 @@ export class Projects extends Component<{ stores?: StoresType }> {
     public render(): JSX.Element {
         return (
             <div className='projects'>
-                {this.projectStore.availableProjects.map((p, i) => <ProjectCard key={i} project={p} onOpenProject={this.handleOpenProject} />)}
+                {this.projectStore.availableProjects.map((p) =>
+                    <ProjectCard key={p.projectId} project={p} onOpenProject={this.handleOpenProject} />
+                )}
             </div>
         );
     }

@@ -13,3 +13,4 @@ export * from './ExperimentResourceInProduct';
 export * from './ExperimentShipment';
 export * from './ExperimentProduct';
 export * from './RkExperimentTemplate';
+export * from './RkExperimentTemplateInfo';

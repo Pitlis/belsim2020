@@ -1,2 +1,14 @@
 .project-details {
+    width: 95%;
+    margin: 0 auto;
+
+    .templates-list {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 -20px;
+
+        .template-card {
+            margin: 20px;
+        }
+    }
 }

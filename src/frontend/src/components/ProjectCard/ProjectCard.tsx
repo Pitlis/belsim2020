@@ -10,10 +10,6 @@ import { formatDate } from 'helpers/dateFormatter';
 @observer
 export class ProjectCard extends PureComponent<{ project: Project, onOpenProject: (projectId: string) => void }> {
 
-    constructor(props) {
-        super(props);
-    }
-
     handleOpenProject = () => {
         console.log('handleOpenProject');
         this.props.onOpenProject(this.props.project.projectId);

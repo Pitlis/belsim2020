@@ -83,7 +83,7 @@ namespace belsim2020.Controllers
         }
 
         [HttpGet("get-empty")]
-        public async Task<IActionResult> GetEmptyExperimentTemplate()
+        public IActionResult GetEmptyExperimentTemplate()
         {
             var emptyTemplate = new ExperimentTemplateViewModel();
             emptyTemplate.Name = string.Empty;

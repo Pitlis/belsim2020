@@ -1,6 +1,6 @@
 import { action, observable, runInAction, computed } from 'mobx';
 
-import { RkExperimentTemplate } from 'models';
+import { RkExperimentTemplate, RkExperimentTemplateInfo } from 'models';
 import { api } from 'repositories';
 import { AbstractControls, FormControl, FormGroup, notEmptyOrSpaces } from '@quantumart/mobx-form-validation-kit';
 import { stores } from 'stores';
@@ -22,6 +22,8 @@ export class TemplateStore {
     @observable public productResourceListChanged: boolean;
 
     @observable public сommonInfoControlForm: FormGroup<ICommonInfoControl>;
+
+    @observable public templatesInProject: RkExperimentTemplateInfo[];
 
     public constructor() {
         this.init();
@@ -55,6 +57,15 @@ export class TemplateStore {
                 this.isLoading = false;
             });
         }
+    }
+
+    @action
+    public async loadProjectTemplatesList(projectId: string): Promise<void> {
+        this.isLoading = true;
+        this.templatesInProject = await api.template.getProjectTemplates(projectId);
+        runInAction(() => {
+            this.isLoading = false;
+        });
     }
 
     @action

@@ -10,12 +10,23 @@ import { BelsimLoader } from 'components/BelsimLoader';
 import { Card, Button } from 'react-bootstrap';
 import { ProductsAndResourcesInTemplate } from './ProductsAndResourcesInTemplate/ProductsAndResourcesInTemplate';
 import { formatDate } from 'helpers/dateFormatter';
+import { when } from 'mobx';
+
+enum EditFormsName {
+    COMMON_INFO = 'Общая информация',
+    PRODUCTS_AND_RESOURCES = 'Продукты и ресурсы в модели'
+}
+
+interface IState {
+    activeEditFormName: EditFormsName;
+    isLoading: boolean;
+}
 
 @inject((stores: StoresType) => ({
     stores
 }))
 @observer
-export class TemplateEditor extends Component<{ stores?: StoresType }, { activeEditFormName: EditFormsName }> {
+export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
     public projectStore: ProjectStore;
     public routerStore: RouterStore;
     public templateStore: TemplateStore;
@@ -31,8 +42,9 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, { activeE
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.PRODUCTS_AND_RESOURCES,
-        }
+            activeEditFormName: EditFormsName.COMMON_INFO,
+            isLoading: true
+        };
     }
 
     componentDidMount() {
@@ -41,6 +53,11 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, { activeE
         this.templateStore.openTemplate(templateId);
         this.productStore.loadProducts(projectId);
         this.resourceStore.loadResources(projectId);
+
+        when(
+            () => !!this.templateStore.currentTemplate && !this.templateStore.isLoading && !this.projectStore.isLoading,
+            () => this.setState({ isLoading: false })
+        );
     }
 
     handleCreateTemplate = () => {
@@ -54,7 +71,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, { activeE
     public render(): JSX.Element {
         return (
             <div className='template-editor'>
-                {this.templateStore.isLoading
+                {this.state.isLoading
                     ? <BelsimLoader />
                     : this.renderEditForm()
                 }
@@ -191,9 +208,4 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, { activeE
             </div>
         );
     }
-}
-
-enum EditFormsName {
-    COMMON_INFO = 'Общая информация',
-    PRODUCTS_AND_RESOURCES = 'Продукты и ресурсы в модели'
 }

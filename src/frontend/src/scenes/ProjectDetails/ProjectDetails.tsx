@@ -4,7 +4,7 @@ import { RouterStore } from 'mobx-react-router';
 
 import './ProjectDetails.scss';
 
-import { StoresType, ProjectStore, EMPTY_TEMPLATE_ID } from 'stores';
+import { StoresType, ProjectStore, EMPTY_TEMPLATE_ID, TemplateStore } from 'stores';
 import { routes, makeUrlWithParams } from 'routes';
 import { ExperimentStore } from 'stores/Experiment.store';
 import { ExperimentShortInfo } from 'models';
@@ -12,6 +12,7 @@ import { ExperimentsList } from 'components/ExperimentsList';
 import { BelsimLoader } from 'components/BelsimLoader';
 import { Button } from 'react-bootstrap';
 import { FiPlus } from 'react-icons/fi';
+import { TemplateCard } from 'components/TemplateCard';
 
 @inject((stores: StoresType) => ({
     stores
@@ -21,16 +22,19 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
     public routerStore: RouterStore;
     public experimentStore: ExperimentStore;
     public projectStore: ProjectStore;
+    public templateStore: TemplateStore;
 
     constructor(props) {
         super(props);
         this.routerStore = this.props.stores!.RouterStore;
         this.experimentStore = this.props.stores!.ExperimentStore;
         this.projectStore = this.props.stores!.ProjectStore;
+        this.templateStore = this.props.stores!.TemplateStore;
     }
 
     componentDidMount() {
         this.experimentStore.loadProjectExperimentsList(this.projectStore.currenProject.projectId);
+        this.templateStore.loadProjectTemplatesList(this.projectStore.currenProject.projectId);
     }
 
     handleOpenExperimentResults = (experiment: ExperimentShortInfo) => {
@@ -52,7 +56,7 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
     public render(): JSX.Element {
         return (
             <div className='project-details'>
-                {this.experimentStore.isLoading ?
+                {this.experimentStore.isLoading || this.templateStore.isLoading ?
                     (<BelsimLoader />) :
                     (
                         <>
@@ -63,6 +67,7 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
                             >
                                 Создать модель данных <FiPlus />
                             </Button>
+                            {this.renderTemplatesList()}
                             <ExperimentsList
                                 title='Все запущенные эксперименты проекта'
                                 experiments={this.experimentStore.projectExperimentsList}
@@ -71,6 +76,29 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
                         </>
                     )}
             </div >
+        );
+    }
+
+    handleOpenTemplate = (templateId: string) => {
+        this.routerStore.push(makeUrlWithParams(routes.template.path,
+            {
+                templateId,
+                projectId: this.projectStore.currenProject.projectId
+            }
+        ));
+    }
+
+    public renderTemplatesList(): JSX.Element {
+        return (
+            <div className='templates-list'>
+                {this.templateStore.templatesInProject.map((t) =>
+                    <TemplateCard
+                        key={t.rkExperimentTemplateId}
+                        template={t}
+                        onOpenTemplate={this.handleOpenTemplate}
+                    />
+                )}
+            </div>
         );
     }
 }

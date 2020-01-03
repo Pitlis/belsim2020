@@ -1,8 +1,8 @@
 .template-editor {
     .edit-form {
         margin: auto;
-        width: 90%;
-        height: 80vh;
+        width: 95%;
+        height: 75vh;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -22,7 +22,7 @@
         }
     }
     .template-saving {
-        width: 90%;
+        width: 95%;
         text-align: right;
         margin: 10px auto;
         padding-bottom: 10px;
@@ -37,7 +37,7 @@
     .editors-list {
         display: flex;
         flex-wrap: wrap;
-        width: 90%;
+        width: 95%;
         margin: 0 auto;
 
         .belsim-action-button {

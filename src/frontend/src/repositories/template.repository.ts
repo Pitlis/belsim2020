@@ -1,9 +1,9 @@
 import { http } from './http';
 
-import { RkExperimentTemplate } from 'models';
+import { RkExperimentTemplate, RkExperimentTemplateInfo } from 'models';
 
 export const template = Object.freeze({
-    async getProjectTemplates(projectId: string): Promise<RkExperimentTemplate[]> {
+    async getProjectTemplates(projectId: string): Promise<RkExperimentTemplateInfo[]> {
         return http.get('/experiment-template/templates-in-project/' + projectId)
             .then(response => response.data);
     },   

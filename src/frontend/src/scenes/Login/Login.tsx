@@ -35,7 +35,7 @@ export class Login extends Component<{ stores: StoresType }> {
     }
 
     handleKeyPress = (target) => {
-        if (target.charCode == 13) {
+        if (target.charCode === 13) {
             this.handleLogin();
         }
     }
