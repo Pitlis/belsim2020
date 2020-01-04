@@ -190,6 +190,14 @@ namespace belsim2020.Integration.Services
         {
             XElement parameters = new XElement("parameters");
 
+            experiment.Products = experiment.Products.OrderBy(p => p.RkProductInExperimentId).ToList();
+            experiment.Resources = experiment.Resources.OrderBy(r => r.RkResourceInExperimentId).ToList();
+            foreach (var product in experiment.Products)
+            {
+                product.Resources = product.Resources.OrderBy(r => r.RkResourceInExperimentId).ToList();
+                product.Shipments = product.Shipments.OrderBy(s => s.ShipmentDatetime).ToList();
+            }
+
             XElement variable = new XElement(VARIABLE, new XAttribute(NAME, "__Период времени (мес.)"));
             variable.Add(new XElement(VALUE, experiment.Period));
             parameters.Add(variable);
@@ -225,10 +233,14 @@ namespace belsim2020.Integration.Services
 
             variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Производство: Расход ресурсов (ед.рес./ед.прод.)"));
             for (int i = 0; i < experiment.Products.Count; i++)
-                for (int j = 0; j < experiment.Products[i].Resources.Count; j++)
+                for (int j = 0; j < experiment.Resources.Count; j++)
                 {
                     XElement item = new XElement(VARIABLE, new XAttribute(INDEX, string.Format("{0},{1}", i, j)));
-                    item.Add(new XElement(VALUE, experiment.Products[i].Resources[j].ResourceConsumption.ToString(CultureInfo.InvariantCulture)));
+
+                    var resourceInProduct = experiment.Products[i].Resources.FirstOrDefault(r => r.RkResourceInExperimentId == experiment.Resources[j].RkResourceInExperimentId);
+                    var resourceConsumption = resourceInProduct != null ? resourceInProduct.ResourceConsumption : 0;
+
+                    item.Add(new XElement(VALUE, resourceConsumption.ToString(CultureInfo.InvariantCulture)));
                     variable.Add(item);
                 }
             parameters.Add(variable);
@@ -273,14 +285,8 @@ namespace belsim2020.Integration.Services
             variable.Add(new XElement(VALUE, experiment.ShipmentsCount));
             parameters.Add(variable);
 
-            foreach (var product in experiment.Products)
-            {
-                product.Shipments = product.Shipments.OrderBy(s => s.ShipmentDatetime).ToList();
-            }
-
             variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Реализация: Время отгрузки: (мес.)"));
-            var countShipmentsForProducts = experiment.Products.First().Shipments.Count;
-            for (int i = 0; i < countShipmentsForProducts; i++)
+            for (int i = 0; i < experiment.ShipmentsCount; i++)
             {
                 XElement item = new XElement(VARIABLE, new XAttribute(INDEX, i));
                 item.Add(new XElement(VALUE, experiment.Products.First().Shipments[i].ShipmentDatetime));
@@ -290,7 +296,7 @@ namespace belsim2020.Integration.Services
 
             variable = new XElement(VARIABLE_ARRAY, new XAttribute(NAME, "Реализация: Объем продукции в отгрузке:(ед.)"));
             for (int productIndex = 0; productIndex < experiment.Products.Count; productIndex++)
-                for (int shipmentIndex = 0; shipmentIndex < countShipmentsForProducts; shipmentIndex++)
+                for (int shipmentIndex = 0; shipmentIndex < experiment.ShipmentsCount; shipmentIndex++)
                 {
                     XElement item = new XElement(VARIABLE, new XAttribute(INDEX, string.Format("{0},{1}", shipmentIndex, productIndex)));
                     item.Add(new XElement(VALUE, experiment.Products[productIndex].Shipments[shipmentIndex].Volume.ToString(CultureInfo.InvariantCulture)));
