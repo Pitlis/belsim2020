@@ -139,7 +139,6 @@ namespace belsim2020
             }
 
             app.UseCors("default");
-            app.UseHttpsRedirection();
 
             app.UseMiddleware<CustomExceptionMiddleware>();
             app.UseStaticFiles();

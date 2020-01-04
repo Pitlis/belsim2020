@@ -111,9 +111,18 @@ namespace belsim2020.Services.Implementations.Rk
                 throw new ApplicationException($"Cannot set experiment results: experiment [{experimentId}] is not in progress - it's in status [{experiment.Status}]");
             }
 
-            experiment.ResultData = resultJson;
-            experiment.Status = ExperimentStatus.Completed;
-            experiment.StatusChangedAt = DateTime.UtcNow;
+            if (resultJson == null)
+            {
+                experiment.Status = ExperimentStatus.Failed;
+                experiment.StatusChangedAt = DateTime.UtcNow;
+            }
+            else
+            {
+                experiment.ResultData = resultJson;
+                experiment.Status = ExperimentStatus.Completed;
+                experiment.StatusChangedAt = DateTime.UtcNow;
+            }
+
 
             await dbContext.SaveChangesAsync();
         }

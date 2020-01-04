@@ -1,11 +1,15 @@
 using Autofac;
 using belsim2020.Integration.Services;
+using NLog;
+using System;
 using System.Net;
 
 namespace belsim2020.Integration
 {
     class Program
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private static IContainer CompositionRoot()
         {
             var builder = new ContainerBuilder();
@@ -17,9 +21,17 @@ namespace belsim2020.Integration
 
         public static void Main()  //Main entry point
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 
-            CompositionRoot().Resolve<Application>().Run().Wait();
+            try
+            {
+                logger.Info("Run app");
+                CompositionRoot().Resolve<Application>().Run();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
         }
     }
 }

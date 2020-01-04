@@ -5,6 +5,9 @@ namespace belsim2020.Integration.Models.ApiModels
 {
     public class ApiExperimentModel
     {
+        public Guid ExperimentId { get; set; }
+        public string ExperimentName { get; set; }
+
         public Guid RkExperimentTemplateId { get; set; }
 
         public string OwnerId { get; set; }

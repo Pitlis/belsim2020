@@ -61,7 +61,7 @@ namespace belsim2020.Controllers
                 return new BadRequestResult();
             }
 
-            await experimentService.SetExperimentResult(model.ExperimentId, model.ResultJson.ToString());
+            //await experimentService.SetExperimentResult(model.ExperimentId, model.ResultJson != null ? model.ResultJson.ToString() : null);
 
             return new OkResult();
         }

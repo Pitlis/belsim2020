@@ -1,11 +1,7 @@
 ﻿using belsim2020.Integration.Models.ApiModels;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,12 +21,12 @@ namespace belsim2020.Integration.Services
             client = new HttpClient();
         }
 
-        public async Task<ApiExperimentModel> TakeExperimentForProcessing()
+        public ApiExperimentModel TakeExperimentForProcessing()
         {
             var httpContent = new StringContent(JsonConvert.SerializeObject(new { AccessKey = apiAccessKey }), Encoding.UTF8, "application/json");
-            var response = await client.PutAsync($"{apiBaseUrl}/take-unprocessed-experiment-for-processing", httpContent);
+            var response = client.PutAsync($"{apiBaseUrl}/take-unprocessed-experiment-for-processing", httpContent).Result;
 
-            var responseString = await response.Content.ReadAsStringAsync();
+            var responseString = response.Content.ReadAsStringAsync().Result;
             if (string.IsNullOrEmpty(responseString))
             {
                 return null;
@@ -39,7 +35,16 @@ namespace belsim2020.Integration.Services
             dynamic experimentDataObject = JsonConvert.DeserializeObject<dynamic>(responseString);
             var experimentData = Convert.ToString(experimentDataObject.experimentData);
 
-            return JsonConvert.DeserializeObject<ApiExperimentModel>(experimentData);
+            var result = JsonConvert.DeserializeObject<ApiExperimentModel>(experimentData);
+            result.ExperimentName = (string)experimentDataObject.name;
+            result.ExperimentId = Guid.Parse((string)experimentDataObject.rkExperimentId);
+            return result;
+        }
+
+        public void SendExperimentResult(string data, Guid experimentId)
+        {
+            var httpContent = new StringContent(JsonConvert.SerializeObject(new { AccessKey = apiAccessKey, ResultJson = data, ExperimentId = experimentId }), Encoding.UTF8, "application/json");
+            var response = client.PutAsync($"{apiBaseUrl}/set-experiment-results", httpContent).Result;
         }
     }
 }
