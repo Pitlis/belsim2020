@@ -13,12 +13,14 @@ import { formatDate } from 'helpers/dateFormatter';
 import { when } from 'mobx';
 import { PlanningEditorEditor } from './PlanningEditor/PlanningEditor';
 import { StoreEditor } from './StoreEditor/StoreEditor';
+import { SupplyEditor } from './SupplyEditor/SupplyEditor';
 
 enum EditFormsName {
     COMMON_INFO = 'Общая информация',
     PRODUCTS_AND_RESOURCES = 'Продукты и ресурсы в модели',
     PLANNING = 'Производство',
-    STORE = 'Запасы'
+    STORE = 'Запасы',
+    SUPPLY = 'Снабжение'
 }
 
 interface IState {
@@ -46,7 +48,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.STORE,
+            activeEditFormName: EditFormsName.SUPPLY,
             isLoading: true
         };
     }
@@ -114,6 +116,8 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                 return <PlanningEditorEditor />
             case EditFormsName.STORE:
                 return <StoreEditor />
+            case EditFormsName.SUPPLY:
+                return <SupplyEditor />
             default:
                 return null;
         }
@@ -186,11 +190,11 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                     {EditFormsName.STORE}
                 </Button>
                 <Button
-                    onClick={() => this.handleOpenEditor(EditFormsName.COMMON_INFO)}
+                    onClick={() => this.handleOpenEditor(EditFormsName.SUPPLY)}
                     variant="success"
                     className='belsim-action-button'
                 >
-                    {EditFormsName.COMMON_INFO}
+                    {EditFormsName.SUPPLY}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.PRODUCTS_AND_RESOURCES)}

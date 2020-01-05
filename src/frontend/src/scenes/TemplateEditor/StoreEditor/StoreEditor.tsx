@@ -89,7 +89,7 @@ export class StoreEditor extends Component<{ stores?: StoresType }> {
     private renderResourceStoreEditor(): JSX.Element {
         return (
             <div className='resource-store-editor'>
-                <div className='title'>Материальные ресурсы</div>
+                <div className='title'>Материальные ресурсы на складе</div>
                 <div className='ag-theme-balham'>
                     <AgGridReact
                         columnDefs={
@@ -112,7 +112,7 @@ export class StoreEditor extends Component<{ stores?: StoresType }> {
                                     valueParser: wholeNumberValueParser
                                 },
                                 {
-                                    headerName: "Цена (руб./ед.)",
+                                    headerName: "Цена ресурса на складе (руб./ед.)",
                                     field: "storedResourcePrice",
                                     sortable: true,
                                     filter: true,

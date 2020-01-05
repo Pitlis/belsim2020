@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { inject, observer } from 'mobx-react'; 
+import { inject, observer } from 'mobx-react';
 import { AgGridReact } from '@ag-grid-community/react';
 import { SelectionChangedEvent } from "@ag-grid-community/core";
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
@@ -211,10 +211,12 @@ export class PlanningEditorEditor extends Component<{ stores?: StoresType }, ISt
                 options={options}
                 onChange={this.handleResourceInDropdownSelected}
                 isDisabled={!this.state.selectedProduct}
-                value={this.state.selectedResourceInDropdown ? {
-                    value: this.state.selectedResourceInDropdown!.rkResourceInExperimentId,
-                    label: this.resourceStore.getResourceName(this.state.selectedResourceInDropdown!.resourceId)
-                } : null}
+                value={
+                    this.state.selectedResourceInDropdown ? {
+                        value: this.state.selectedResourceInDropdown!.rkResourceInExperimentId,
+                        label: this.resourceStore.getResourceName(this.state.selectedResourceInDropdown!.resourceId)
+                    } : null
+                }
             />
         );
     }

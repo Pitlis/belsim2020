@@ -16,6 +16,16 @@ interface IPlanningControl extends AbstractControls {
     planningIntervalsCount: FormControl<number>;
 }
 
+interface ISupplyControl extends AbstractControls {
+    supplyPaymentDate: FormControl<number>;
+    supplyPaymentDateStdDev: FormControl<number>;
+
+    supplyPriceChangeCoefficient: FormControl<number>;
+    supplyPriceChangeCoefficientStdDev: FormControl<number>;
+
+    supplyPriceChangeInterval: FormControl<number>;
+    supplyPriceChangeIntervalStdDev: FormControl<number>;
+}
 
 export const EMPTY_TEMPLATE_ID = 'new';
 
@@ -29,6 +39,7 @@ export class TemplateStore {
 
     @observable public сommonInfoControlForm: FormGroup<ICommonInfoControl>;
     @observable public planningControlForm: FormGroup<IPlanningControl>;
+    @observable public supplyControlForm: FormGroup<ISupplyControl>;
 
     @observable public templatesInProject: RkExperimentTemplateInfo[];
 
@@ -198,6 +209,42 @@ export class TemplateStore {
                 this.currentTemplate.planningIntervalsCount,
                 [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
                 v => (this.currentTemplate.planningIntervalsCount = Math.trunc(v))
+            )
+        });
+    }
+
+    @action
+    public initSupplyControlForm(): void {
+        this.supplyControlForm = new FormGroup<ISupplyControl>({
+            supplyPaymentDate: new FormControl(
+                this.currentTemplate.supplyPaymentDate,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.supplyPaymentDate = Math.trunc(v))
+            ),
+            supplyPaymentDateStdDev: new FormControl(
+                this.currentTemplate.supplyPaymentDateStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.supplyPaymentDateStdDev = Math.trunc(v))
+            ),
+            supplyPriceChangeCoefficient: new FormControl(
+                this.currentTemplate.supplyPriceChangeCoefficient,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.supplyPriceChangeCoefficient = Number(Number(v).toFixed(4)))
+            ),
+            supplyPriceChangeCoefficientStdDev: new FormControl(
+                this.currentTemplate.supplyPriceChangeCoefficientStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.supplyPriceChangeCoefficientStdDev = Number(Number(v).toFixed(4)))
+            ),
+            supplyPriceChangeInterval: new FormControl(
+                this.currentTemplate.supplyPriceChangeInterval,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.supplyPriceChangeInterval = Math.trunc(v))
+            ),
+            supplyPriceChangeIntervalStdDev: new FormControl(
+                this.currentTemplate.supplyPriceChangeIntervalStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.supplyPriceChangeIntervalStdDev = Math.trunc(v))
             )
         });
     }
