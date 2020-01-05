@@ -11,10 +11,12 @@ import { Card, Button } from 'react-bootstrap';
 import { ProductsAndResourcesInTemplate } from './ProductsAndResourcesInTemplate/ProductsAndResourcesInTemplate';
 import { formatDate } from 'helpers/dateFormatter';
 import { when } from 'mobx';
+import { PlanningEditorEditor } from './PlanningEditor/PlanningEditor';
 
 enum EditFormsName {
     COMMON_INFO = 'Общая информация',
-    PRODUCTS_AND_RESOURCES = 'Продукты и ресурсы в модели'
+    PRODUCTS_AND_RESOURCES = 'Продукты и ресурсы в модели',
+    PLANNING = 'Производство'
 }
 
 interface IState {
@@ -42,7 +44,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.COMMON_INFO,
+            activeEditFormName: EditFormsName.PLANNING,
             isLoading: true
         };
     }
@@ -106,6 +108,8 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                 return <CommonInfoEditor />
             case EditFormsName.PRODUCTS_AND_RESOURCES:
                 return <ProductsAndResourcesInTemplate />
+            case EditFormsName.PLANNING:
+                return <PlanningEditorEditor />
             default:
                 return null;
         }
@@ -164,11 +168,11 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                     {EditFormsName.PRODUCTS_AND_RESOURCES}
                 </Button>
                 <Button
-                    onClick={() => this.handleOpenEditor(EditFormsName.COMMON_INFO)}
+                    onClick={() => this.handleOpenEditor(EditFormsName.PLANNING)}
                     variant="success"
                     className='belsim-action-button'
                 >
-                    {EditFormsName.COMMON_INFO}
+                    {EditFormsName.PLANNING}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.PRODUCTS_AND_RESOURCES)}

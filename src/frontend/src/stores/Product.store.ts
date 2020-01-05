@@ -107,6 +107,11 @@ export class ProductStore {
         }
     }
 
+    public getProductName(productId: string) {
+        let product = this.allProducts.find(p => p.rkProductId === productId);
+        return product ? product.name : '';
+    }
+
 
     // Helpers
     private async validateNameDublicates(control: FormControl): Promise<ValidationEvent[]> {

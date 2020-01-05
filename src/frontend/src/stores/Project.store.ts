@@ -22,19 +22,6 @@ export class ProjectStore {
     @action
     public async openProject(projectId: string): Promise<void> {
         this.isLoading = true;
-
-        let project = this.availableProjects.find(p => p.projectId === projectId);
-        if (project) {
-            this.currenProject = project;
-            this.isLoading = false;
-        }
-        else {
-            await this.loadProject(projectId);
-        }
-    }
-
-    @action
-    private async loadProject(projectId: string) {
         this.currenProject = await api.project.getProject(projectId);
         runInAction(() => {
             this.isLoading = false;

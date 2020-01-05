@@ -2,10 +2,12 @@
     width: 95%;
     margin: 0 auto;
 
-    display: flex;
-    flex-wrap: wrap;
-
-    .project-card {
-        margin: 20px;
+    .projects-list {
+        display: flex;
+        flex-wrap: wrap;
+    
+        .project-card {
+            margin: 20px;
+        }
     }
 }

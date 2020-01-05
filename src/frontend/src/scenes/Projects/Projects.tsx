@@ -6,6 +6,7 @@ import './Projects.scss';
 import { ProjectCard } from 'components/ProjectCard';
 import { ProjectStore, RouterStore, StoresType } from 'stores';
 import { routes, makeUrlWithParams } from 'routes';
+import { BelsimLoader } from 'components/BelsimLoader';
 
 @inject((stores: StoresType) => ({
     stores
@@ -32,9 +33,14 @@ export class Projects extends Component<{ stores?: StoresType }> {
     public render(): JSX.Element {
         return (
             <div className='projects'>
-                {this.projectStore.availableProjects.map((p) =>
-                    <ProjectCard key={p.projectId} project={p} onOpenProject={this.handleOpenProject} />
-                )}
+                {this.projectStore.isLoading
+                    ? <BelsimLoader />
+                    : <div className='projects-list'>
+                        {this.projectStore.availableProjects.map((p) =>
+                            <ProjectCard key={p.projectId} project={p} onOpenProject={this.handleOpenProject} />
+                        )}
+                    </div>
+                }
             </div>
         );
     }

@@ -155,6 +155,8 @@ export class ProductsAndResourcesInTemplate extends Component<{ stores?: StoresT
         if (selectedProduct) {
             let productId = (event.api.getSelectedRows()[0] as Product).rkProductId;
             this.setState({ selectedProductInTemplate: this.productStore.allProducts.find(p => p.rkProductId === productId)! })
+        } else {
+            this.setState({ selectedProductInTemplate: null })
         }
     }
 
@@ -196,6 +198,8 @@ export class ProductsAndResourcesInTemplate extends Component<{ stores?: StoresT
         if (selectedResource) {
             let ResourceId = (event.api.getSelectedRows()[0] as Resource).rkResourceId;
             this.setState({ selectedResourceInTemplate: this.resourceStore.allResources.find(p => p.rkResourceId === ResourceId)! })
+        } else {
+            this.setState({ selectedResourceInTemplate: null })
         }
     }
 

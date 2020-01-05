@@ -106,6 +106,12 @@ export class ResourceStore {
     }
 
 
+    public getResourceName(resourceId: string) {
+        let resource = this.allResources.find(p => p.rkResourceId === resourceId);
+        return resource ? resource.name : '';
+    }
+
+
     // Helpers
     private async validateNameDublicates(control: FormControl): Promise<ValidationEvent[]> {
         console.log('validateNameDublicates');

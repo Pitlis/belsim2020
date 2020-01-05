@@ -1,5 +1,5 @@
 export class ExperimentResourceInProduct {
-    public rkProductResourceInExperimentId: string;
+    public rkProductResourceInExperimentId?: string;
 
     public rkResourceInExperimentId: string;
 

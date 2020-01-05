@@ -7,7 +7,7 @@ import './BelsimInput.scss';
 import errorMessages from "helpers/errorMessages";
 
 interface Props {
-    formControl: FormControl;
+    formControl: FormControl<any, any>;
     inputType: 'text' | 'email' | 'password' | 'number';
     showErrors: boolean;
     fieldName: string;

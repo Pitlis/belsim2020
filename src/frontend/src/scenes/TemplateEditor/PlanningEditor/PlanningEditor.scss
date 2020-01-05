@@ -1,0 +1,36 @@
+.planning-editor {
+    .editor-form {
+        form {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+
+            .belsim-input {
+                width: 50%;
+            }
+        }
+        input {
+            width: 350px;
+        }
+    }
+
+    .actions {
+        display: flex;
+        height: 40px;
+
+        .selector {
+            width: 50%;
+        }
+
+        .add-resource {
+            width: 150px;
+            margin-top: 3px;
+            margin-left: 20px;
+        }
+    }
+
+    .ag-theme-balham {
+        height: 35vh;
+        width: 100%;
+    }
+}
