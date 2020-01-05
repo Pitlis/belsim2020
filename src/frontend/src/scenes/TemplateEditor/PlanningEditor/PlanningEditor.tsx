@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { inject, observer } from 'mobx-react'; import { AgGridReact } from '@ag-grid-community/react';
+import { inject, observer } from 'mobx-react'; 
+import { AgGridReact } from '@ag-grid-community/react';
 import { SelectionChangedEvent } from "@ag-grid-community/core";
 import { AllCommunityModules } from '@ag-grid-community/all-modules';
 import '@ag-grid-community/all-modules/dist/styles/ag-grid.css';
@@ -52,7 +53,9 @@ export class PlanningEditorEditor extends Component<{ stores?: StoresType }, ISt
         return (
             <div className='planning-editor'>
                 {this.renderForm()}
+                <hr />
                 {this.renderProductCycleEditor()}
+                <hr />
                 {this.renderProductResourcesEditor()}
             </div>
         );
