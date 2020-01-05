@@ -5,6 +5,7 @@ import { api } from 'repositories';
 import { AbstractControls, FormControl, FormGroup, notEmptyOrSpaces, minValue, required } from '@quantumart/mobx-form-validation-kit';
 import { stores } from 'stores';
 import { routes, makeUrlWithParams } from 'routes';
+import { toCurrency } from 'helpers/gridNumberParser';
 
 interface ICommonInfoControl extends AbstractControls {
     name: FormControl<string>;
@@ -27,6 +28,21 @@ interface ISupplyControl extends AbstractControls {
     supplyPriceChangeIntervalStdDev: FormControl<number>;
 }
 
+interface IFinanceControl extends AbstractControls {
+    settlementAccountVolume: FormControl<number>;
+
+    isCreditUsed: FormControl<boolean>;
+    interestRate: FormControl<number>;
+    creditInterval: FormControl<number>;
+    creditCycle: FormControl<number>;
+    liquidityRatio: FormControl<number>;
+
+    replacementCost: FormControl<number>;
+    wearFactor: FormControl<number>;
+    amortizationQuota: FormControl<number>;
+    overvalueCoefficient: FormControl<number>;
+}
+
 export const EMPTY_TEMPLATE_ID = 'new';
 
 export class TemplateStore {
@@ -40,6 +56,7 @@ export class TemplateStore {
     @observable public сommonInfoControlForm: FormGroup<ICommonInfoControl>;
     @observable public planningControlForm: FormGroup<IPlanningControl>;
     @observable public supplyControlForm: FormGroup<ISupplyControl>;
+    @observable public financeControlForm: FormGroup<IFinanceControl>;
 
     @observable public templatesInProject: RkExperimentTemplateInfo[];
 
@@ -248,4 +265,61 @@ export class TemplateStore {
             )
         });
     }
+
+    @action
+    public initFinanceControlForm(): void {
+        this.financeControlForm = new FormGroup<IFinanceControl>({
+            settlementAccountVolume: new FormControl(
+                this.currentTemplate.settlementAccountVolume,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.settlementAccountVolume = toCurrency(v))
+            ),
+            isCreditUsed: new FormControl(
+                this.currentTemplate.isCreditUsed,
+                [],
+                v => (this.currentTemplate.isCreditUsed = v)
+            ),
+            interestRate: new FormControl(
+                this.currentTemplate.interestRate,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.interestRate = Number(Number(v).toFixed(4)))
+            ),
+            creditInterval: new FormControl(
+                this.currentTemplate.creditInterval,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.creditInterval = Math.trunc(v))
+            ),
+            creditCycle: new FormControl(
+                this.currentTemplate.creditCycle,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.creditCycle = Math.trunc(v))
+            ),
+            liquidityRatio: new FormControl(
+                this.currentTemplate.liquidityRatio,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.liquidityRatio = Number(Number(v).toFixed(4)))
+            ),
+            replacementCost: new FormControl(
+                this.currentTemplate.replacementCost,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.replacementCost = toCurrency(v))
+            ),
+            wearFactor: new FormControl(
+                this.currentTemplate.wearFactor,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.wearFactor = Number(Number(v).toFixed(4)))
+            ),
+            amortizationQuota: new FormControl(
+                this.currentTemplate.amortizationQuota,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.amortizationQuota = Number(Number(v).toFixed(4)))
+            ),
+            overvalueCoefficient: new FormControl(
+                this.currentTemplate.overvalueCoefficient,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.overvalueCoefficient = Number(Number(v).toFixed(4)))
+            ),
+        });
+    }
 }
+

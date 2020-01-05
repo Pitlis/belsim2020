@@ -14,13 +14,17 @@ import { when } from 'mobx';
 import { PlanningEditorEditor } from './PlanningEditor/PlanningEditor';
 import { StoreEditor } from './StoreEditor/StoreEditor';
 import { SupplyEditor } from './SupplyEditor/SupplyEditor';
+import { ShipmentsEditor } from './ShipmentsEditor/ShipmentsEditor';
+import { FinanceEditor } from './FinanceEditor/FinanceEditor';
 
 enum EditFormsName {
     COMMON_INFO = 'Общая информация',
     PRODUCTS_AND_RESOURCES = 'Продукты и ресурсы в модели',
     PLANNING = 'Производство',
     STORE = 'Запасы',
-    SUPPLY = 'Снабжение'
+    SHIPMENTS = 'Реализация',
+    SUPPLY = 'Снабжение',
+    FINANCE = 'Финансы'
 }
 
 interface IState {
@@ -48,7 +52,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.SUPPLY,
+            activeEditFormName: EditFormsName.FINANCE,
             isLoading: true
         };
     }
@@ -118,6 +122,10 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                 return <StoreEditor />
             case EditFormsName.SUPPLY:
                 return <SupplyEditor />
+            case EditFormsName.SHIPMENTS:
+                return <ShipmentsEditor />
+            case EditFormsName.FINANCE:
+                return <FinanceEditor />
             default:
                 return null;
         }
@@ -190,6 +198,13 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                     {EditFormsName.STORE}
                 </Button>
                 <Button
+                    onClick={() => this.handleOpenEditor(EditFormsName.SHIPMENTS)}
+                    variant="success"
+                    className='belsim-action-button'
+                >
+                    {EditFormsName.SHIPMENTS}
+                </Button>
+                <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.SUPPLY)}
                     variant="success"
                     className='belsim-action-button'
@@ -197,18 +212,11 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                     {EditFormsName.SUPPLY}
                 </Button>
                 <Button
-                    onClick={() => this.handleOpenEditor(EditFormsName.PRODUCTS_AND_RESOURCES)}
+                    onClick={() => this.handleOpenEditor(EditFormsName.FINANCE)}
                     variant="success"
                     className='belsim-action-button'
                 >
-                    {EditFormsName.PRODUCTS_AND_RESOURCES}
-                </Button>
-                <Button
-                    onClick={() => this.handleOpenEditor(EditFormsName.COMMON_INFO)}
-                    variant="success"
-                    className='belsim-action-button'
-                >
-                    {EditFormsName.COMMON_INFO}
+                    {EditFormsName.FINANCE}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.PRODUCTS_AND_RESOURCES)}
