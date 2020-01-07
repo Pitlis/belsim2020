@@ -1,0 +1,30 @@
+.experiments {
+
+    .experiments-list {
+        .ag-theme-balham {
+            height: 35vh;
+            width: 100%;
+        }
+    }
+
+    .run-button {
+        text-align: right;
+        button {
+            line-height: 15px;
+        }
+    }
+
+    .period-interval {
+        display: flex;
+        justify-content: space-between;
+
+        .belsim-input {
+            width: 45%;
+        }
+    }
+
+    .error {
+        font-size: 1em;
+        font-weight: 600;
+    }
+}

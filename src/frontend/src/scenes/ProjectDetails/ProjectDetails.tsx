@@ -11,12 +11,13 @@ import { BelsimLoader } from 'components/BelsimLoader';
 import { Button } from 'react-bootstrap';
 import { FiPlus } from 'react-icons/fi';
 import { TemplateCard } from 'components/TemplateCard';
+import { when } from 'mobx';
 
 @inject((stores: StoresType) => ({
     stores
 }))
 @observer
-export class ProjectDetails extends Component<{ stores: StoresType }, { selectedExperiment: ExperimentShortInfo | null }> {
+export class ProjectDetails extends Component<{ stores: StoresType }, { isLoading: boolean }> {
     public routerStore: RouterStore;
     public projectStore: ProjectStore;
     public templateStore: TemplateStore;
@@ -26,10 +27,19 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
         this.routerStore = this.props.stores!.RouterStore;
         this.projectStore = this.props.stores!.ProjectStore;
         this.templateStore = this.props.stores!.TemplateStore;
+
+        this.state = {
+            isLoading: true
+        }
     }
 
     componentDidMount() {
         this.templateStore.loadProjectTemplatesList(this.projectStore.currenProject.projectId);
+
+        when(
+            () => !!this.templateStore.templatesInProject && !this.templateStore.isLoading && !this.projectStore.isLoading,
+            () => this.setState({ isLoading: false })
+        );
     }
 
     handleOpenExperimentResults = (experiment: ExperimentShortInfo) => {

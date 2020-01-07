@@ -33,21 +33,24 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
                                 field: "ownerName",
                                 sortable: true,
                                 filter: true,
-                                suppressMovable: true
+                                suppressMovable: true,
+                                resizable: true
                             },
                             {
                                 headerName: "Название",
                                 field: "name",
                                 sortable: true,
                                 filter: true,
-                                suppressMovable: true
+                                suppressMovable: true,
+                                resizable: true
                             },
                             {
                                 headerName: "Модель данных",
                                 field: "experimentTemplateName",
                                 sortable: true,
                                 filter: true,
-                                suppressMovable: true
+                                suppressMovable: true,
+                                resizable: true
                             },
                             {
                                 headerName: "Дата создания",
@@ -56,7 +59,8 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
                                 filter: true,
                                 suppressMovable: true,
                                 valueFormatter: this.dateFormatter,
-                                sort: 'desc'
+                                sort: 'desc',
+                                resizable: true
                             },
                             {
                                 headerName: "Текущее состояние",
@@ -64,7 +68,8 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
                                 sortable: true,
                                 filter: true,
                                 valueFormatter: this.statusFormatter,
-                                suppressMovable: true
+                                suppressMovable: true,
+                                resizable: true
                             },
                             {
                                 headerName: "Изменен",
@@ -72,7 +77,8 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
                                 sortable: true,
                                 filter: true,
                                 suppressMovable: true,
-                                valueFormatter: this.dateFormatter
+                                valueFormatter: this.dateFormatter,
+                                resizable: true
                             },
                             {
                                 headerName: "",
@@ -106,7 +112,7 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
                 return 'Ожидает обработки';
             }
             case 2: {
-                return 'В процессе обработки...';
+                return 'Обрабатывается';
             }
             case 3: {
                 return 'Успешно выполнен';

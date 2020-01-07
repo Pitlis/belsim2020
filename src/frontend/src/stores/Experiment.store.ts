@@ -23,6 +23,7 @@ export class ExperimentStore {
 
     @action
     public async loadProjectExperimentsList(projectId: string): Promise<void> {
+        console.log('loadProjectExperimentsList');
         this.isLoading = true;
         this.projectExperimentsList = await api.experiment.getExperimentsOfProject(projectId);
         runInAction(() => {

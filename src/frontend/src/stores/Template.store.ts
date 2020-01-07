@@ -80,6 +80,12 @@ interface ITaxesControl extends AbstractControls {
     landTax: FormControl<number>;
 }
 
+interface IRunExperimentControl extends AbstractControls {
+    name: FormControl<string>;
+    period: FormControl<number>;
+    interval: FormControl<number>;
+}
+
 export const EMPTY_TEMPLATE_ID = 'new';
 
 export class TemplateStore {
@@ -97,8 +103,12 @@ export class TemplateStore {
     @observable public shipmentControlForm: FormGroup<IShipmentControl>;
     @observable public costsControlForm: FormGroup<IConstsControl>;
     @observable public taxesControlForm: FormGroup<ITaxesControl>;
+    @observable public runExperimentControlForm: FormGroup<IRunExperimentControl>;
 
     @observable public templatesInProject: RkExperimentTemplateInfo[];
+
+    @observable public runExperimentName: string;
+
 
     public constructor() {
         this.init();
@@ -205,7 +215,6 @@ export class TemplateStore {
         this.isLoading = true;
 
         await api.template.updateTemplate(this.currentTemplate);
-        console.log(this.productResourceListChanged);
         if (this.productResourceListChanged) {
             await api.template.updateProductsList(this.currentTemplate.rkExperimentTemplateId, this.productIdsInCurrentTemplate);
             await api.template.updateResourcesList(this.currentTemplate.rkExperimentTemplateId, this.resourceIdsInCurrentTemplate);
@@ -253,6 +262,15 @@ export class TemplateStore {
                 p.shipments = p.shipments.filter(s => s.shipmentDatetime !== lastShipmentMonth);
             });
         }
+    }
+
+    @action
+    public async runNewExperiment(): Promise<void> {
+        this.isLoading = true;
+        await api.template.createExperimentFromTemplate(this.currentTemplate.rkExperimentTemplateId, this.runExperimentName);
+        runInAction(() => {
+            this.isLoading = false;
+        })
     }
 
     // controls
@@ -510,6 +528,28 @@ export class TemplateStore {
                 this.currentTemplate.landTax,
                 [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
                 v => (this.currentTemplate.landTax = toCurrency(v))
+            )
+        });
+    }
+
+    @action
+    public initRunExperimentControlForm(): void {
+        this.runExperimentName = 'Новый эксперимент';
+        this.runExperimentControlForm = new FormGroup<IRunExperimentControl>({
+            name: new FormControl(
+                this.runExperimentName,
+                [notEmptyOrSpaces('SHOULD_NOT_BE_EMPTY')],
+                v => (this.runExperimentName = v)
+            ),
+            period: new FormControl(
+                this.currentTemplate.period,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.period = Math.trunc(v))
+            ),
+            interval: new FormControl(
+                this.currentTemplate.interval,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.interval = Math.trunc(v))
             )
         });
     }

@@ -6,8 +6,8 @@ export const template = Object.freeze({
     async getProjectTemplates(projectId: string): Promise<RkExperimentTemplateInfo[]> {
         return http.get('/experiment-template/templates-in-project/' + projectId)
             .then(response => response.data);
-    },   
-     async getEmptyTemplate(): Promise<RkExperimentTemplate> {
+    },
+    async getEmptyTemplate(): Promise<RkExperimentTemplate> {
         return http.get('/experiment-template/get-empty')
             .then(response => response.data);
     },
@@ -30,5 +30,13 @@ export const template = Object.freeze({
     async updateResourcesList(templateId: string, resourceIds: string[]): Promise<void> {
         return http.put('/experiment-template/update-resources-list', { experimentTemplateId: templateId, resourceIds })
             .then(response => response.data);
+    },
+    async createExperimentFromTemplate(templateId: string, name: string): Promise<void> {
+        return http.post('/experiment-template/create-experiment-from-template',
+            {
+                ExperimentTemplateId: templateId,
+                ExperimentName: name
+            }
+        ).then(response => response.data);
     },
 });

@@ -18,6 +18,7 @@ import { ShipmentsEditor } from './ShipmentsEditor/ShipmentsEditor';
 import { FinanceEditor } from './FinanceEditor/FinanceEditor';
 import { CostsEditor } from './CostsEditor/CostsEditor';
 import { TaxesEditor } from './TaxesEditor/TaxesEditor';
+import { Experiments } from './Experiments/Experiments';
 
 enum EditFormsName {
     COMMON_INFO = 'Общая информация',
@@ -28,7 +29,8 @@ enum EditFormsName {
     FINANCE = 'Финансы',
     SUPPLY = 'Снабжение',
     COSTS = 'Затраты',
-    TAXES = 'Налоги'
+    TAXES = 'Налоги',
+    EXPERIMENTS = 'Запуск эксперимента'
 }
 
 interface IState {
@@ -136,6 +138,8 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                 return <CostsEditor />
             case EditFormsName.TAXES:
                 return <TaxesEditor />
+            case EditFormsName.EXPERIMENTS:
+                return <Experiments />
             default:
                 return null;
         }
@@ -250,6 +254,14 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                     className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.COSTS ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.COSTS}
+                </Button>
+                <Button
+                    onClick={() => this.handleOpenEditor(EditFormsName.EXPERIMENTS)}
+                    variant="success"
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.EXPERIMENTS ? 'belsim-active-menu' : ''}`}
+                >
+                    {EditFormsName.EXPERIMENTS}
                 </Button>
             </div>
         );
