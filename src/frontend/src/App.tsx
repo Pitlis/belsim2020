@@ -16,6 +16,7 @@ import { ExperimentResults } from 'scenes/ExperimentResults';
 import { BelsimHeader } from 'components/BelsimHeader';
 import { TemplateEditor } from 'scenes/TemplateEditor';
 import { ProjectExperiments } from 'scenes/ProjectExperiments';
+import { Logout } from 'scenes/Logout';
 
 @inject((stores: StoresType) => ({
   stores
@@ -38,6 +39,10 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
               path={routes.login.path}
               exact={routes.login.exact}
               component={Login} />
+            <Route
+              path={routes.logout.path}
+              exact={routes.logout.exact}
+              component={Logout} />
             <BelsimHeader>
               <Route
                 path={routes.projects.path}

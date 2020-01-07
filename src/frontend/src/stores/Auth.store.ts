@@ -12,6 +12,8 @@ import { routes } from 'routes';
 
 const REFRESHING_SESSION_TIME = 30000;
 const EMAIL_VALIDATION_PATTERN = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//const ADMIN_ROLE = 'admin';
+
 
 interface IUserCredentials extends AbstractControls {
     email: FormControl<string>;

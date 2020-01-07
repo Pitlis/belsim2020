@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using belsim2020.Entities;
 using belsim2020.ViewModels;
@@ -90,6 +91,17 @@ namespace belsim2020.Controllers
         public IActionResult RefreshSession()
         {
             return new OkResult();
+        }
+
+        [HttpGet("get-roles")]
+        [Authorize]
+        public IActionResult GetRoles()
+        {
+            var roles = User.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToList();
+            return new OkObjectResult(roles);
         }
 
         [HttpPost("logout")]

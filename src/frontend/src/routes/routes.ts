@@ -1,5 +1,6 @@
 export const routes = {
     login: { path: '/', exact: true },
+    logout: { path: '/logout', exact: true },
     projects: { path: '/projects', exact: true },
     baseProjectUrl: { path: '/project' },
     projectDetails: { path: '/project/:projectId', exact: true },

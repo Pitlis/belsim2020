@@ -173,7 +173,7 @@ export class RouterStore extends BaseRouterStore {
     private attachAdditionalMenuItems(menuItems: HeaderMenuItem[]) {
         return [
             ...menuItems,
-            { title: 'FiLogOut', position: HeaderMenuItemPosition.RIGHT, link: '/', isIcon: true },
+            { title: 'FiLogOut', position: HeaderMenuItemPosition.RIGHT, link: routes.logout.path, isIcon: true },
         ]
     }
 }
