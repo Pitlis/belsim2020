@@ -18,7 +18,7 @@ export class ProjectDetailsContainer extends Component<{ stores?: StoresType }>{
         super(props);
         this.projectStore = this.props.stores!.ProjectStore;
         this.routerStore = this.props.stores!.RouterStore;
-
+        
         let projectId = getProjectIdFromUrl(this.routerStore.location);
         this.projectStore.openProject(projectId);
     }

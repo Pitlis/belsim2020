@@ -15,6 +15,7 @@ import { ProjectProductsResourcesEditor } from 'scenes/ProjectProductsResourcesE
 import { ExperimentResults } from 'scenes/ExperimentResults';
 import { BelsimHeader } from 'components/BelsimHeader';
 import { TemplateEditor } from 'scenes/TemplateEditor';
+import { ProjectExperiments } from 'scenes/ProjectExperiments';
 
 @inject((stores: StoresType) => ({
   stores
@@ -62,6 +63,10 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
                     path={routes.template.path}
                     exact={routes.template.exact}
                     component={TemplateEditor} />
+                  <Route
+                    path={routes.experimentsList.path}
+                    exact={routes.experimentsList.exact}
+                    component={ProjectExperiments} />
                 </ProjectDetailsContainer>
               </Route>
             </BelsimHeader>

@@ -6,9 +6,7 @@ import './ProjectDetails.scss';
 
 import { StoresType, ProjectStore, EMPTY_TEMPLATE_ID, TemplateStore } from 'stores';
 import { routes, makeUrlWithParams } from 'routes';
-import { ExperimentStore } from 'stores/Experiment.store';
 import { ExperimentShortInfo } from 'models';
-import { ExperimentsList } from 'components/ExperimentsList';
 import { BelsimLoader } from 'components/BelsimLoader';
 import { Button } from 'react-bootstrap';
 import { FiPlus } from 'react-icons/fi';
@@ -20,20 +18,17 @@ import { TemplateCard } from 'components/TemplateCard';
 @observer
 export class ProjectDetails extends Component<{ stores: StoresType }, { selectedExperiment: ExperimentShortInfo | null }> {
     public routerStore: RouterStore;
-    public experimentStore: ExperimentStore;
     public projectStore: ProjectStore;
     public templateStore: TemplateStore;
 
     constructor(props) {
         super(props);
         this.routerStore = this.props.stores!.RouterStore;
-        this.experimentStore = this.props.stores!.ExperimentStore;
         this.projectStore = this.props.stores!.ProjectStore;
         this.templateStore = this.props.stores!.TemplateStore;
     }
 
     componentDidMount() {
-        this.experimentStore.loadProjectExperimentsList(this.projectStore.currenProject.projectId);
         this.templateStore.loadProjectTemplatesList(this.projectStore.currenProject.projectId);
     }
 
@@ -56,7 +51,7 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
     public render(): JSX.Element {
         return (
             <div className='project-details'>
-                {this.experimentStore.isLoading || this.templateStore.isLoading ?
+                {this.templateStore.isLoading ?
                     (<BelsimLoader />) :
                     (
                         <>
@@ -68,11 +63,6 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { selected
                                 Создать модель данных <FiPlus />
                             </Button>
                             {this.renderTemplatesList()}
-                            <ExperimentsList
-                                title='Все запущенные эксперименты проекта'
-                                experiments={this.experimentStore.projectExperimentsList}
-                                onOpenResults={this.handleOpenExperimentResults}
-                            />
                         </>
                     )}
             </div >

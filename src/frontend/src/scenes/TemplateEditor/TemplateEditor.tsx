@@ -56,7 +56,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.TAXES,
+            activeEditFormName: EditFormsName.COMMON_INFO,
             isLoading: true
         };
     }
@@ -182,70 +182,72 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.COMMON_INFO)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.COMMON_INFO ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.COMMON_INFO}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.PRODUCTS_AND_RESOURCES)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.PRODUCTS_AND_RESOURCES ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.PRODUCTS_AND_RESOURCES}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.PLANNING)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.PLANNING ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.PLANNING}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.STORE)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.STORE ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.STORE}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.SHIPMENTS)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.SHIPMENTS ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.SHIPMENTS}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.SUPPLY)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.SUPPLY ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.SUPPLY}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.FINANCE)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.FINANCE ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.FINANCE}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.TAXES)}
                     variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.TAXES ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.TAXES}
                 </Button>
                 <Button
                     onClick={() => this.handleOpenEditor(EditFormsName.COSTS)}
                     variant="success"
-                    className='belsim-action-button'
-                >
-                    {EditFormsName.COSTS}
-                </Button>
-                <Button
-                    onClick={() => this.handleOpenEditor(EditFormsName.COSTS)}
-                    variant="success"
-                    className='belsim-action-button'
+                    disabled={this.templateStore.productResourceListChanged}
+                    className={`belsim-action-button ${this.state.activeEditFormName === EditFormsName.COSTS ? 'belsim-active-menu' : ''}`}
                 >
                     {EditFormsName.COSTS}
                 </Button>

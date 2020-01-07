@@ -48,6 +48,10 @@ export class RouterStore extends BaseRouterStore {
             this.HeaderMenuItems = this.attachAdditionalMenuItems(this.getMenuForTemplateEditor());
             return;
         }
+        if (isUrlRelatedToRoute(currentPath, routes.experimentsList)) {
+            this.HeaderMenuItems = this.attachAdditionalMenuItems(this.getMenuForProjectExperimentsList());
+            return;
+        }
 
         this.HeaderMenuItems = new Array<HeaderMenuItem>();
     }
@@ -62,7 +66,7 @@ export class RouterStore extends BaseRouterStore {
         return [
             { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true },
             {
-                title: 'Проект',
+                title: 'Модели данных',
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectDetails.path, { projectId: getProjectIdFromUrl(this.location) }),
                 isActive: true
@@ -71,6 +75,11 @@ export class RouterStore extends BaseRouterStore {
                 title: 'Продукты и ресурсы',
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectProductsAndResources.path, { projectId: getProjectIdFromUrl(this.location) })
+            },
+            {
+                title: 'Эксперименты',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.experimentsList.path, { projectId: getProjectIdFromUrl(this.location) })
             }
         ]
     }
@@ -79,7 +88,7 @@ export class RouterStore extends BaseRouterStore {
         return [
             { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true },
             {
-                title: 'Проект',
+                title: 'Модели данных',
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectDetails.path, { projectId: getProjectIdFromUrl(this.location) })
             },
@@ -88,15 +97,20 @@ export class RouterStore extends BaseRouterStore {
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectProductsAndResources.path, { projectId: getProjectIdFromUrl(this.location) }),
                 isActive: true
+            },
+            {
+                title: 'Эксперименты',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.experimentsList.path, { projectId: getProjectIdFromUrl(this.location) })
             }
         ]
-    }    
+    }
 
     private getMenuForExperimentResults(): HeaderMenuItem[] {
         return [
             { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true },
             {
-                title: 'Проект',
+                title: 'Модели данных',
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectDetails.path, { projectId: getProjectIdFromUrl(this.location) })
             },
@@ -104,15 +118,20 @@ export class RouterStore extends BaseRouterStore {
                 title: 'Продукты и ресурсы',
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectProductsAndResources.path, { projectId: getProjectIdFromUrl(this.location) })
+            },
+            {
+                title: 'Эксперименты',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.experimentsList.path, { projectId: getProjectIdFromUrl(this.location) })
             }
         ]
-    }    
-    
+    }
+
     private getMenuForTemplateEditor(): HeaderMenuItem[] {
         return [
             { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true },
             {
-                title: 'Проект',
+                title: 'Модели данных',
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectDetails.path, { projectId: getProjectIdFromUrl(this.location) })
             },
@@ -120,6 +139,33 @@ export class RouterStore extends BaseRouterStore {
                 title: 'Продукты и ресурсы',
                 position: HeaderMenuItemPosition.LEFT,
                 link: makeUrlWithParams(routes.projectProductsAndResources.path, { projectId: getProjectIdFromUrl(this.location) })
+            },
+            {
+                title: 'Эксперименты',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.experimentsList.path, { projectId: getProjectIdFromUrl(this.location) })
+            }
+        ]
+    }
+
+    private getMenuForProjectExperimentsList(): HeaderMenuItem[] {
+        return [
+            { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true },
+            {
+                title: 'Модели данных',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.projectDetails.path, { projectId: getProjectIdFromUrl(this.location) })
+            },
+            {
+                title: 'Продукты и ресурсы',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.projectProductsAndResources.path, { projectId: getProjectIdFromUrl(this.location) })
+            },
+            {
+                title: 'Эксперименты',
+                position: HeaderMenuItemPosition.LEFT,
+                link: makeUrlWithParams(routes.experimentsList.path, { projectId: getProjectIdFromUrl(this.location) }),
+                isActive: true
             }
         ]
     }

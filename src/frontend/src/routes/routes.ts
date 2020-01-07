@@ -6,4 +6,5 @@ export const routes = {
     projectProductsAndResources: { path: '/project/:projectId/products-and-resources', exact: true },
     experimentResults: { path: '/project/:projectId/experiment-results/:experimentId', exact: true },
     template: { path: '/project/:projectId/template/:templateId', exact: true },
+    experimentsList: { path: '/project/:projectId/experiments', exact: true },
 };
