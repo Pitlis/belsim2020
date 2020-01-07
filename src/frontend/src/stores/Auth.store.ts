@@ -36,16 +36,13 @@ export class AuthStore {
     public constructor() {
         reaction(() => this.isLoggedIn, (isLoggedIn) => {
             if (isLoggedIn) {
-                console.log('start refresh session');
                 this.startRefreshingSession();
             } else {
-                console.log('stop refresh session');
                 this.stopRefreshingSession();
             }
         });
 
         reaction(() => this.IsSignInChecked, (isSignInChecked) => {
-            console.log('call reaction');
             if (isSignInChecked) {
                 if (this.isLoggedIn) {
                     this.redirectToStartPageAfterLogin();
@@ -60,7 +57,6 @@ export class AuthStore {
 
     @action
     public initUserCredentialsForm(): void {
-        console.log(this.userCredentials.email);
         this.userCredentialsForm = new FormGroup<IUserCredentials>({
             email: new FormControl(
                 this.userCredentials.email,
@@ -87,7 +83,6 @@ export class AuthStore {
 
     @action
     public async login(): Promise<void> {
-        console.log('login');
         this.isLoginButtonClicked = true;
         if (this.userCredentialsForm.valid) {
             try {
@@ -127,7 +122,6 @@ export class AuthStore {
             });
 
         } catch (err) {
-            console.log('!!!!');
             console.log(err);
         }
     }

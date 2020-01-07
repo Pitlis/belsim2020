@@ -58,15 +58,21 @@ export class ExperimentResults extends Component<{ stores?: StoresType }, { sele
     private renderExperimentResults(): JSX.Element {
         return (
             <div>
+                <div className='page-title'>
+                    Результаты моделирования для эксперимента
+                    "{this.experimentStore.currenExperiment!.name}"
+                    (модель данных: "{this.experimentStore.currenExperiment!.experimentTemplateName}")
+                </div>
                 {this.renderResponsesList()}
-                results: {this.experimentStore.currenExperiment!.name}
-                <ReactEcharts
-                    option={this.getOptions(this.getBoxplotData(this.state.selectedExperimentResult!.originalName))}
-                    notMerge={true}
-                    lazyUpdate={true}
-                    theme={"theme_name"}
-                    style={{ height: "80vh", left: 50, top: 50, width: "90vw" }}
-                />
+                <div className='response-chart'>
+                    <ReactEcharts
+                        option={this.getOptions(this.getBoxplotData(this.state.selectedExperimentResult!.originalName))}
+                        notMerge={true}
+                        lazyUpdate={true}
+                        theme={"theme_name"}
+                        style={{ height: "80vh", width: "90vw" }}
+                    />
+                </div>
             </div>
         );
     }
@@ -74,14 +80,17 @@ export class ExperimentResults extends Component<{ stores?: StoresType }, { sele
     private renderResponsesList(): JSX.Element {
         const options = this.experimentStore.responseNamesList.map(n => { return { value: n.originalName, label: n.name }; })
         return (
-            <Select
-                options={options}
-                onChange={this.handleResponseChanged}
-                value={{
-                    value: this.state.selectedExperimentResult!.originalName,
-                    label: this.state.selectedExperimentResult!.name
-                }}
-            />
+            <div className='responses'>
+                <div className='title'>Список откликов модели:</div>
+                <Select
+                    options={options}
+                    onChange={this.handleResponseChanged}
+                    value={{
+                        value: this.state.selectedExperimentResult!.originalName,
+                        label: this.state.selectedExperimentResult!.name
+                    }}
+                />
+            </div>
         );
     }
 

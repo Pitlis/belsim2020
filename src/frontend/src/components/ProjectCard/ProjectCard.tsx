@@ -11,7 +11,6 @@ import { formatDate } from 'helpers/dateFormatter';
 export class ProjectCard extends PureComponent<{ project: Project, onOpenProject: (projectId: string) => void }> {
 
     handleOpenProject = () => {
-        console.log('handleOpenProject');
         this.props.onOpenProject(this.props.project.projectId);
     }
 

@@ -14,3 +14,4 @@ export * from './ExperimentShipment';
 export * from './ExperimentProduct';
 export * from './RkExperimentTemplate';
 export * from './RkExperimentTemplateInfo';
+export * from './BelsimError';

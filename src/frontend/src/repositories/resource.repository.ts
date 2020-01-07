@@ -8,15 +8,13 @@ export const resource = Object.freeze({
             .then(response => response.data);
     },
     async createResource(name: string, projectId: string): Promise<void> {
-        // return http.post('/account/login', authUser)
-        //     .then(response => response.data);
-        await Promise.resolve();
-        //tempResponse.push({ Name: name, RkResourceId: ('5e5dfadb-2ab1-466e-9dbc-351a1097fec' + (tempResponse.length + 1).toString()) })
+        return http.post('/resource/create', {
+            name: name,
+            projectId: projectId
+        }).then(response => response.data);
     },
     async deleteResource(resourceId: string): Promise<void> {
-        // return http.post('/account/login', authUser)
-        //     .then(response => response.data);
-        await Promise.resolve();
-        //tempResponse = tempResponse.filter(t => t.RkResourceId !== resourceId);
+        return http.delete('/resource/delete/' + resourceId)
+        .then(response => response.data);
     },
 });

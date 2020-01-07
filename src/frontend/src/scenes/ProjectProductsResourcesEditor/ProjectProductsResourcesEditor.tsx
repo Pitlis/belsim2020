@@ -49,7 +49,6 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
     handleProductRowSelected = (event: SelectionChangedEvent) => {
         let selectedProduct = event.api.getSelectedRows()[0] as Product;
         if (selectedProduct) {
-            console.log((event.api.getSelectedRows()[0] as Product).rkProductId);
             this.productStore.setProductNameEditorSelectedProduct(selectedProduct.rkProductId);
         } else {
             this.productStore.setProductNameEditorSelectedProduct(null);
@@ -82,7 +81,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
     public render(): JSX.Element {
         return (
             <div className='project-products-resources-editor'>
-                <div>Управление продуктами и ресурсами во всем проекте. Данные продукты/ресурсы будут доступны во всех шаблонах экспериментов</div>
+                <div className='page-title'>Управление продуктами и ресурсами во всем проекте. Данные продукты/ресурсы будут доступны во всех моделях данных</div>
                 <div className='row'>
                     {this.renderProductsEditor()}
                     {this.renderResourcesEditor()}
@@ -95,7 +94,6 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
     renderProductsEditor = () => {
         return (
             <div className='col-md-6'>
-                <div className='title'>Продукты</div>
                 <div className='item-editor'>
                     <BelsimInput
                         inputType='text'
@@ -151,8 +149,7 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
 
     renderResourcesEditor = () => {
         return (
-            <div className='col-md-6'>
-                <div className='title'>Ресурсы</div>
+            <div className='col-md-6 right-panel'>
                 <div className='item-editor'>
                     <BelsimInput
                         inputType='text'

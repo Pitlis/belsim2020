@@ -2,6 +2,7 @@ import { action, observable, runInAction } from 'mobx';
 
 import { Project } from 'models';
 import { api } from 'repositories';
+import { stores } from 'stores';
 
 
 export class ProjectStore {
@@ -22,10 +23,15 @@ export class ProjectStore {
     @action
     public async openProject(projectId: string): Promise<void> {
         this.isLoading = true;
-        this.currenProject = await api.project.getProject(projectId);
-        runInAction(() => {
-            this.isLoading = false;
-        });
+        try {
+            this.currenProject = await api.project.getProject(projectId);
+            runInAction(() => {
+                this.isLoading = false;
+            });
+        } catch (err) {
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка открытия проекта. Попробуйте обновить страницу.');
+        }
     }
 
     @action
@@ -46,10 +52,15 @@ export class ProjectStore {
     @action
     public async loadAvailableProjects(): Promise<void> {
         this.isLoading = true;
-        this.availableProjects = new Array<Project>();
-        this.availableProjects = await api.project.getAvailableProjects();
-        runInAction(() => {
-            this.isLoading = false;
-        });
+        try {
+            this.availableProjects = new Array<Project>();
+            this.availableProjects = await api.project.getAvailableProjects();
+            runInAction(() => {
+                this.isLoading = false;
+            });
+        } catch (err) {
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка загрузки списка проектов. Попробуйте обновить страницу.');
+        }
     }
 }

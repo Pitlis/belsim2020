@@ -61,17 +61,19 @@ export class ProjectDetails extends Component<{ stores: StoresType }, { isLoadin
     public render(): JSX.Element {
         return (
             <div className='project-details'>
-                {this.templateStore.isLoading ?
+                {this.templateStore.isLoading || this.templateStore.templatesInProject === undefined ?
                     (<BelsimLoader />) :
                     (
                         <>
-                            <Button
-                                onClick={this.handleCreateNewTemplate}
-                                variant="success"
-                                className='belsim-action-button'
-                            >
-                                Создать модель данных <FiPlus />
-                            </Button>
+                            <div className='actions'>
+                                <Button
+                                    onClick={this.handleCreateNewTemplate}
+                                    variant="success"
+                                    className='belsim-action-button'
+                                >
+                                    Создать модель данных <FiPlus />
+                                </Button>
+                            </div>
                             {this.renderTemplatesList()}
                         </>
                     )}

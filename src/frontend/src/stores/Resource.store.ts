@@ -3,6 +3,7 @@ import { action, observable, runInAction } from 'mobx';
 import { Resource } from 'models';
 import { api } from 'repositories';
 import { FormGroup, AbstractControls, FormControl, notEmptyOrSpaces, ValidationEvent, ValidationEventTypes } from '@quantumart/mobx-form-validation-kit';
+import { stores } from 'stores';
 
 interface IResourceNameEditor extends AbstractControls {
     name: FormControl<string>;
@@ -12,7 +13,6 @@ export class ResourceStore {
 
     @observable public resourceNameEditorForm: FormGroup<IResourceNameEditor>;
     @observable public resourceNameEditorSelectedResource: Resource;
-    @observable public serverErrorMessage: string;
 
     private projectId: string;
 
@@ -29,17 +29,14 @@ export class ResourceStore {
     public async loadResources(projectId: string): Promise<void> {
         this.projectId = projectId;
         try {
-            console.log('loadResources');
             let resources = await api.resource.getProjectResources(projectId);
-            console.log(resources);
 
             runInAction(() => {
                 this.allResources = resources.sort((r1, r2) => r1.name.localeCompare(r2.name));
             });
         } catch (err) {
-            runInAction(() => {
-                this.serverErrorMessage = err;
-            });
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка загрузки списка ресурсов. Попробуйте обновить страницу.');
         }
     }
 
@@ -72,7 +69,6 @@ export class ResourceStore {
     @action
     public async createResourceForProject(): Promise<void> {
         try {
-            console.log('loadResources');
             await api.resource.createResource(this.resourceNameEditorSelectedResource.name, this.projectId);
 
             runInAction(() => {
@@ -82,16 +78,14 @@ export class ResourceStore {
                 this.resourceNameEditorForm.controls.name.setTouched(false);
             });
         } catch (err) {
-            runInAction(() => {
-                this.serverErrorMessage = err;
-            });
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка создания ресурса. Попробуйте снова.');
         }
     }
 
     @action
     public async deleteResourceFromProject(): Promise<void> {
         try {
-            console.log('loadResources');
             await api.resource.deleteResource(this.resourceNameEditorSelectedResource.rkResourceId);
 
             runInAction(() => {
@@ -99,23 +93,20 @@ export class ResourceStore {
                 this.resourceNameEditorSelectedResource = new Resource();
             });
         } catch (err) {
-            runInAction(() => {
-                this.serverErrorMessage = err;
-            });
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка удаления ресурса. Возможно этот ресурс уже используется в моделях данных - тогда сначала удалите оттуда.');
         }
     }
 
 
     public getResourceName(resourceId: string) {
         let resource = this.allResources.find(p => p.rkResourceId === resourceId);
-        return resource ? resource.name : '';
+        return resource ? resource.name : '[не найдено]';
     }
 
 
     // Helpers
     private async validateNameDublicates(control: FormControl): Promise<ValidationEvent[]> {
-        console.log('validateNameDublicates');
-        console.log(this.resourceNameEditorSelectedResource.rkResourceId);
         if (control.value == null || this.resourceNameEditorSelectedResource.rkResourceId) {
             return [];
         }

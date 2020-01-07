@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Navbar, Nav } from 'react-bootstrap';
+import { Navbar, Nav, Alert } from 'react-bootstrap';
 import { FiGrid, FiLogOut } from "react-icons/fi";
 
 import './BelsimHeader.scss';
-import { StoresType, RouterStore } from 'stores';
-import { HeaderMenuItemPosition, HeaderMenuItem } from 'models';
+import { StoresType, RouterStore, ErrorStore } from 'stores';
+import { HeaderMenuItemPosition, HeaderMenuItem, BelsimError } from 'models';
 
 @inject((stores: StoresType) => ({
     stores
@@ -13,10 +13,12 @@ import { HeaderMenuItemPosition, HeaderMenuItem } from 'models';
 @observer
 export class BelsimHeader extends Component<any> {
     public routerStore: RouterStore;
+    public errorStore: ErrorStore;
 
     constructor(props) {
         super(props);
         this.routerStore = this.props.stores!.RouterStore;
+        this.errorStore = this.props.stores!.ErrorStore;
     }
 
     onOpenLink = (path: string) => {
@@ -34,15 +36,6 @@ export class BelsimHeader extends Component<any> {
                             {this.routerStore.HeaderMenuItems
                                 .filter(menuItem => menuItem.position === HeaderMenuItemPosition.LEFT)
                                 .map(menuItem => this.renderNavLink(menuItem))}
-                            {/* <Nav.Link onClick={() => this.onOpenLink(routes.projects.path)}>Проекты</Nav.Link>
-                            <Nav.Link href='#link'>Link</Nav.Link>
-                            <NavDropdown title='Dropdown' id='basic-nav-dropdown'>
-                                <NavDropdown.Item href='#action/3.1'>Action</NavDropdown.Item>
-                                <NavDropdown.Item href='#action/3.2'>Another action</NavDropdown.Item>
-                                <NavDropdown.Item href='#action/3.3'>Something</NavDropdown.Item>
-                                <NavDropdown.Divider />
-                                <NavDropdown.Item href='#action/3.4'>Separated link</NavDropdown.Item>
-                            </NavDropdown> */}
                         </Nav>
                     </Navbar.Collapse>
                     <Nav>
@@ -51,6 +44,9 @@ export class BelsimHeader extends Component<any> {
                             .map(menuItem => this.renderNavLink(menuItem))}
                     </Nav>
                 </Navbar>
+                <div className='errors'>
+                    {this.errorStore.errors.map(e => this.renderError(e))}
+                </div>
                 <div className='content'>
                     {this.props.children}
                 </div>
@@ -58,7 +54,19 @@ export class BelsimHeader extends Component<any> {
         );
     }
 
-    renderIconByName(name: string) {
+    handleCloseError = (errorId: string) => {
+        this.errorStore.closeError(errorId);
+    }
+
+    private renderError(error: BelsimError): JSX.Element {
+        return (
+            <Alert key={error.errorId} variant='danger' onClose={() => this.handleCloseError(error.errorId)} dismissible>
+                {error.message}
+            </Alert>
+        );
+    }
+
+    private renderIconByName(name: string): JSX.Element | null {
         switch (name) {
             case 'FiGrid':
                 return <FiGrid size='1.5em' />;
@@ -69,7 +77,7 @@ export class BelsimHeader extends Component<any> {
         }
     }
 
-    renderNavLink(menuItem: HeaderMenuItem) {
+    private renderNavLink(menuItem: HeaderMenuItem): JSX.Element {
         return (
             <Nav.Link
                 onClick={() => this.onOpenLink(menuItem.link)}

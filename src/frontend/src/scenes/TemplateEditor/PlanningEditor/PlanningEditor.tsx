@@ -85,8 +85,6 @@ export class PlanningEditorEditor extends Component<{ stores?: StoresType }, ISt
 
     handleProductRowSelected = (event: SelectionChangedEvent) => {
         let selectedProduct = event.api.getSelectedRows()[0] as ExperimentProduct;
-        console.log('selectedProduct');
-        console.log(selectedProduct);
         if (selectedProduct) {
             this.setState({ selectedProduct: selectedProduct, selectedResourceInDropdown: null })
         } else {

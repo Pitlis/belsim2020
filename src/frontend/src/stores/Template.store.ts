@@ -125,53 +125,66 @@ export class TemplateStore {
     @action
     public async openTemplate(templateId: string): Promise<void> {
         this.isLoading = true;
-        if (templateId === EMPTY_TEMPLATE_ID) {
-            console.log('openTemplate');
-            this.currentTemplate = await api.template.getEmptyTemplate();
-            runInAction(() => {
-                this.isTemplateEmpty = true;
-                this.isLoading = false;
-            });
-        } else {
-            this.currentTemplate = await api.template.getTemplate(templateId);
-            runInAction(() => {
-                this.isTemplateEmpty = false;
-                this.productIdsInCurrentTemplate = this.currentTemplate.products.map(p => p.productId);
-                this.resourceIdsInCurrentTemplate = this.currentTemplate.resources.map(p => p.resourceId);
-                this.productResourceListChanged = false;
-                this.isLoading = false;
-            });
+        try {
+            if (templateId === EMPTY_TEMPLATE_ID) {
+                this.currentTemplate = await api.template.getEmptyTemplate();
+                runInAction(() => {
+                    this.isTemplateEmpty = true;
+                    this.isLoading = false;
+                });
+            } else {
+                this.currentTemplate = await api.template.getTemplate(templateId);
+                runInAction(() => {
+                    this.isTemplateEmpty = false;
+                    this.productIdsInCurrentTemplate = this.currentTemplate.products.map(p => p.productId);
+                    this.resourceIdsInCurrentTemplate = this.currentTemplate.resources.map(p => p.resourceId);
+                    this.productResourceListChanged = false;
+                    this.isLoading = false;
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка модели данных. Попробуйте обновить страницу.');
         }
     }
 
     @action
     public async loadProjectTemplatesList(projectId: string): Promise<void> {
         this.isLoading = true;
-        this.templatesInProject = await api.template.getProjectTemplates(projectId);
-        runInAction(() => {
-            this.isLoading = false;
-        });
+        try {
+            this.templatesInProject = await api.template.getProjectTemplates(projectId);
+            runInAction(() => {
+                this.isLoading = false;
+            });
+        } catch (err) {
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка загрузки списка моделей данных. Попробуйте обновить страницу.');
+        }
     }
 
     @action
     public async createTemplate(projectId: string): Promise<void> {
         this.isLoading = true;
-        if (this.сommonInfoControlForm.valid) {
-            let templateId = await api.template.createTemplate(
-                this.currentTemplate.name,
-                this.currentTemplate.description,
-                projectId
-            );
-            stores.RouterStore.push(makeUrlWithParams(routes.template.path, { templateId, projectId }));
-            runInAction(() => {
-                this.openTemplate(templateId);
-            });
+        try {
+            if (this.сommonInfoControlForm.valid) {
+                let templateId = await api.template.createTemplate(
+                    this.currentTemplate.name,
+                    this.currentTemplate.description,
+                    projectId
+                );
+                stores.RouterStore.push(makeUrlWithParams(routes.template.path, { templateId, projectId }));
+                runInAction(() => {
+                    this.openTemplate(templateId);
+                });
+            };
+        } catch (err) {
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка создания модели данных. Попробуйте снова');
         }
     }
 
     @computed
     public get isTemplateValid(): boolean {
-        console.log('isTemplateValid');
         if (!this.currentTemplate.rkExperimentTemplateId) {
             return (
                 (this.сommonInfoControlForm ? this.сommonInfoControlForm.valid : true)
@@ -187,7 +200,6 @@ export class TemplateStore {
 
     @action
     public addProductToTemplateList(productId: string) {
-        console.log(productId);
         this.productIdsInCurrentTemplate.push(productId);
         this.productResourceListChanged = true;
     }
@@ -213,22 +225,24 @@ export class TemplateStore {
     @action
     public async saveTemplate() {
         this.isLoading = true;
-
-        await api.template.updateTemplate(this.currentTemplate);
-        if (this.productResourceListChanged) {
-            await api.template.updateProductsList(this.currentTemplate.rkExperimentTemplateId, this.productIdsInCurrentTemplate);
-            await api.template.updateResourcesList(this.currentTemplate.rkExperimentTemplateId, this.resourceIdsInCurrentTemplate);
+        try {
+            await api.template.updateTemplate(this.currentTemplate);
+            if (this.productResourceListChanged) {
+                await api.template.updateProductsList(this.currentTemplate.rkExperimentTemplateId, this.productIdsInCurrentTemplate);
+                await api.template.updateResourcesList(this.currentTemplate.rkExperimentTemplateId, this.resourceIdsInCurrentTemplate);
+            }
+            runInAction(() => {
+                this.openTemplate(this.currentTemplate.rkExperimentTemplateId);
+            });
+        } catch (err) {
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка сохранения модели данных. Попробуйте снова.');
         }
-        runInAction(() => {
-            this.openTemplate(this.currentTemplate.rkExperimentTemplateId);
-        });
     }
 
     @action
     public addResourceToProduct(rkProductInExperimentId: string, rkResourceInExperimentId: string) {
-        console.log('addResourceToProduct');
         let product = this.currentTemplate.products.find(p => p.rkProductInExperimentId === rkProductInExperimentId);
-        console.log(product);
         product!.resources.push({ rkResourceInExperimentId: rkResourceInExperimentId, resourceConsumption: 1, });
     }
 
@@ -267,10 +281,15 @@ export class TemplateStore {
     @action
     public async runNewExperiment(): Promise<void> {
         this.isLoading = true;
-        await api.template.createExperimentFromTemplate(this.currentTemplate.rkExperimentTemplateId, this.runExperimentName);
-        runInAction(() => {
-            this.isLoading = false;
-        })
+        try {
+            await api.template.createExperimentFromTemplate(this.currentTemplate.rkExperimentTemplateId, this.runExperimentName);
+            runInAction(() => {
+                this.isLoading = false;
+            })
+        } catch (err) {
+            console.log(err);
+            stores.ErrorStore.addError('Ошибка запуска эксперимента. Попробуйте снова.');
+        }
     }
 
     // controls

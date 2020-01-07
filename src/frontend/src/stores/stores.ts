@@ -7,6 +7,7 @@ import { ProductStore } from './Product.store';
 import { ResourceStore } from './Resource.store';
 import { ExperimentStore } from './Experiment.store';
 import { TemplateStore } from './Template.store';
+import { ErrorStore } from './Error.store';
 
 export const history = createBrowserHistory();
 
@@ -17,7 +18,8 @@ export const stores = Object.freeze({
     ProductStore: new ProductStore(),
     ResourceStore: new ResourceStore(),
     ExperimentStore: new ExperimentStore(),
-    TemplateStore: new TemplateStore()
+    TemplateStore: new TemplateStore(),
+    ErrorStore: new ErrorStore()
 });
 
 export type StoresType = typeof stores;

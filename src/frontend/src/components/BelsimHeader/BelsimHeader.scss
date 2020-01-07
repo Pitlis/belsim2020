@@ -28,5 +28,16 @@
         user-select: none;
         cursor: default;
     }
+}
     
+.errors {
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+    opacity: 0.95;
+    
+    .alert {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 }

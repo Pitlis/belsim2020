@@ -40,8 +40,8 @@ namespace belsim2020.Controllers
             return new OkResult();
         }
 
-        [HttpDelete("delete")]
-        public async Task<IActionResult> DeleteResource([FromBody] Guid resourceId)
+        [HttpDelete("delete/{resourceId}")]
+        public async Task<IActionResult> DeleteResource(Guid resourceId)
         {
             await resourceService.DeleteResource(resourceId);
 

@@ -8,15 +8,13 @@ export const product = Object.freeze({
             .then(response => response.data);
     },
     async createProduct(name: string, projectId: string): Promise<void> {
-        // return http.post('/account/login', authUser)
-        //     .then(response => response.data);
-        await Promise.resolve();
-        //tempResponse.push({ Name: name, ProductId: ('5e5dfadb-2ab1-466e-9dbc-351a1097fec' + (tempResponse.length + 1).toString()) })
+        return http.post('/product/create', {
+            name: name,
+            projectId: projectId
+        }).then(response => response.data);
     },
     async deleteProduct(productId: string): Promise<void> {
-        // return http.post('/account/login', authUser)
-        //     .then(response => response.data);
-        await Promise.resolve();
-        //tempResponse = tempResponse.filter(t => t.ProductId !== productId);
+        return http.delete('/product/delete/' + productId)
+        .then(response => response.data);
     },
 });
