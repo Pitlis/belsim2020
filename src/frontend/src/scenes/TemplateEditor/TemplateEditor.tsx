@@ -17,6 +17,7 @@ import { SupplyEditor } from './SupplyEditor/SupplyEditor';
 import { ShipmentsEditor } from './ShipmentsEditor/ShipmentsEditor';
 import { FinanceEditor } from './FinanceEditor/FinanceEditor';
 import { CostsEditor } from './CostsEditor/CostsEditor';
+import { TaxesEditor } from './TaxesEditor/TaxesEditor';
 
 enum EditFormsName {
     COMMON_INFO = 'Общая информация',
@@ -26,7 +27,8 @@ enum EditFormsName {
     SHIPMENTS = 'Реализация',
     FINANCE = 'Финансы',
     SUPPLY = 'Снабжение',
-    COSTS = 'Затраты'
+    COSTS = 'Затраты',
+    TAXES = 'Налоги'
 }
 
 interface IState {
@@ -54,7 +56,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.COSTS,
+            activeEditFormName: EditFormsName.TAXES,
             isLoading: true
         };
     }
@@ -132,6 +134,8 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                 return <FinanceEditor />
             case EditFormsName.COSTS:
                 return <CostsEditor />
+            case EditFormsName.TAXES:
+                return <TaxesEditor />
             default:
                 return null;
         }
@@ -225,11 +229,25 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                     {EditFormsName.FINANCE}
                 </Button>
                 <Button
-                    onClick={() => this.handleOpenEditor(EditFormsName.PRODUCTS_AND_RESOURCES)}
+                    onClick={() => this.handleOpenEditor(EditFormsName.TAXES)}
                     variant="success"
                     className='belsim-action-button'
                 >
-                    {EditFormsName.PRODUCTS_AND_RESOURCES}
+                    {EditFormsName.TAXES}
+                </Button>
+                <Button
+                    onClick={() => this.handleOpenEditor(EditFormsName.COSTS)}
+                    variant="success"
+                    className='belsim-action-button'
+                >
+                    {EditFormsName.COSTS}
+                </Button>
+                <Button
+                    onClick={() => this.handleOpenEditor(EditFormsName.COSTS)}
+                    variant="success"
+                    className='belsim-action-button'
+                >
+                    {EditFormsName.COSTS}
                 </Button>
             </div>
         );

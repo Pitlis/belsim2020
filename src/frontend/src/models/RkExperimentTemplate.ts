@@ -188,4 +188,35 @@ export class RkExperimentTemplate {
     // Основные средства: Коэффициент переоценки (отн.ед./год)
     public overvalueCoefficient: number;
 
+
+
+    //// Taxes
+
+    // Налоги: НДС (отн.ед.)
+    public vat: number;
+
+    // Налоги: С выручки (отн.ед.)
+    public earningsTax: number;
+
+    // Налоги: С прибыли (отн.ед.)
+    public profitsTax: number;
+
+    // Налоги: С прибыли, остающейся в распоряжении предпрития (отн.ед.)
+    public restProfitsTax: number;
+
+    // Налоги: В фонд социальной защиты (отн.ед.)
+    public fundTax: number;
+
+    // Налоги: С заработной платы (отн.ед.)
+    public wageTax: number;
+
+    // Налоги: На недвижимость (отн.ед./год)
+    public realEstateTax: number;
+
+    // Налоги: Экологический (руб./ед.прод.)
+    public ecologicalTax: number;
+
+    // Налоги: На землю (руб./мес.)
+    public landTax: number;
+
 }

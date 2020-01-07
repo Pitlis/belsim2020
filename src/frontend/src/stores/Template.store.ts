@@ -67,6 +67,19 @@ interface IConstsControl extends AbstractControls {
     costsChangeInterval: FormControl<number>;
     costsChangeIntervalStdDev: FormControl<number>;
 }
+
+interface ITaxesControl extends AbstractControls {
+    vat: FormControl<number>;
+    earningsTax: FormControl<number>;
+    profitsTax: FormControl<number>;
+    restProfitsTax: FormControl<number>;
+    fundTax: FormControl<number>;
+    wageTax: FormControl<number>;
+    realEstateTax: FormControl<number>;
+    ecologicalTax: FormControl<number>;
+    landTax: FormControl<number>;
+}
+
 export const EMPTY_TEMPLATE_ID = 'new';
 
 export class TemplateStore {
@@ -83,6 +96,7 @@ export class TemplateStore {
     @observable public financeControlForm: FormGroup<IFinanceControl>;
     @observable public shipmentControlForm: FormGroup<IShipmentControl>;
     @observable public costsControlForm: FormGroup<IConstsControl>;
+    @observable public taxesControlForm: FormGroup<ITaxesControl>;
 
     @observable public templatesInProject: RkExperimentTemplateInfo[];
 
@@ -445,6 +459,57 @@ export class TemplateStore {
                 this.currentTemplate.costsChangeIntervalStdDev,
                 [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
                 v => (this.currentTemplate.costsChangeIntervalStdDev = Math.trunc(v))
+            )
+        });
+    }
+
+    @action
+    public initTaxesControlForm(): void {
+        this.taxesControlForm = new FormGroup<ITaxesControl>({
+            vat: new FormControl(
+                this.currentTemplate.vat,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.vat = Number(Number(v).toFixed(2)))
+            ),
+            earningsTax: new FormControl(
+                this.currentTemplate.earningsTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.earningsTax = Number(Number(v).toFixed(2)))
+            ),
+            profitsTax: new FormControl(
+                this.currentTemplate.profitsTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.profitsTax = Number(Number(v).toFixed(2)))
+            ),
+            restProfitsTax: new FormControl(
+                this.currentTemplate.restProfitsTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.restProfitsTax = Number(Number(v).toFixed(2)))
+            ),
+            fundTax: new FormControl(
+                this.currentTemplate.fundTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.fundTax = Number(Number(v).toFixed(2)))
+            ),
+            wageTax: new FormControl(
+                this.currentTemplate.wageTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.wageTax = Number(Number(v).toFixed(2)))
+            ),
+            realEstateTax: new FormControl(
+                this.currentTemplate.realEstateTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.realEstateTax = Number(Number(v).toFixed(2)))
+            ),
+            ecologicalTax: new FormControl(
+                this.currentTemplate.ecologicalTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.ecologicalTax = toCurrency(v))
+            ),
+            landTax: new FormControl(
+                this.currentTemplate.landTax,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.landTax = toCurrency(v))
             )
         });
     }
