@@ -53,6 +53,7 @@ export class StoreEditor extends Component<{ stores?: StoresType }> {
                                     filter: true,
                                     suppressMovable: true,
                                     valueFormatter: this.productNameFormatter,
+                                    sort: 'asc'
                                 },
                                 {
                                     headerName: "Запасы (ед.)",
@@ -101,6 +102,7 @@ export class StoreEditor extends Component<{ stores?: StoresType }> {
                                     filter: true,
                                     suppressMovable: true,
                                     valueFormatter: this.resourceNameFormatter,
+                                    sort: 'asc'
                                 },
                                 {
                                     headerName: "Запасы (ед.)",

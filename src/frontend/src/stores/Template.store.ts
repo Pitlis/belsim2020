@@ -43,6 +43,20 @@ interface IFinanceControl extends AbstractControls {
     overvalueCoefficient: FormControl<number>;
 }
 
+interface IShipmentControl extends AbstractControls {
+    shippingCycle: FormControl<number>;
+    shippingCycleStdDev: FormControl<number>;
+
+    paymentDate: FormControl<number>;
+    paymentDateStdDev: FormControl<number>;
+
+    priceChangeCoefficient: FormControl<number>;
+    priceChangeCoefficientStdDev: FormControl<number>;
+
+    priceChangeInterval: FormControl<number>;
+    priceChangeIntervalStdDev: FormControl<number>;
+}
+
 export const EMPTY_TEMPLATE_ID = 'new';
 
 export class TemplateStore {
@@ -57,6 +71,7 @@ export class TemplateStore {
     @observable public planningControlForm: FormGroup<IPlanningControl>;
     @observable public supplyControlForm: FormGroup<ISupplyControl>;
     @observable public financeControlForm: FormGroup<IFinanceControl>;
+    @observable public shipmentControlForm: FormGroup<IShipmentControl>;
 
     @observable public templatesInProject: RkExperimentTemplateInfo[];
 
@@ -195,6 +210,25 @@ export class TemplateStore {
         }
     }
 
+    @action
+    public addProductsShipment() {
+        this.currentTemplate.products.forEach(p => {
+            p.shipments.push({ volume: 0, shipmentDatetime: p.shipments.length })
+        });
+    }
+
+    @action
+    public removeLastProductsShipment() {
+        if (this.currentTemplate.products && this.currentTemplate.products[0].shipments.length > 0) {
+            let product = this.currentTemplate.products[0];
+            let lastShipmentMonth = product.shipments
+                .sort((s1, s2) => s1.shipmentDatetime - s2.shipmentDatetime)[product.shipments.length - 1].shipmentDatetime;
+
+            this.currentTemplate.products.forEach(p => {
+                p.shipments = p.shipments.filter(s => s.shipmentDatetime !== lastShipmentMonth);
+            });
+        }
+    }
 
     // controls
 
@@ -319,6 +353,52 @@ export class TemplateStore {
                 [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
                 v => (this.currentTemplate.overvalueCoefficient = Number(Number(v).toFixed(4)))
             ),
+        });
+    }
+
+    @action
+    public initShipmentControlForm(): void {
+        this.shipmentControlForm = new FormGroup<IShipmentControl>({
+            shippingCycle: new FormControl(
+                this.currentTemplate.shippingCycle,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.shippingCycle = Math.trunc(v))
+            ),
+            shippingCycleStdDev: new FormControl(
+                this.currentTemplate.shippingCycleStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.shippingCycleStdDev = Math.trunc(v))
+            ),
+            paymentDate: new FormControl(
+                this.currentTemplate.paymentDate,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.paymentDate = Math.trunc(v))
+            ),
+            paymentDateStdDev: new FormControl(
+                this.currentTemplate.paymentDateStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.paymentDateStdDev = Math.trunc(v))
+            ),
+            priceChangeCoefficient: new FormControl(
+                this.currentTemplate.priceChangeCoefficient,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.priceChangeCoefficient = Number(Number(v).toFixed(4)))
+            ),
+            priceChangeCoefficientStdDev: new FormControl(
+                this.currentTemplate.priceChangeCoefficientStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.priceChangeCoefficientStdDev = Number(Number(v).toFixed(4)))
+            ),
+            priceChangeInterval: new FormControl(
+                this.currentTemplate.priceChangeInterval,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.priceChangeInterval = Math.trunc(v))
+            ),
+            priceChangeIntervalStdDev: new FormControl(
+                this.currentTemplate.priceChangeIntervalStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.priceChangeIntervalStdDev = Math.trunc(v))
+            )
         });
     }
 }

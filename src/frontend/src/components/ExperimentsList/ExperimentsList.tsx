@@ -55,7 +55,8 @@ export class ExperimentsList extends PureComponent<IOwnProps> {
                                 sortable: true,
                                 filter: true,
                                 suppressMovable: true,
-                                valueFormatter: this.dateFormatter
+                                valueFormatter: this.dateFormatter,
+                                sort: 'desc'
                             },
                             {
                                 headerName: "Текущее состояние",

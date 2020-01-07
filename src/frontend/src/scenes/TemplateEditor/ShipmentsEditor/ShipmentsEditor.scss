@@ -1,3 +1,20 @@
 .shipments-editor {
-    
+    .ag-theme-balham {
+        height: 35vh;
+        width: 100%;
+
+        .ag-header-cell-label .ag-header-cell-text {
+            white-space: normal !important;
+          }
+    }
+
+    .actions {
+        height: 40px;
+        margin-bottom: 5px;
+        text-align: right;
+
+        button {
+            margin-left: 10px;
+        }
+    }
 }

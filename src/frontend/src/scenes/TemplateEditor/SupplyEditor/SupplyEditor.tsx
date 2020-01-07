@@ -155,6 +155,7 @@ export class SupplyEditor extends Component<{ stores?: StoresType }> {
                                     filter: true,
                                     suppressMovable: true,
                                     valueFormatter: this.resourceNameFormatter,
+                                    sort: 'asc'
                                 },
                                 {
                                     headerName: "Цена (руб./ед.)",

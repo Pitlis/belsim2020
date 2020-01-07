@@ -52,7 +52,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.FINANCE,
+            activeEditFormName: EditFormsName.SHIPMENTS,
             isLoading: true
         };
     }
@@ -75,7 +75,9 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
     }
 
     handleSaveTemplate = async () => {
+        this.setState({isLoading: true});
         await this.templateStore.saveTemplate();
+        this.setState({isLoading: false});
     }
 
     public render(): JSX.Element {

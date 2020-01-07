@@ -107,7 +107,8 @@ export class PlanningEditorEditor extends Component<{ stores?: StoresType }, ISt
                             filter: true,
                             suppressMovable: true,
                             valueFormatter: this.productNameFormatter,
-                            checkboxSelection: true
+                            checkboxSelection: true,
+                            sort: 'asc'
                         },
                         {
                             headerName: "Длительность цикла (дн.)",
@@ -143,7 +144,8 @@ export class PlanningEditorEditor extends Component<{ stores?: StoresType }, ISt
                             sortable: true,
                             filter: true,
                             suppressMovable: true,
-                            valueFormatter: this.resourceNameFormatter
+                            valueFormatter: this.resourceNameFormatter,
+                            sort: 'asc'
                         },
                         {
                             headerName: "Расход ресурсов (ед.рес./ед.прод.)",

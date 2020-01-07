@@ -131,7 +131,8 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                             sortable: true,
                             filter: true,
                             suppressMovable: true,
-                            checkboxSelection: true
+                            checkboxSelection: true,
+                            sort: 'asc'
                         }]}
                         rowData={this.productStore.allProducts}
                         modules={AllCommunityModules}
@@ -187,7 +188,8 @@ export class ProjectProductsResourcesEditor extends Component<{ stores?: StoresT
                             sortable: true,
                             filter: true,
                             suppressMovable: true,
-                            checkboxSelection: true
+                            checkboxSelection: true,
+                            sort: 'asc'
                         }]}
                         rowData={this.resourceStore.allResources}
                         modules={AllCommunityModules}

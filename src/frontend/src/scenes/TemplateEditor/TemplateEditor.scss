@@ -1,4 +1,7 @@
 .template-editor {
+    max-width: 1200px;
+    margin: auto;
+
     .edit-form {
         margin: auto;
         width: 95%;
@@ -55,6 +58,25 @@
                 background-color: #1c4d54;
                 border-color: #1c4d54;
             }
+        }
+    }
+
+    .editor-blocks {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+
+    .block-editor {
+        border: 1px solid #e5e5e5;
+        width: 320px;
+        min-width: 320px;
+        padding: 10px;
+        padding-top: 0px;
+        height: 100%;
+        margin: 10px;
+
+        .title {
         }
     }
 }

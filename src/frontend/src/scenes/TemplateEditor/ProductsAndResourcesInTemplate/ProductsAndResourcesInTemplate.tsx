@@ -78,7 +78,8 @@ export class ProductsAndResourcesInTemplate extends Component<{ stores?: StoresT
                                 sortable: true,
                                 filter: true,
                                 suppressMovable: true,
-                                checkboxSelection: true
+                                checkboxSelection: true,
+                                sort: 'asc'
                             }]}
                             rowData={this.templateStore.productIdsInCurrentTemplate.map(pt => this.productStore.allProducts.find(p => p.rkProductId === pt))}
                             modules={AllCommunityModules}
@@ -119,7 +120,8 @@ export class ProductsAndResourcesInTemplate extends Component<{ stores?: StoresT
                                 sortable: true,
                                 filter: true,
                                 suppressMovable: true,
-                                checkboxSelection: true
+                                checkboxSelection: true,
+                                sort: 'asc'
                             }]}
                             rowData={this.templateStore.resourceIdsInCurrentTemplate.map(pt => this.resourceStore.allResources.find(p => p.rkResourceId === pt))}
                             modules={AllCommunityModules}

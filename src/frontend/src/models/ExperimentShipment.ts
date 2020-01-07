@@ -1,5 +1,5 @@
 export class ExperimentShipment {
-    public rkProductShipmentInExperimentId: string;
+    public rkProductShipmentInExperimentId?: string;
 
     // Реализация: Объем продукции в отгрузке:(ед.)
     public volume: number;

@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using belsim2020.Services.Models;
+using System.Linq;
 
 namespace belsim2020.Controllers
 {
@@ -96,6 +97,7 @@ namespace belsim2020.Controllers
         {
             var experimentTemplates = await experimentTemplateService.GetExperimentTemplates(projectId);
             var model = mapper.Map<IList<ExperimentTemplateItemViewModel>>(experimentTemplates);
+            model = model.OrderByDescending(m => m.CreatedAt).ToList();
 
             return new OkObjectResult(model);
         }
