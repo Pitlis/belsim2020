@@ -57,6 +57,16 @@ interface IShipmentControl extends AbstractControls {
     priceChangeIntervalStdDev: FormControl<number>;
 }
 
+interface IConstsControl extends AbstractControls {
+    fixedCosts: FormControl<number>;
+    wageShare: FormControl<number>;
+
+    costsChangeCoefficient: FormControl<number>;
+    dostsChangeStdDev: FormControl<number>;
+
+    costsChangeInterval: FormControl<number>;
+    costsChangeIntervalStdDev: FormControl<number>;
+}
 export const EMPTY_TEMPLATE_ID = 'new';
 
 export class TemplateStore {
@@ -72,6 +82,7 @@ export class TemplateStore {
     @observable public supplyControlForm: FormGroup<ISupplyControl>;
     @observable public financeControlForm: FormGroup<IFinanceControl>;
     @observable public shipmentControlForm: FormGroup<IShipmentControl>;
+    @observable public costsControlForm: FormGroup<IConstsControl>;
 
     @observable public templatesInProject: RkExperimentTemplateInfo[];
 
@@ -398,6 +409,42 @@ export class TemplateStore {
                 this.currentTemplate.priceChangeIntervalStdDev,
                 [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
                 v => (this.currentTemplate.priceChangeIntervalStdDev = Math.trunc(v))
+            )
+        });
+    }
+
+    @action
+    public initCostsControlForm(): void {
+        this.costsControlForm = new FormGroup<IConstsControl>({
+            fixedCosts: new FormControl(
+                this.currentTemplate.fixedCosts,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.fixedCosts = toCurrency(v))
+            ),
+            wageShare: new FormControl(
+                this.currentTemplate.wageShare,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.wageShare = Number(Number(v).toFixed(4)))
+            ),
+            costsChangeCoefficient: new FormControl(
+                this.currentTemplate.costsChangeCoefficient,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.costsChangeCoefficient = Number(Number(v).toFixed(4)))
+            ),
+            dostsChangeStdDev: new FormControl(
+                this.currentTemplate.dostsChangeStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.dostsChangeStdDev = Number(Number(v).toFixed(4)))
+            ),
+            costsChangeInterval: new FormControl(
+                this.currentTemplate.costsChangeInterval,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.costsChangeInterval = Math.trunc(v))
+            ),
+            costsChangeIntervalStdDev: new FormControl(
+                this.currentTemplate.costsChangeIntervalStdDev,
+                [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
+                v => (this.currentTemplate.costsChangeIntervalStdDev = Math.trunc(v))
             )
         });
     }

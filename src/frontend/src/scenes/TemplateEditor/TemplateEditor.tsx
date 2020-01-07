@@ -16,6 +16,7 @@ import { StoreEditor } from './StoreEditor/StoreEditor';
 import { SupplyEditor } from './SupplyEditor/SupplyEditor';
 import { ShipmentsEditor } from './ShipmentsEditor/ShipmentsEditor';
 import { FinanceEditor } from './FinanceEditor/FinanceEditor';
+import { CostsEditor } from './CostsEditor/CostsEditor';
 
 enum EditFormsName {
     COMMON_INFO = 'Общая информация',
@@ -23,8 +24,9 @@ enum EditFormsName {
     PLANNING = 'Производство',
     STORE = 'Запасы',
     SHIPMENTS = 'Реализация',
+    FINANCE = 'Финансы',
     SUPPLY = 'Снабжение',
-    FINANCE = 'Финансы'
+    COSTS = 'Затраты'
 }
 
 interface IState {
@@ -52,7 +54,7 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
         this.resourceStore = this.props.stores!.ResourceStore;
 
         this.state = {
-            activeEditFormName: EditFormsName.SHIPMENTS,
+            activeEditFormName: EditFormsName.COSTS,
             isLoading: true
         };
     }
@@ -75,9 +77,9 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
     }
 
     handleSaveTemplate = async () => {
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
         await this.templateStore.saveTemplate();
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false });
     }
 
     public render(): JSX.Element {
@@ -128,6 +130,8 @@ export class TemplateEditor extends Component<{ stores?: StoresType }, IState> {
                 return <ShipmentsEditor />
             case EditFormsName.FINANCE:
                 return <FinanceEditor />
+            case EditFormsName.COSTS:
+                return <CostsEditor />
             default:
                 return null;
         }
