@@ -36,6 +36,8 @@ namespace belsim2020.Services.AutoMapper
 
             CreateMap<RkExperimentTemplate, RkExperimentShortInfoModel>()
                 .ForMember(m => m.OwnerName, opt => opt.MapFrom(src => src.Owner.PublicName));
+
+            CreateMap<User, UserViewModel>();
         }
     }
 }

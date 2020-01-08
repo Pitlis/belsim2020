@@ -1,12 +1,17 @@
-﻿using belsim2020.Database;
+﻿using AutoMapper;
+using belsim2020.Database;
 using belsim2020.Entities;
 using belsim2020.Entities.Constants;
 using belsim2020.Services.Interfaces;
 using belsim2020.Services.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using static belsim2020.Entities.Constants.AuthConstants;
 
 namespace belsim2020.Services.Implementations
 {
@@ -15,15 +20,18 @@ namespace belsim2020.Services.Implementations
         private readonly Belsim2020DbContext dbContext;
         private readonly UserManager<User> userManager;
         private readonly ILogger<UserService> logger;
+        private readonly IMapper mapper;
 
         public UserService(
             Belsim2020DbContext dbContext,
             UserManager<User> userManager,
-            ILogger<UserService> logger)
+            ILogger<UserService> logger,
+            IMapper mapper)
         {
             this.dbContext = dbContext;
             this.userManager = userManager;
             this.logger = logger;
+            this.mapper = mapper;
         }
 
         public async Task<CreateUserResultModel> CreateUser(string email, string publicName, string organizationName, string comments, string password)
@@ -91,9 +99,69 @@ namespace belsim2020.Services.Implementations
             return result;
         }
 
-        public async Task<User> GetUser(string userId)
+        public async Task<UserViewModel> GetUser(string userId)
         {
-            return await userManager.FindByIdAsync(userId);
+            // TODO: use join?
+            var user = await userManager.FindByIdAsync(userId);
+            var userModel = mapper.Map<UserViewModel>(user);
+            userModel.Roles = await userManager.GetRolesAsync(user);
+
+            return userModel;
+        }
+
+        public async Task<IList<UserViewModel>> GetUsers()
+        {
+            var result = new List<UserViewModel>();
+            // TODO: use join
+            var users = await dbContext.Users.ToListAsync();
+            foreach (var user in users)
+            {
+                var userModel = mapper.Map<UserViewModel>(user);
+                userModel.Roles = await userManager.GetRolesAsync((User)user);
+                result.Add(userModel);
+            }
+            return result;
+        }
+
+        public async Task SetRoles(string userId, IList<string> roles)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new ApplicationException($"User [{userId}] does not exist");
+            }
+
+            var allowedRolesList = new List<string>() { Roles.Admin, Roles.User };
+            foreach (var role in roles)
+            {
+                if (!allowedRolesList.Contains(role))
+                {
+                    throw new ApplicationException($"Role [{role}] is not allowed");
+                }
+            }
+
+            var rolesToRemove = new List<string>();
+            var existsRoles = await userManager.GetRolesAsync(user);
+            foreach (var existsRole in existsRoles)
+            {
+                if (!roles.Contains(existsRole))
+                {
+                    rolesToRemove.Add(existsRole);
+                }
+            }
+
+            var rolesToAdd = new List<string>();
+            foreach (var role in roles)
+            {
+                if (!existsRoles.Contains(role))
+                {
+                    rolesToAdd.Add(role);
+                }
+            }
+
+            await userManager.RemoveFromRolesAsync(user, rolesToRemove);
+            await userManager.AddToRolesAsync(user, rolesToAdd);
         }
     }
 }

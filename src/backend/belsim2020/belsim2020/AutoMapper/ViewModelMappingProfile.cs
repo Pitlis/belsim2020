@@ -78,6 +78,8 @@ namespace belsim2020.AutoMapper
                         src => JArray.Parse(src.ResultData)
                     )
                  );
+
+            CreateMap<Services.Models.UserViewModel, ViewModels.UserViewModel>();
         }
     }
 }

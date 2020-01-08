@@ -1,4 +1,5 @@
-﻿using belsim2020.Configuration;
+﻿using AutoMapper;
+using belsim2020.Configuration;
 using belsim2020.Entities;
 using belsim2020.Entities.Constants;
 using belsim2020.Services.Interfaces;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace belsim2020.Controllers
@@ -19,14 +21,17 @@ namespace belsim2020.Controllers
         private readonly IUserService userService;
         private readonly UserManager<User> userManager;
         private readonly AdminSettings adminSettings;
+        private readonly IMapper mapper;
 
         public AdminController(
             IUserService userService,
             UserManager<User> userManager,
-            IOptions<AdminSettings> adminSettings)
+            IOptions<AdminSettings> adminSettings,
+            IMapper mapper)
         {
             this.userService = userService;
             this.userManager = userManager;
+            this.mapper = mapper;
             this.adminSettings = adminSettings.Value;
         }
 
@@ -51,6 +56,13 @@ namespace belsim2020.Controllers
             }
         }
 
+        [HttpPost("set-roles")]
+        public async Task<IActionResult> SetUserRoles([FromBody] SetUserRolesViewModel model)
+        {
+            await userService.SetRoles(model.UserId, model.Roles);
+            return new OkResult();
+        }
+
         [HttpGet("get-user/{userId}")]
         public async Task<IActionResult> GetUser(string userId)
         {
@@ -64,6 +76,15 @@ namespace belsim2020.Controllers
             };
 
             return new OkObjectResult(result);
+        }
+
+        [HttpGet("get-users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            var users = await userService.GetUsers();
+            var model = mapper.Map<IList<UserViewModel>>(users);
+
+            return new OkObjectResult(model);
         }
 
         [HttpPost("update-password")]
