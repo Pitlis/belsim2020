@@ -14,5 +14,6 @@ namespace belsim2020.Services.Interfaces
         Task DeleteUserFromProject(Guid projectId, string userId);
         Task<Project> GetProjectInfo(Guid projectId);
         Task<IList<Project>> GetAvailableProjectsList(string userId);
+        Task<IList<Project>> GetAllProjects();
     }
 }

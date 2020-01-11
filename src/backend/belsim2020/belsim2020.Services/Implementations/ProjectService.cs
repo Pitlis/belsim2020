@@ -124,6 +124,16 @@ namespace belsim2020.Services.Implementations
                 .ToListAsync();
         }
 
+        public async Task<IList<Project>> GetAllProjects()
+        {
+            VerifyAdminAccess();
+
+            return await dbContext.Projects
+                .Include(p => p.Users)
+                    .ThenInclude(up => up.User)
+                .ToListAsync();
+        }
+
         public async Task<Project> GetProjectInfo(Guid projectId)
         {
             var project = await dbContext.Projects

@@ -49,11 +49,11 @@ namespace belsim2020.Controllers
             return new OkResult();
         }
 
-        [HttpDelete("delete")]
+        [HttpPost("delete")]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> DeleteProject([FromBody] Guid projectId)
+        public async Task<IActionResult> DeleteProject([FromBody] DeleteProjectViewModel model)
         {
-            await projectService.DeleteProject(projectId);
+            await projectService.DeleteProject(model.ProjectId);
 
             return new OkResult();
         }
@@ -82,6 +82,17 @@ namespace belsim2020.Controllers
             var project = await projectService.GetProjectInfo(projectId);
 
             var model = mapper.Map<ProjectInfoWithUsersViewModel>(project);
+
+            return new OkObjectResult(model);
+        }
+
+        [HttpGet("get-projects")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> GetProjects()
+        {
+            var project = await projectService.GetAllProjects();
+
+            var model = mapper.Map<IList<ProjectInfoWithUsersViewModel>>(project);
 
             return new OkObjectResult(model);
         }

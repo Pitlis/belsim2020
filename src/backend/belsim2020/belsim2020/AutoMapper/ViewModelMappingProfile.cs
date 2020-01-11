@@ -25,7 +25,8 @@ namespace belsim2020.AutoMapper
                             .Select(up => new UserNameViewModel()
                             {
                                 UserId = up.User.Id,
-                                Name = up.User.PublicName
+                                Name = up.User.PublicName,
+                                Email = up.User.Email
                             }).ToList()
                     )
                  )
@@ -34,7 +35,8 @@ namespace belsim2020.AutoMapper
                         src => src.Users.Select(up => new UserNameViewModel()
                         {
                             UserId = up.User.Id,
-                            Name = up.User.PublicName
+                            Name = up.User.PublicName,
+                            Email = up.User.Email
                         }).ToList()
                     )
                  );
