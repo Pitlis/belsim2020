@@ -49,7 +49,7 @@ export class UsersEditor extends Component<{ stores?: StoresType }, IState> {
     public render(): JSX.Element {
         return (
             <div className='users-editor'>
-                {this.renderEditUserForm()}
+                {this.renderCreateUserForm()}
                 <hr />
                 {
                     (this.adminStore.isLoading || this.adminStore.usersList === undefined)
@@ -67,7 +67,7 @@ export class UsersEditor extends Component<{ stores?: StoresType }, IState> {
         this.setState({ selectedUser: null });
     }
 
-    private renderEditUserForm(): JSX.Element {
+    private renderCreateUserForm(): JSX.Element {
         return (
             <div className='block-editor create-user'>
                 <div className='title'>Создание пользователей</div>

@@ -1,14 +1,29 @@
 .admin-panel {
-    .block-editor {
-        border: 1px solid #e5e5e5;
-        width: 320px;
-        min-width: 320px;
-        padding: 10px;
-        padding-top: 0px;
-        height: 100%;
-        margin: 10px;
 
-        .title {
+    .admin-panels-list {
+        display: flex;
+        flex-wrap: wrap;
+        width: 95%;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #208fa0;
+
+        .belsim-action-button {
+            margin: 5px;
+            background-color: #208fa0;
+            border-color: #208fa0;
+            
+            &:hover {
+                background-color: #1c4d54;
+                border-color: #1c4d54;
+            }
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+        .belsim-active-menu {
+            background-color: #1a616f;
         }
     }
 }

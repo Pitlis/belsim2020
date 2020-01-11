@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
 
+import './AdminPanel.scss';
+
 import { StoresType, RouterStore, AdminStore } from 'stores';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import { UsersEditor } from './UsersEditor/UsersEditor';
+import { ProjectsEditor } from './ProjectsEditor/ProjectsEditor';
 
 enum AdminPanelFormName {
-    USERS = 'Пользователи'
+    USERS = 'Пользователи',
+    PROJECTS = 'Проекты'
 }
 interface IState {
     activeFormName: AdminPanelFormName;
@@ -44,6 +48,7 @@ export class AdminPanel extends Component<{ stores: StoresType }, IState> {
     private renderPanel(): JSX.Element {
         return (
             <>
+                {this.renderEditorsList()}
                 <div className='panel'>
                     <Card border='info' className='editor'>
                         <Card.Body>
@@ -60,8 +65,34 @@ export class AdminPanel extends Component<{ stores: StoresType }, IState> {
         switch (this.state.activeFormName) {
             case AdminPanelFormName.USERS:
                 return <UsersEditor />
+            case AdminPanelFormName.PROJECTS:
+                return <ProjectsEditor />
             default:
                 return null;
         }
+    }
+    handleOpenEditor = (editFormName: AdminPanelFormName) => {
+        this.setState({ activeFormName: editFormName });
+    }
+
+    private renderEditorsList(): JSX.Element {
+        return (
+            <div className='admin-panels-list'>
+                <Button
+                    onClick={() => this.handleOpenEditor(AdminPanelFormName.USERS)}
+                    variant="success"
+                    className={`belsim-action-button ${this.state.activeFormName === AdminPanelFormName.USERS ? 'belsim-active-menu' : ''}`}
+                >
+                    {AdminPanelFormName.USERS}
+                </Button>
+                <Button
+                    onClick={() => this.handleOpenEditor(AdminPanelFormName.PROJECTS)}
+                    variant="success"
+                    className={`belsim-action-button ${this.state.activeFormName === AdminPanelFormName.PROJECTS ? 'belsim-active-menu' : ''}`}
+                >
+                    {AdminPanelFormName.PROJECTS}
+                </Button>
+            </div>
+        );
     }
 }

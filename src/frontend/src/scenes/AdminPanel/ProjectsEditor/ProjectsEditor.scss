@@ -1,0 +1,38 @@
+.projects-editor {
+    .ag-theme-balham {
+        height: 35vh;
+        width: 100%;
+    }
+    .title {
+        font-weight: 500;
+    }
+
+    .delete-project {
+        text-align: right;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        button {
+            line-height: 10px;
+        }
+    }
+
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        .selector {
+            width: 300px;
+        }
+
+        .add-user {
+            margin-left: 10px;
+        }
+
+        .remove-user {
+            margin-left: 50px;
+            button {
+                line-height: 10px;
+            }
+        }
+    }
+}
