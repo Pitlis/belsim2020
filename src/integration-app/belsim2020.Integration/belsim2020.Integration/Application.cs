@@ -46,11 +46,20 @@ namespace belsim2020.Integration
 
                     if (model != null)
                     {
-                        var dataDirectory = PrepareExperimentEnvironment(model);
+                        IList<Run> results = null;
+                        try
+                        {
+                            var dataDirectory = PrepareExperimentEnvironment(model);
 
-                        var results = ExecuteExperiment(dataDirectory);
+                            results = ExecuteExperiment(dataDirectory);
 
-                        ClearExperimentEnvironment(dataDirectory);
+                            ClearExperimentEnvironment(dataDirectory);
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.Error($"Experiment failed...");
+                            logger.Error(ex);
+                        }
 
                         SendExperimentResultsToServer(results, model);
 
