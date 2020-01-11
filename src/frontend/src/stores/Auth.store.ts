@@ -1,4 +1,4 @@
-import { action, observable, runInAction, reaction } from 'mobx';
+import { action, observable, runInAction, reaction, computed } from 'mobx';
 import {
     FormControl,
     FormGroup,
@@ -12,7 +12,7 @@ import { routes } from 'routes';
 
 const REFRESHING_SESSION_TIME = 30000;
 const EMAIL_VALIDATION_PATTERN = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//const ADMIN_ROLE = 'admin';
+const ADMIN_ROLE = 'admin';
 
 
 interface IUserCredentials extends AbstractControls {
@@ -32,6 +32,8 @@ export class AuthStore {
     @observable public userCredentialsForm: FormGroup<IUserCredentials>;
     @observable public isLoginButtonClicked: boolean = false;
     @observable public loginErrors: string[];
+
+    @observable public roles: string[];
 
     private refreshingTimer: NodeJS.Timer;
 
@@ -55,6 +57,8 @@ export class AuthStore {
                 this.setLoggedInState();
             }
         }, { fireImmediately: true });
+
+        this.roles = [];
     }
 
     @action
@@ -84,6 +88,20 @@ export class AuthStore {
     }
 
     @action
+    public async loadUserRoles(): Promise<void> {
+        try {
+            this.roles = await api.account.getRoles();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    @computed
+    public get isAdmin(): boolean {
+        return !!this.roles.find(r => r === ADMIN_ROLE);
+    }
+
+    @action
     public async login(): Promise<void> {
         this.isLoginButtonClicked = true;
         if (this.userCredentialsForm.valid) {
@@ -100,14 +118,17 @@ export class AuthStore {
                     this.userCredentialsForm.controls.rememberMe.value = false;
 
                     this.isLoggedIn = true;
+                    this.loadUserRoles();
                     stores.RouterStore.push(routes.projects.path);
                 });
             } catch (err) {
                 runInAction(() => {
                     this.userCredentialsForm.controls.password.value = '';
                     this.isLoginButtonClicked = false;
-                    if (err.response.data.Errors) {
+                    if (err.response && err.response.data && err.response.data.Errors) {
                         this.loginErrors = err.response.data.Errors;
+                    } else {
+                        this.loginErrors = ['CONNECTION_FAILED'];
                     }
                 });
             }
@@ -135,6 +156,7 @@ export class AuthStore {
             runInAction(() => {
                 this.isLoggedIn = true;
                 this.IsSignInChecked = true;
+                this.loadUserRoles();
             });
         } catch (err) {
             runInAction(() => {

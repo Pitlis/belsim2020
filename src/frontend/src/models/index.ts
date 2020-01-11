@@ -15,3 +15,4 @@ export * from './ExperimentProduct';
 export * from './RkExperimentTemplate';
 export * from './RkExperimentTemplateInfo';
 export * from './BelsimError';
+export * from './UserProfile';

@@ -17,6 +17,7 @@ import { BelsimHeader } from 'components/BelsimHeader';
 import { TemplateEditor } from 'scenes/TemplateEditor';
 import { ProjectExperiments } from 'scenes/ProjectExperiments';
 import { Logout } from 'scenes/Logout';
+import { AdminPanel } from 'scenes/AdminPanel';
 
 @inject((stores: StoresType) => ({
   stores
@@ -48,6 +49,10 @@ export class App extends Component<{ history: History, stores?: StoresType }>{
                 path={routes.projects.path}
                 exact={routes.projects.exact}
                 component={Projects} />
+              <Route
+                path={routes.admin.path}
+                exact={routes.admin.exact}
+                component={AdminPanel} />
               <Route
                 path={routes.baseProjectUrl.path}
               >

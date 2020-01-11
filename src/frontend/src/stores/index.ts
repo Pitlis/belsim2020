@@ -7,3 +7,4 @@ export * from './Resource.store';
 export * from './Template.store';
 export * from './Experiment.store';
 export * from './Error.store';
+export * from './Admin.store';

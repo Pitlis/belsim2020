@@ -265,9 +265,7 @@ export class TemplateStore {
 
     @action
     public initProductShipments(product: ExperimentProduct) {
-        console.log('initProductShipments');
         if (product.shipments.length !== this.currentTemplate.shipmentsCount) {
-            console.log('initProductShipments start');
             let shipments: ExperimentShipment[] = [];
             for (let shipmentIndex = 0; shipmentIndex < this.currentTemplate.shipmentsCount; shipmentIndex++) {
                 shipments.push({ volume: 0, shipmentDatetime: shipmentIndex })

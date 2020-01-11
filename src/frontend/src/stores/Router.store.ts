@@ -52,6 +52,10 @@ export class RouterStore extends BaseRouterStore {
             this.HeaderMenuItems = this.attachAdditionalMenuItems(this.getMenuForProjectExperimentsList());
             return;
         }
+        if (isUrlRelatedToRoute(currentPath, routes.admin)) {
+            this.HeaderMenuItems = this.attachAdditionalMenuItems(this.getMenuAdminPanel());
+            return;
+        }
 
         this.HeaderMenuItems = new Array<HeaderMenuItem>();
     }
@@ -167,6 +171,12 @@ export class RouterStore extends BaseRouterStore {
                 link: makeUrlWithParams(routes.experimentsList.path, { projectId: getProjectIdFromUrl(this.location) }),
                 isActive: true
             }
+        ]
+    }
+
+    private getMenuAdminPanel(): HeaderMenuItem[] {
+        return [
+            { title: 'FiGrid', position: HeaderMenuItemPosition.RIGHT, link: routes.projects.path, isIcon: true }
         ]
     }
 

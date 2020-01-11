@@ -10,4 +10,16 @@
             margin: 20px;
         }
     }
+
+    .admin-button {
+        width: 95%;
+        text-align: right;
+        margin: 10px auto;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #208fa0;
+
+        button {
+            line-height: 15px;
+        }
+    }
 }

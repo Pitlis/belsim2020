@@ -1,0 +1,40 @@
+.users-editor {
+
+    .ag-theme-balham {
+        height: 35vh;
+        width: 100%;
+    }
+
+    .title {
+        font-weight: 500;
+    }
+
+    .create-user {
+        .content {
+            display: flex;
+            justify-content: space-between;
+            form {
+                width: 45%;
+            }
+        }
+        .create-user-button {
+            text-align: center;
+            height: 60px;
+            padding-top: 25px;
+        }
+    }
+
+    .password-change {
+        .content {
+            display: flex;
+            justify-content: space-between;
+            form {
+                width: 45%;
+            }
+            button {
+                margin-top: 25px;
+                height: 40px;
+            }
+        }
+    }
+}

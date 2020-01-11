@@ -4,6 +4,7 @@ import { product } from './product.repository';
 import { resource } from './resource.repository';
 import { experiment } from './experiment.repository';
 import { template } from './template.repository';
+import { admin } from './admin.repository';
 
 export const api = Object.freeze({
     project,
@@ -11,5 +12,6 @@ export const api = Object.freeze({
     product,
     resource,
     experiment,
-    template
+    template,
+    admin
 });

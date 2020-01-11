@@ -69,10 +69,11 @@ namespace belsim2020.Controllers
             var user = await userService.GetUser(userId);
             var result = new UserViewModel()
             {
+                Id = user.Id,
                 Email = user.Email,
                 PublicName = user.PublicName,
                 Comments = user.Comments,
-                Organization = user.OrganizationName
+                OrganizationName = user.OrganizationName
             };
 
             return new OkObjectResult(result);

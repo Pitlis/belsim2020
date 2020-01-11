@@ -8,4 +8,5 @@ export const routes = {
     experimentResults: { path: '/project/:projectId/experiment-results/:experimentId', exact: true },
     template: { path: '/project/:projectId/template/:templateId', exact: true },
     experimentsList: { path: '/project/:projectId/experiments', exact: true },
+    admin: { path: '/admin', exact: true },
 };
