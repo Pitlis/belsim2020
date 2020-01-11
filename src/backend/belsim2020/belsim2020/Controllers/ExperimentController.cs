@@ -46,8 +46,10 @@ namespace belsim2020.Controllers
             var experiment = await experimentService.GetLastUnprocessedExperiment();
             if (experiment != null)
             {
-                //await experimentService.MarkExperimentAsProcessed(experiment.RkExperimentId);
+                await experimentService.MarkExperimentAsProcessed(experiment.RkExperimentId);
             }
+
+            await experimentService.ExpireExperiments();
 
             return new OkObjectResult(experiment);
         }
@@ -61,7 +63,7 @@ namespace belsim2020.Controllers
                 return new BadRequestResult();
             }
 
-            //await experimentService.SetExperimentResult(model.ExperimentId, model.ResultJson != null ? model.ResultJson.ToString() : null);
+            await experimentService.SetExperimentResult(model.ExperimentId, model.ResultJson != null ? model.ResultJson.ToString() : null);
 
             return new OkResult();
         }

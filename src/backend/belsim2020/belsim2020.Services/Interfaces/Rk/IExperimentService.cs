@@ -13,5 +13,6 @@ namespace belsim2020.Services.Interfaces.Rk
         Task SetExperimentResult(Guid experimentId, string resultJson);
         Task<IList<ExperimentShortInfoModel>> GetProjectExperimentsList(Guid projectId);
         Task<RkExperiment> GetExperiment(Guid experimentId);
+        Task ExpireExperiments();
     }
 }

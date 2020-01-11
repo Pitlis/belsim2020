@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using belsim2020.Database;
 using belsim2020.Entities;
+using belsim2020.Services.Configuration;
 using belsim2020.Services.Extensions;
 using belsim2020.Services.Interfaces;
 using belsim2020.Services.Interfaces.Rk;
 using belsim2020.Services.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +22,20 @@ namespace belsim2020.Services.Implementations.Rk
         private readonly ILogger<ExperimentService> logger;
         private readonly ICurrentUserContext userContext;
         private readonly IMapper mapper;
+        private readonly ExperimentSettings options;
 
         public ExperimentService(
             Belsim2020DbContext dbContext,
             ILogger<ExperimentService> logger,
             IMapper mapper,
-            ICurrentUserContext userContext)
+            ICurrentUserContext userContext,
+            IOptions<ExperimentSettings> settings)
         {
             this.dbContext = dbContext;
             this.logger = logger;
             this.mapper = mapper;
             this.userContext = userContext;
+            this.options = settings.Value;
         }
 
         public async Task<IList<ExperimentShortInfoModel>> GetProjectExperimentsList(Guid projectId)
@@ -96,6 +101,8 @@ namespace belsim2020.Services.Implementations.Rk
             experiment.StatusChangedAt = DateTime.UtcNow;
 
             await dbContext.SaveChangesAsync();
+
+
         }
 
         public async Task SetExperimentResult(Guid experimentId, string resultJson)
@@ -123,9 +130,25 @@ namespace belsim2020.Services.Implementations.Rk
                 experiment.StatusChangedAt = DateTime.UtcNow;
             }
 
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task ExpireExperiments()
+        {
+            var expirationTime = DateTime.UtcNow.Subtract(options.ProcessingTimeout);
+            var expiredExperiments = await dbContext.RkExperiments
+                .Where(e => e.Status == ExperimentStatus.InProgress && e.StatusChangedAt < expirationTime)
+                .ToListAsync();
+
+            foreach (var experiment in expiredExperiments)
+            {
+                experiment.Status = ExperimentStatus.Failed;
+                experiment.StatusChangedAt = DateTime.UtcNow;
+            }
 
             await dbContext.SaveChangesAsync();
         }
+
 
         #region Helpers
 

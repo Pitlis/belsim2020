@@ -6,6 +6,7 @@ using belsim2020.Entities;
 using belsim2020.Middlewares;
 using belsim2020.Services;
 using belsim2020.Services.AutoMapper;
+using belsim2020.Services.Configuration;
 using belsim2020.Services.Implementations;
 using belsim2020.Services.Implementations.Rk;
 using belsim2020.Services.Interfaces;
@@ -111,6 +112,7 @@ namespace belsim2020
 
             services.Configure<AdminSettings>(Configuration.GetSection("AdminSettings"));
             services.Configure<ExperimentorSettings>(Configuration.GetSection("ExperimentorSettings"));
+            services.Configure<ExperimentSettings>(Configuration.GetSection("ExperimentSettings"));
 
             services.AddScoped<ICurrentUserContext, CurrentUserContext>();
             services.AddTransient<IUserService, UserService>();
