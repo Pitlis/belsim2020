@@ -1,6 +1,6 @@
 import { action, observable, runInAction, computed } from 'mobx';
 
-import { RkExperimentTemplate, RkExperimentTemplateInfo } from 'models';
+import { RkExperimentTemplate, RkExperimentTemplateInfo, ExperimentProduct, ExperimentShipment } from 'models';
 import { api } from 'repositories';
 import { AbstractControls, FormControl, FormGroup, notEmptyOrSpaces, minValue, required } from '@quantumart/mobx-form-validation-kit';
 import { stores } from 'stores';
@@ -138,6 +138,11 @@ export class TemplateStore {
                     this.isTemplateEmpty = false;
                     this.productIdsInCurrentTemplate = this.currentTemplate.products.map(p => p.productId);
                     this.resourceIdsInCurrentTemplate = this.currentTemplate.resources.map(p => p.resourceId);
+
+                    this.currentTemplate.products.forEach(product => {
+                        this.initProductShipments(product);
+                    });
+
                     this.productResourceListChanged = false;
                     this.isLoading = false;
                 });
@@ -259,10 +264,24 @@ export class TemplateStore {
     }
 
     @action
+    public initProductShipments(product: ExperimentProduct) {
+        console.log('initProductShipments');
+        if (product.shipments.length !== this.currentTemplate.shipmentsCount) {
+            console.log('initProductShipments start');
+            let shipments: ExperimentShipment[] = [];
+            for (let shipmentIndex = 0; shipmentIndex < this.currentTemplate.shipmentsCount; shipmentIndex++) {
+                shipments.push({ volume: 0, shipmentDatetime: shipmentIndex })
+            }
+            product.shipments = shipments;
+        }
+    }
+
+    @action
     public addProductsShipment() {
         this.currentTemplate.products.forEach(p => {
             p.shipments.push({ volume: 0, shipmentDatetime: p.shipments.length })
         });
+        this.currentTemplate.shipmentsCount = this.currentTemplate.products[0].shipments.length;
     }
 
     @action
@@ -276,6 +295,7 @@ export class TemplateStore {
                 p.shipments = p.shipments.filter(s => s.shipmentDatetime !== lastShipmentMonth);
             });
         }
+        this.currentTemplate.shipmentsCount = this.currentTemplate.products[0].shipments.length;
     }
 
     @action
