@@ -109,8 +109,8 @@ export class ShipmentsEditor extends Component<{ stores?: StoresType }, IState> 
                             fieldName='Стандартное отклонение (дн.):'
                         ></BelsimInput>
                         <DistrFuncTypeSelector
-                            value={this.templateStore.currentTemplate.publicpaymentDateDistrFuncType}
-                            onChange={(val) => runInAction(() => { this.templateStore.currentTemplate.publicpaymentDateDistrFuncType = val; })}
+                            value={this.templateStore.currentTemplate.paymentDateDistrFuncType}
+                            onChange={(val) => runInAction(() => { this.templateStore.currentTemplate.paymentDateDistrFuncType = val; })}
                         />
                     </Form>
                 </div>

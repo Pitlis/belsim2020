@@ -67,7 +67,7 @@ export class RkExperimentTemplate {
     public paymentDateStdDev: number;
 
     // Реализация: Срок платежа: Вид фукнции плотности распределения (0;1;2)
-    publicpaymentDateDistrFuncType: DistrFuncTypes
+    public paymentDateDistrFuncType: DistrFuncTypes
 
     // Реализация: Коэффициент изменения цен (отн.ед./мес.)
     public priceChangeCoefficient: number;

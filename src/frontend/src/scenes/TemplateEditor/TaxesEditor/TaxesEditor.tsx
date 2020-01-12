@@ -79,7 +79,7 @@ export class TaxesEditor extends Component<{ stores?: StoresType }> {
                         ></BelsimInput>
                         <BelsimInput
                             inputType='number'
-                            formControl={this.templateStore.taxesControlForm.controls.landTax}
+                            formControl={this.templateStore.taxesControlForm.controls.ecologicalTax}
                             showErrors={this.templateStore.taxesControlForm.controls.ecologicalTax.touched}
                             fieldName='Экологический (руб./ед.прод.):'
                         ></BelsimInput>
