@@ -62,7 +62,7 @@ namespace belsim2020.Services.Implementations.Rk
             var experimentTemplate = await GetExperimentTemplateFullEntity(model.RkExperimentTemplateId);
 
             await VerifyAccessToProject(experimentTemplate.ProjectId);
-            VerifyEditAccess(experimentTemplate);
+            //VerifyEditAccess(experimentTemplate);
             VerifyUpdatedExperimentModel(model, experimentTemplate);
 
             mapper.Map(model, experimentTemplate);
@@ -147,7 +147,7 @@ namespace belsim2020.Services.Implementations.Rk
 
             await VerifyAccessToProject(experimentTemplate.ProjectId);
 
-            VerifyEditAccess(experimentTemplate);
+            //VerifyEditAccess(experimentTemplate);
 
             dbContext.RkExperimentTemplates.Remove(experimentTemplate);
             await dbContext.SaveChangesAsync();
@@ -192,7 +192,7 @@ namespace belsim2020.Services.Implementations.Rk
                 throw new ApplicationException($"Template [{experimentTemplate.RkExperimentTemplateId}] does not exists");
             }
 
-            VerifyEditAccess(experimentTemplate);
+            //VerifyEditAccess(experimentTemplate);
 
             var productsInExperiment = await dbContext.RkProductsInExperiment
                 .Where(p => p.ExperimentTemplateId == experimentTemplateId)
@@ -246,7 +246,7 @@ namespace belsim2020.Services.Implementations.Rk
                 throw new ApplicationException($"Template [{experimentTemplate.RkExperimentTemplateId}] does not exists");
             }
 
-            VerifyEditAccess(experimentTemplate);
+            //VerifyEditAccess(experimentTemplate);
 
             var resourcesInExperiment = await dbContext.RkResourcesInExperiment
                 .Where(r => r.ExperimentTemplateId == experimentTemplateId)
