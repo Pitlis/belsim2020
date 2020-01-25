@@ -62,7 +62,7 @@ interface IConstsControl extends AbstractControls {
     wageShare: FormControl<number>;
 
     costsChangeCoefficient: FormControl<number>;
-    dostsChangeStdDev: FormControl<number>;
+    costsChangeStdDev: FormControl<number>;
 
     costsChangeInterval: FormControl<number>;
     costsChangeIntervalStdDev: FormControl<number>;
@@ -500,10 +500,10 @@ export class TemplateStore {
                 [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
                 v => (this.currentTemplate.costsChangeCoefficient = Number(Number(v).toFixed(4)))
             ),
-            dostsChangeStdDev: new FormControl(
-                this.currentTemplate.dostsChangeStdDev,
+            costsChangeStdDev: new FormControl(
+                this.currentTemplate.costsChangeStdDev,
                 [required('SHOULD_NOT_BE_EMPTY'), minValue(0, 'MORE_OR_ZERO')],
-                v => (this.currentTemplate.dostsChangeStdDev = Number(Number(v).toFixed(4)))
+                v => (this.currentTemplate.costsChangeStdDev = Number(Number(v).toFixed(4)))
             ),
             costsChangeInterval: new FormControl(
                 this.currentTemplate.costsChangeInterval,

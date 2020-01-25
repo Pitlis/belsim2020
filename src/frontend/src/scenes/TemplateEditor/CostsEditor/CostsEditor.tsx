@@ -91,8 +91,8 @@ export class CostsEditor extends Component<{ stores?: StoresType }> {
                         ></BelsimInput>
                         <BelsimInput
                             inputType='number'
-                            formControl={this.templateStore.costsControlForm.controls.dostsChangeStdDev}
-                            showErrors={this.templateStore.costsControlForm.controls.dostsChangeStdDev.touched}
+                            formControl={this.templateStore.costsControlForm.controls.costsChangeStdDev}
+                            showErrors={this.templateStore.costsControlForm.controls.costsChangeStdDev.touched}
                             fieldName='Стандартное отклонение (отн.ед.):'
                         ></BelsimInput>
                         <DistrFuncTypeSelector

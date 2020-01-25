@@ -158,7 +158,7 @@ export class RkExperimentTemplate {
     public costsChangeCoefficient: number;
 
     // Затраты: Коэффициент изменения: Стандартное отклонение (отн.ед.)
-    public dostsChangeStdDev: number;
+    public costsChangeStdDev: number;
 
     // Затраты: Коэффициент изменения: Вид функции плотности распределения (0;1;2)
     public costsChangeDistrFuncType: DistrFuncTypes
