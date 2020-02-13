@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using belsim2020.Configuration;
+using belsim2020.Database;
 using belsim2020.Entities;
 using belsim2020.Entities.Constants;
 using belsim2020.Services.Interfaces;
@@ -22,17 +23,20 @@ namespace belsim2020.Controllers
         private readonly UserManager<User> userManager;
         private readonly AdminSettings adminSettings;
         private readonly IMapper mapper;
+        private readonly Belsim2020DbContext belsim2020DbContext;
 
         public AdminController(
             IUserService userService,
             UserManager<User> userManager,
             IOptions<AdminSettings> adminSettings,
-            IMapper mapper)
+            IMapper mapper,
+            Belsim2020DbContext belsim2020DbContext)
         {
             this.userService = userService;
             this.userManager = userManager;
             this.mapper = mapper;
             this.adminSettings = adminSettings.Value;
+            this.belsim2020DbContext = belsim2020DbContext;
         }
 
         [HttpPost("create-user")]
@@ -123,6 +127,8 @@ namespace belsim2020.Controllers
         public async Task<IActionResult> InitSystem()
         {
             IdentityResult result = null;
+
+            await belsim2020DbContext.Database.EnsureCreatedAsync();
 
             if (userManager.FindByNameAsync(adminSettings.Email).Result == null)
             {
