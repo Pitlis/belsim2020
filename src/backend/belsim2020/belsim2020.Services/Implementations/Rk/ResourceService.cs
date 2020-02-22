@@ -34,7 +34,7 @@ namespace belsim2020.Services.Implementations.Rk
             await VerifyProjectAccess(resource.ProjectId);
 
             resource.NormalizedName = resource.Name.ToLowerInvariant();
-            var existsResource = await dbContext.RkResources.FirstOrDefaultAsync(r => r.NormalizedName == resource.NormalizedName);
+            var existsResource = await dbContext.RkResources.FirstOrDefaultAsync(r =>r.ProjectId == resource.ProjectId && r.NormalizedName == resource.NormalizedName);
             if (existsResource != null)
             {
                 throw new ApplicationException($"Resource with name [{resource.Name}] already exists");

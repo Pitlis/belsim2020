@@ -34,7 +34,7 @@ namespace belsim2020.Services.Implementations.Rk
             await VerifyProjectAccess(product.ProjectId);
 
             product.NormalizedName = product.Name.ToLowerInvariant();
-            var existsProduct = await dbContext.RkProducts.FirstOrDefaultAsync(r => r.NormalizedName == product.NormalizedName);
+            var existsProduct = await dbContext.RkProducts.FirstOrDefaultAsync(r => r.ProjectId == product.ProjectId && r.NormalizedName == product.NormalizedName);
             if (existsProduct != null)
             {
                 throw new ApplicationException($"Product with name [{product.Name}] already exists");
